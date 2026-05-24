@@ -1,7 +1,7 @@
-@extends('layouts.guest')
+@extends('layouts.customer')
 
 @section('title', 'Daftar Harga Layanan – TailorTrack')
-
+@section('fullwidth', true)
 @section('content')
 
 {{-- =====================================================================

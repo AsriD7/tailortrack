@@ -1,6 +1,7 @@
-@extends('layouts.guest')
+@extends('layouts.customer')
 
 @section('title', 'Daftar')
+@section('fullwidth', true)
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50">

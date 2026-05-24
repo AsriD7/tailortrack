@@ -1,7 +1,7 @@
-@extends('layouts.guest')
+@extends('layouts.customer')
 
 @section('title', 'Daftar Penjahit – TailorTrack')
-
+@section('fullwidth', true)
 @section('content')
 
 {{-- =====================================================================

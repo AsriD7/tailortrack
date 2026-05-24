@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer')
 
 @section('title', 'Detail Pesanan #' . $order->order_code)
 @section('page-title', 'Detail Pesanan')

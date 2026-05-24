@@ -1,6 +1,7 @@
-@extends('layouts.guest')
+@extends('layouts.customer')
 
 @section('title', 'TailorTrack – Temukan Penjahit Terbaik untuk Anda')
+@section('fullwidth', true)
 
 @section('content')
 

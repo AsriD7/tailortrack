@@ -1,7 +1,7 @@
-@extends('layouts.guest')
+@extends('layouts.customer')
 
 @section('title', ($tailor->tailorProfile->shop_name ?? $tailor->name) . ' – TailorTrack')
-
+@section('fullwidth', true)
 @section('content')
 
 {{-- =====================================================================
