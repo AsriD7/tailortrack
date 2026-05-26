@@ -44,8 +44,11 @@ class CustomerOrderController extends Controller
 
         $tailor->load(['tailorProfile', 'priceLists' => fn($q) => $q->orderBy('category')->orderBy('name')]);
         $priceLists = $tailor->priceLists;
+        $activeOrdersCount = $tailor->activeTailorOrdersCount();
+        $weeklyOrdersCount = $tailor->weeklyTailorOrdersCount();
+        $isAtCapacity = $tailor->isAtOrderCapacity();
 
-        return view('customer.orders.create', compact('tailor', 'priceLists'));
+        return view('customer.orders.create', compact('tailor', 'priceLists', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity'));
     }
 
     /**
@@ -76,6 +79,14 @@ class CustomerOrderController extends Controller
 
         $tailor    = User::findOrFail($request->tailor_id);
         $priceList = PriceList::findOrFail($request->price_list_id);
+
+        $tailor->load('tailorProfile');
+
+        if ($tailor->isAtOrderCapacity()) {
+            return back()
+                ->with('error', 'Penjahit sedang penuh dan belum dapat menerima pesanan baru.')
+                ->withInput();
+        }
 
         if (!$tailor->priceLists()->where('price_lists.id', $priceList->id)->exists()) {
             return back()

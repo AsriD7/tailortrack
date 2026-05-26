@@ -176,6 +176,20 @@
                                 <p class="text-slate-600 leading-relaxed">{{ $tailor->tailorProfile->description }}</p>
                             </div>
                         @endif
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                            <div class="bg-slate-50 rounded-xl p-3">
+                                <p class="text-xs text-slate-500 font-medium">Maks. Aktif</p>
+                                <p class="font-bold text-slate-700 mt-1">{{ $tailor->tailorProfile->max_active_orders ?? '-' }}</p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-3">
+                                <p class="text-xs text-slate-500 font-medium">Maks. Mingguan</p>
+                                <p class="font-bold text-slate-700 mt-1">{{ $tailor->tailorProfile->max_weekly_orders ?? '-' }}</p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-3">
+                                <p class="text-xs text-slate-500 font-medium">Estimasi</p>
+                                <p class="font-bold text-slate-700 mt-1">{{ $tailor->tailorProfile->estimated_processing_days ? $tailor->tailorProfile->estimated_processing_days . ' hari' : '-' }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endif

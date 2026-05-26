@@ -331,13 +331,40 @@
                                 </div>
                             @endif
 
+                            <div class="grid grid-cols-2 gap-2 mb-5">
+                                <div class="bg-slate-50 rounded-xl p-3">
+                                    <p class="text-[11px] text-slate-400 font-medium">Antrean Aktif</p>
+                                    <p class="text-sm font-bold text-slate-700 mt-0.5">
+                                        {{ $activeOrdersCount }}{{ $tailor->tailorProfile?->max_active_orders ? ' / ' . $tailor->tailorProfile->max_active_orders : '' }}
+                                    </p>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-3">
+                                    <p class="text-[11px] text-slate-400 font-medium">Estimasi</p>
+                                    <p class="text-sm font-bold text-slate-700 mt-0.5">
+                                        {{ $tailor->tailorProfile?->estimated_processing_days ? $tailor->tailorProfile->estimated_processing_days . ' hari' : 'Dikonfirmasi' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            @if($isAtCapacity)
+                                <div class="bg-red-50 border border-red-200 rounded-xl p-3 mb-5">
+                                    <p class="text-xs text-red-700 leading-relaxed">
+                                        Antrean penjahit sedang penuh. Pesanan baru belum dapat dibuat saat ini.
+                                    </p>
+                                </div>
+                            @endif
+
                             {{-- CTA button --}}
                             @auth
-                                @if(auth()->user()->isCustomer())
+                                @if(auth()->user()->isCustomer() && !$isAtCapacity)
                                     <a href="{{ route('customer.orders.create', $tailor->id) }}"
                                        class="block w-full text-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-3.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity shadow-md shadow-indigo-200 mb-3">
                                         🧵 Buat Pesanan Sekarang
                                     </a>
+                                @elseif(auth()->user()->isCustomer() && $isAtCapacity)
+                                    <div class="block w-full text-center bg-slate-100 text-slate-400 px-4 py-3.5 rounded-xl font-bold text-sm cursor-not-allowed mb-3">
+                                        Antrean Sedang Penuh
+                                    </div>
                                 @elseif(auth()->user()->isTailor())
                                     <div class="block w-full text-center bg-slate-100 text-slate-400 px-4 py-3.5 rounded-xl font-bold text-sm cursor-not-allowed mb-3">
                                         Hanya customer yang dapat memesan

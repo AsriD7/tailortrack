@@ -36,6 +36,9 @@ class TailorProfileController extends Controller
             'description'      => 'nullable|string|max:2000',
             'experience_years' => 'nullable|integer|min:0|max:100',
             'is_available'     => 'nullable|boolean',
+            'max_active_orders' => 'nullable|integer|min:1|max:999',
+            'max_weekly_orders' => 'nullable|integer|min:1|max:999',
+            'estimated_processing_days' => 'nullable|integer|min:1|max:365',
             'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'phone'            => 'nullable|string|max:20',
             'address'          => 'nullable|string|max:500',
@@ -59,6 +62,9 @@ class TailorProfileController extends Controller
             'description'      => $request->description,
             'experience_years' => $request->experience_years,
             'is_available'     => $request->boolean('is_available', true),
+            'max_active_orders' => $request->max_active_orders,
+            'max_weekly_orders' => $request->max_weekly_orders,
+            'estimated_processing_days' => $request->estimated_processing_days,
         ];
 
         // Upload foto profil baru jika ada

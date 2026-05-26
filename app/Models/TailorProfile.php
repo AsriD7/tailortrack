@@ -18,6 +18,9 @@ class TailorProfile extends Model
         'profile_photo',
         'is_verified',
         'is_available',
+        'max_active_orders',
+        'max_weekly_orders',
+        'estimated_processing_days',
     ];
 
     /**
@@ -26,6 +29,9 @@ class TailorProfile extends Model
     protected $casts = [
         'is_verified'  => 'boolean',
         'is_available' => 'boolean',
+        'max_active_orders' => 'integer',
+        'max_weekly_orders' => 'integer',
+        'estimated_processing_days' => 'integer',
     ];
 
     // ==========================================

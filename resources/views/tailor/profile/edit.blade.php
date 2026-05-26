@@ -306,6 +306,57 @@
                     <p class="text-xs text-slate-400 mt-1">Jelaskan keunggulan dan jenis layanan yang Anda tawarkan.</p>
                 </div>
 
+                {{-- Schedule Capacity --}}
+                <div class="border-t border-slate-100 pt-5">
+                    <div class="mb-4">
+                        <h3 class="text-sm font-semibold text-slate-800">Jadwal & Kapasitas Pesanan</h3>
+                        <p class="text-xs text-slate-500 mt-1">Atur batas antrean agar pelanggan tahu kapasitas toko Anda.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div>
+                            <label for="max_active_orders" class="block text-sm font-medium text-slate-700 mb-1.5">
+                                Maks. Pesanan Aktif
+                            </label>
+                            <input type="number" id="max_active_orders" name="max_active_orders" min="1" max="999"
+                                   value="{{ old('max_active_orders', $profile->max_active_orders ?? '') }}"
+                                   placeholder="Contoh: 10"
+                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('max_active_orders') border-red-300 focus:ring-red-500 @enderror">
+                            @error('max_active_orders')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="max_weekly_orders" class="block text-sm font-medium text-slate-700 mb-1.5">
+                                Maks. Pesanan / Minggu
+                            </label>
+                            <input type="number" id="max_weekly_orders" name="max_weekly_orders" min="1" max="999"
+                                   value="{{ old('max_weekly_orders', $profile->max_weekly_orders ?? '') }}"
+                                   placeholder="Contoh: 5"
+                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('max_weekly_orders') border-red-300 focus:ring-red-500 @enderror">
+                            @error('max_weekly_orders')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="estimated_processing_days" class="block text-sm font-medium text-slate-700 mb-1.5">
+                                Estimasi Pengerjaan
+                            </label>
+                            <div class="relative">
+                                <input type="number" id="estimated_processing_days" name="estimated_processing_days" min="1" max="365"
+                                       value="{{ old('estimated_processing_days', $profile->estimated_processing_days ?? '') }}"
+                                       placeholder="Contoh: 7"
+                                       class="w-full px-4 py-2.5 pr-12 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('estimated_processing_days') border-red-300 focus:ring-red-500 @enderror">
+                                <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">hari</span>
+                            </div>
+                            @error('estimated_processing_days')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Services --}}
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1.5">

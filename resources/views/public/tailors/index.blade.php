@@ -125,7 +125,7 @@
 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div class="flex flex-wrap gap-2">
-                        @foreach(array_slice($skillOptions, 0, 7) as $skill)
+                        @foreach($skillOptions->take(7) as $skill)
                             <a href="{{ route('tailors.index', array_filter(array_merge(request()->except('page'), ['skill' => $skill]))) }}"
                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-colors {{ request('skill') === $skill ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100' }}">
                                 {{ $skill }}

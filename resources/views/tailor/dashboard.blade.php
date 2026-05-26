@@ -210,6 +210,32 @@
     {{-- ------------------------------------------------------------------ --}}
     {{-- RECENT ORDERS TABLE                                                  --}}
     {{-- ------------------------------------------------------------------ --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <p class="text-xs text-slate-500 font-medium">Antrean Aktif</p>
+            <p class="text-3xl font-bold text-slate-800 mt-2">
+                {{ $stats['active_orders'] ?? 0 }}{{ $tailorProfile?->max_active_orders ? ' / ' . $tailorProfile->max_active_orders : '' }}
+            </p>
+            <p class="text-xs text-slate-400 mt-1">Pesanan belum selesai</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <p class="text-xs text-slate-500 font-medium">Pesanan Minggu Ini</p>
+            <p class="text-3xl font-bold text-slate-800 mt-2">
+                {{ $stats['weekly_orders'] ?? 0 }}{{ $tailorProfile?->max_weekly_orders ? ' / ' . $tailorProfile->max_weekly_orders : '' }}
+            </p>
+            <p class="text-xs text-slate-400 mt-1">Berdasarkan minggu berjalan</p>
+        </div>
+        <div class="rounded-2xl p-6 shadow-sm border {{ ($stats['is_at_capacity'] ?? false) ? 'bg-red-50 border-red-100' : 'bg-emerald-50 border-emerald-100' }}">
+            <p class="text-xs font-medium {{ ($stats['is_at_capacity'] ?? false) ? 'text-red-500' : 'text-emerald-600' }}">Status Kapasitas</p>
+            <p class="text-xl font-bold mt-2 {{ ($stats['is_at_capacity'] ?? false) ? 'text-red-700' : 'text-emerald-700' }}">
+                {{ ($stats['is_at_capacity'] ?? false) ? 'Antrean Penuh' : 'Masih Menerima' }}
+            </p>
+            <p class="text-xs mt-1 {{ ($stats['is_at_capacity'] ?? false) ? 'text-red-500' : 'text-emerald-600' }}">
+                Estimasi {{ $tailorProfile?->estimated_processing_days ? $tailorProfile->estimated_processing_days . ' hari' : 'belum diatur' }}
+            </p>
+        </div>
+    </div>
+
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
         {{-- Card header --}}

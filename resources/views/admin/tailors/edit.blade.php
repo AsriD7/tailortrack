@@ -175,6 +175,39 @@
                         @enderror
                     </div>
 
+                    <div class="sm:col-span-2 border-t border-slate-100 pt-5">
+                        <h4 class="text-sm font-semibold text-slate-800 mb-3">Jadwal & Kapasitas Pesanan</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Maks. Pesanan Aktif</label>
+                                <input type="number" name="max_active_orders" min="1" max="999" value="{{ old('max_active_orders', $tailor->tailorProfile?->max_active_orders) }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('max_active_orders') ? 'border-red-400 bg-red-50' : '' }}"
+                                       placeholder="10">
+                                @error('max_active_orders')
+                                    <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Maks. / Minggu</label>
+                                <input type="number" name="max_weekly_orders" min="1" max="999" value="{{ old('max_weekly_orders', $tailor->tailorProfile?->max_weekly_orders) }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('max_weekly_orders') ? 'border-red-400 bg-red-50' : '' }}"
+                                       placeholder="5">
+                                @error('max_weekly_orders')
+                                    <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Estimasi Pengerjaan</label>
+                                <input type="number" name="estimated_processing_days" min="1" max="365" value="{{ old('estimated_processing_days', $tailor->tailorProfile?->estimated_processing_days) }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('estimated_processing_days') ? 'border-red-400 bg-red-50' : '' }}"
+                                       placeholder="7 hari">
+                                @error('estimated_processing_days')
+                                    <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
                             Layanan yang Diterima

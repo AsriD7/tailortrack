@@ -118,12 +118,46 @@
                         @endif
                     </div>
                     <div class="shrink-0">
-                        <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                            Terpilih
-                        </span>
+                        @if($isAtCapacity)
+                            <span class="inline-flex items-center gap-1 bg-red-50 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                Penuh
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                Terpilih
+                            </span>
+                        @endif
                     </div>
                 </div>
+
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                    <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2">
+                        <p class="text-slate-400 font-medium">Antrean Aktif</p>
+                        <p class="text-slate-700 font-bold mt-0.5">
+                            {{ $activeOrdersCount }}{{ $tailor->tailorProfile?->max_active_orders ? ' / ' . $tailor->tailorProfile->max_active_orders : '' }}
+                        </p>
+                    </div>
+                    <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2">
+                        <p class="text-slate-400 font-medium">Pesanan Minggu Ini</p>
+                        <p class="text-slate-700 font-bold mt-0.5">
+                            {{ $weeklyOrdersCount }}{{ $tailor->tailorProfile?->max_weekly_orders ? ' / ' . $tailor->tailorProfile->max_weekly_orders : '' }}
+                        </p>
+                    </div>
+                    <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2">
+                        <p class="text-slate-400 font-medium">Estimasi</p>
+                        <p class="text-slate-700 font-bold mt-0.5">
+                            {{ $tailor->tailorProfile?->estimated_processing_days ? $tailor->tailorProfile->estimated_processing_days . ' hari' : 'Dikonfirmasi' }}
+                        </p>
+                    </div>
+                </div>
+
+                @if($isAtCapacity)
+                    <div class="mt-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                        Penjahit sedang penuh sesuai batas antrean yang diatur. Silakan pilih penjahit lain atau cek kembali nanti.
+                    </div>
+                @endif
             </div>
 
             {{-- Order Detail Form --}}
@@ -143,10 +177,33 @@
                     </label>
 
                     @if($priceLists->isNotEmpty())
+                        @php
+                            $serviceCategories = $priceLists->pluck('category')->filter()->unique()->values();
+                            $selectedPriceListId = old('price_list_id');
+                            $selectedPriceList = $selectedPriceListId ? $priceLists->firstWhere('id', (int) $selectedPriceListId) : null;
+                            $activeServiceCategory = old('service_category', $selectedPriceList?->category ?? $serviceCategories->first());
+                        @endphp
+
+                        <input type="hidden" name="service_category" id="service_category" value="{{ $activeServiceCategory }}">
+
+                        <div class="mb-3">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Kategori</p>
+                            <div id="serviceCategorySelector" class="flex flex-wrap gap-2">
+                                @foreach($serviceCategories as $category)
+                                    <button type="button"
+                                            data-category="{{ $category }}"
+                                            class="service-category-option inline-flex items-center px-3 py-2 rounded-xl border text-xs font-bold transition-colors {{ $activeServiceCategory === $category ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50' }}">
+                                        {{ $category }}
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <div id="priceListSelector" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @foreach($priceLists as $priceList)
                             @php $isSelected = old('price_list_id') == $priceList->id; @endphp
-                            <label class="price-list-option group relative rounded-2xl border-2 p-4 cursor-pointer transition-all {{ $isSelected ? 'border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40' }}">
+                            <label data-category="{{ $priceList->category }}"
+                                   class="price-list-option group relative rounded-2xl border-2 p-4 cursor-pointer transition-all {{ $isSelected ? 'border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40' }}">
                                 <input
                                     type="radio"
                                     name="price_list_id"
@@ -183,6 +240,10 @@
                                 </div>
                             </label>
                         @endforeach
+                        </div>
+
+                        <div id="emptyCategoryMessage" class="hidden mt-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-xs text-slate-500">
+                            Tidak ada layanan pada kategori ini.
                         </div>
                     @else
                         <div class="mt-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-700 leading-relaxed">
@@ -334,7 +395,7 @@
                 </a>
                 <button type="submit"
                         class="inline-flex items-center gap-2 gradient-brand text-white px-8 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        {{ $priceLists->isEmpty() ? 'disabled' : '' }}>
+                        {{ $priceLists->isEmpty() || $isAtCapacity ? 'disabled' : '' }}>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -441,6 +502,8 @@
     const qtyPlus         = document.getElementById('qtyPlus');
     const imagesInput     = document.getElementById('images');
     const previewGrid     = document.getElementById('imagePreviewGrid');
+    const serviceCategoryInput = document.getElementById('service_category');
+    const emptyCategoryMessage = document.getElementById('emptyCategoryMessage');
 
     const estBase    = document.getElementById('est-base-price');
     const estSurge   = document.getElementById('est-surcharge');
@@ -504,6 +567,43 @@
     }
 
     // ─── Size radio button styling ───────────────────────────────
+    function getActiveServiceCategory() {
+        return serviceCategoryInput ? serviceCategoryInput.value : '';
+    }
+
+    function updateServiceCategoryStyles() {
+        const activeCategory = getActiveServiceCategory();
+
+        document.querySelectorAll('.service-category-option').forEach(function (button) {
+            if (button.dataset.category === activeCategory) {
+                button.classList.remove('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-700', 'hover:bg-indigo-50');
+                button.classList.add('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
+            } else {
+                button.classList.remove('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
+                button.classList.add('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-700', 'hover:bg-indigo-50');
+            }
+        });
+    }
+
+    function updateVisibleServices() {
+        const activeCategory = getActiveServiceCategory();
+        let visibleCount = 0;
+
+        document.querySelectorAll('.price-list-option').forEach(function (label) {
+            const radio = label.querySelector('input[type="radio"]');
+            const isVisible = !activeCategory || label.dataset.category === activeCategory;
+
+            label.classList.toggle('hidden', !isVisible);
+            if (radio) radio.disabled = !isVisible;
+
+            if (isVisible) visibleCount++;
+        });
+
+        if (emptyCategoryMessage) {
+            emptyCategoryMessage.classList.toggle('hidden', visibleCount > 0);
+        }
+    }
+
     function updateSizeStyles() {
         document.querySelectorAll('.size-option').forEach(function (label) {
             const radio = label.querySelector('input[type="radio"]');
@@ -529,6 +629,24 @@
     });
 
     // ─── Event listeners ─────────────────────────────────────────
+    document.querySelectorAll('.service-category-option').forEach(function (button) {
+        button.addEventListener('click', function () {
+            if (!serviceCategoryInput) return;
+
+            serviceCategoryInput.value = button.dataset.category;
+
+            const selectedService = getSelectedPriceList();
+            if (selectedService && selectedService.closest('.price-list-option')?.dataset.category !== button.dataset.category) {
+                selectedService.checked = false;
+            }
+
+            updateServiceCategoryStyles();
+            updateVisibleServices();
+            updatePriceListStyles();
+            updateEstimate();
+        });
+    });
+
     document.querySelectorAll('input[name="price_list_id"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
             updatePriceListStyles();
@@ -580,6 +698,8 @@
     });
 
     // ─── Init ────────────────────────────────────────────────────
+    updateServiceCategoryStyles();
+    updateVisibleServices();
     updatePriceListStyles();
     updateSizeStyles();
     updateEstimate();

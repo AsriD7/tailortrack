@@ -20,6 +20,9 @@ class TailorDashboardController extends Controller
             'menunggu_konfirmasi'  => $user->tailorOrders()->where('status', OrderStatus::MenungguKonfirmasi->value)->count(),
             'diproses'             => $user->tailorOrders()->where('status', OrderStatus::Diproses->value)->count(),
             'selesai'              => $user->tailorOrders()->where('status', OrderStatus::Selesai->value)->count(),
+            'active_orders'         => $user->activeTailorOrdersCount(),
+            'weekly_orders'         => $user->weeklyTailorOrdersCount(),
+            'is_at_capacity'        => $user->isAtOrderCapacity(),
             'total_revenue'        => $user->tailorOrders()
                 ->where('status', OrderStatus::Selesai->value)
                 ->sum('total_price'),

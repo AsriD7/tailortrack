@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -127,6 +128,61 @@ class User extends Authenticatable
     public function getReviewCountAttribute(): int
     {
         return $this->reviewsReceived()->count();
+    }
+
+    /**
+     * Status pesanan yang masih dianggap masuk antrean kerja penjahit.
+     */
+    public static function activeOrderStatuses(): array
+    {
+        return [
+            OrderStatus::MenungguKonfirmasi->value,
+            OrderStatus::MenungguPembayaran->value,
+            OrderStatus::Dibayar->value,
+            OrderStatus::Diproses->value,
+        ];
+    }
+
+    /**
+     * Jumlah pesanan aktif penjahit.
+     */
+    public function activeTailorOrdersCount(): int
+    {
+        return $this->tailorOrders()
+            ->whereIn('status', self::activeOrderStatuses())
+            ->count();
+    }
+
+    /**
+     * Jumlah pesanan yang masuk pada minggu berjalan.
+     */
+    public function weeklyTailorOrdersCount(): int
+    {
+        return $this->tailorOrders()
+            ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->count();
+    }
+
+    /**
+     * Cek apakah kapasitas penjahit sudah penuh.
+     */
+    public function isAtOrderCapacity(): bool
+    {
+        $profile = $this->tailorProfile;
+
+        if (!$profile) {
+            return false;
+        }
+
+        if ($profile->max_active_orders && $this->activeTailorOrdersCount() >= $profile->max_active_orders) {
+            return true;
+        }
+
+        if ($profile->max_weekly_orders && $this->weeklyTailorOrdersCount() >= $profile->max_weekly_orders) {
+            return true;
+        }
+
+        return false;
     }
 
     // ==========================================
