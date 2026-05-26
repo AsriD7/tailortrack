@@ -3,10 +3,24 @@
 <!-- Animated header using capsule-render -->
 <img src="https://capsule-render.vercel.app/api?type=waving&color=6366f1&height=200&section=header&text=TailorTrack&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Marketplace+Penjahit+Terpercaya+🧵&descAlignY=55&descAlign=50" width="100%"/>
 
-<!-- Typing SVG -->
-<a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&multiline=true&width=600&height=80&lines=✂️+Connecting+Customers+with+Tailors;👗+Custom+Fashion+Made+Easy;🧵+Jahit+Sesuai+Keinginanmu!" alt="Typing SVG" />
-</a>
+<!-- Animated text via SVG inline -->
+<svg width="600" height="80" viewBox="0 0 600 80" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .line1 { animation: fadeSlide 9s infinite; }
+    .line2 { animation: fadeSlide 9s 3s infinite; opacity: 0; }
+    .line3 { animation: fadeSlide 9s 6s infinite; opacity: 0; }
+    @keyframes fadeSlide {
+      0%   { opacity: 0; transform: translateY(8px); }
+      10%  { opacity: 1; transform: translateY(0); }
+      30%  { opacity: 1; transform: translateY(0); }
+      40%  { opacity: 0; transform: translateY(-8px); }
+      100% { opacity: 0; }
+    }
+  </style>
+  <text class="line1" x="300" y="48" text-anchor="middle" font-family="monospace" font-size="20" fill="#6366f1">✂️ Connecting Customers with Tailors</text>
+  <text class="line2" x="300" y="48" text-anchor="middle" font-family="monospace" font-size="20" fill="#6366f1">👗 Custom Fashion Made Easy</text>
+  <text class="line3" x="300" y="48" text-anchor="middle" font-family="monospace" font-size="20" fill="#6366f1">🧵 Jahit Sesuai Keinginanmu!</text>
+</svg>
 
 <br/>
 
