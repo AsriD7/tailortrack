@@ -169,24 +169,60 @@
                             </div>
                         @endif
 
-                        {{-- Meta stats --}}
-                        <div class="grid grid-cols-2 gap-3 mb-5">
+                        {{-- Rating Row --}}
+                        @php
+                            $avgRating  = round($tailor->reviews_received_avg_rating ?? 0, 1);
+                            $revCount   = $tailor->reviews_received_count ?? 0;
+                        @endphp
+                        <div class="flex items-center gap-1.5 mb-4">
+                            @if($avgRating > 0)
+                                <div class="flex items-center gap-0.5">
+                                    @for($s = 1; $s <= 5; $s++)
+                                        <svg class="w-4 h-4 {{ $s <= round($avgRating) ? 'text-yellow-400' : 'text-slate-200' }}"
+                                             fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    @endfor
+                                </div>
+                                <span class="text-sm font-bold text-yellow-600">{{ $avgRating }}</span>
+                                <span class="text-xs text-slate-400">({{ $revCount }} ulasan)</span>
+                            @else
+                                <div class="flex items-center gap-0.5">
+                                    @for($s = 1; $s <= 5; $s++)
+                                        <svg class="w-4 h-4 text-slate-200" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    @endfor
+                                </div>
+                                <span class="text-xs text-slate-400">Belum ada ulasan</span>
+                            @endif
+                        </div>
+
+                        {{-- Meta stats: 3 kolom --}}
+                        <div class="grid grid-cols-3 gap-2 mb-5">
                             {{-- Experience --}}
-                            <div class="bg-slate-50 rounded-lg p-3">
+                            <div class="bg-slate-50 rounded-lg p-2.5 text-center">
                                 <p class="text-xs text-slate-400 mb-0.5">Pengalaman</p>
                                 <p class="text-sm font-bold text-slate-700">
                                     @if($tailor->tailorProfile && $tailor->tailorProfile->experience_years)
-                                        {{ $tailor->tailorProfile->experience_years }} Tahun
+                                        {{ $tailor->tailorProfile->experience_years }} thn
                                     @else
                                         <span class="font-normal text-slate-400">—</span>
                                     @endif
                                 </p>
                             </div>
-                            {{-- Portfolio count --}}
-                            <div class="bg-slate-50 rounded-lg p-3">
+                            {{-- Portfolio --}}
+                            <div class="bg-slate-50 rounded-lg p-2.5 text-center">
                                 <p class="text-xs text-slate-400 mb-0.5">Portfolio</p>
                                 <p class="text-sm font-bold text-slate-700">
-                                    {{ $tailor->portfolios_count ?? $tailor->portfolios->count() }} karya
+                                    {{ $tailor->portfolios_count ?? 0 }} karya
+                                </p>
+                            </div>
+                            {{-- Total Orders --}}
+                            <div class="bg-indigo-50 rounded-lg p-2.5 text-center">
+                                <p class="text-xs text-indigo-400 mb-0.5">Pesanan</p>
+                                <p class="text-sm font-bold text-indigo-700">
+                                    {{ $tailor->tailor_orders_count ?? 0 }} order
                                 </p>
                             </div>
                         </div>

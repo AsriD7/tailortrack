@@ -17,6 +17,7 @@ class PublicTailorController extends Controller
             ->whereHas('tailorProfile', fn($q) => $q->where('is_verified', true)->where('is_available', true))
             ->with(['tailorProfile', 'portfolios'])
             ->withCount('portfolios')
+            ->withCount('tailorOrders')
             ->withAvg('reviewsReceived', 'rating')
             ->withCount('reviewsReceived')
             ->paginate(12);

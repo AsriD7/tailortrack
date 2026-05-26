@@ -239,7 +239,27 @@
                                     {{ $profile->specialization }}
                                 </span>
                             @endif
-                            <div class="flex items-center gap-3 mt-2 text-[11px] text-slate-400">
+
+                            {{-- Rating --}}
+                            @php
+                                $tAvg   = $tailor->avg_rating;
+                                $tCount = $tailor->review_count;
+                            @endphp
+                            <div class="flex items-center gap-1 mt-1.5">
+                                @if($tAvg)
+                                    @for($s = 1; $s <= 5; $s++)
+                                        <svg class="w-3.5 h-3.5 {{ $s <= round($tAvg) ? 'text-yellow-400' : 'text-slate-200' }}" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    @endfor
+                                    <span class="text-[11px] font-bold text-yellow-600 ml-0.5">{{ $tAvg }}</span>
+                                    <span class="text-[11px] text-slate-400">({{ $tCount }})</span>
+                                @else
+                                    <span class="text-[11px] text-slate-400 italic">Belum ada ulasan</span>
+                                @endif
+                            </div>
+
+                            <div class="flex items-center gap-3 mt-1.5 text-[11px] text-slate-400">
                                 @if($profile && $profile->experience_years)
                                     <span class="flex items-center gap-1">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -247,7 +267,7 @@
                                     </span>
                                 @endif
                                 <span class="flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01"/></svg>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
                                     {{ $tailor->portfolios_count ?? $tailor->portfolios->count() }} karya
                                 </span>
                                 @if($profile && $profile->is_available)
@@ -262,6 +282,7 @@
                         Lihat Profil & Pesan
                     </a>
                 </div>
+
                 @empty
                 <div class="sm:col-span-2 text-center py-10 text-slate-400">
                     <p class="text-sm">Belum ada penjahit tersedia</p>
