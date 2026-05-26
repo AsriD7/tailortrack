@@ -20,6 +20,7 @@ use App\Http\Controllers\Tailor\TailorDashboardController;
 use App\Http\Controllers\Tailor\TailorOrderController;
 use App\Http\Controllers\Tailor\TailorPortfolioController;
 use App\Http\Controllers\Tailor\TailorProfileController;
+use App\Http\Controllers\Tailor\TailorReviewController;
 use Illuminate\Support\Facades\Route;
 
 // =============================================
@@ -98,6 +99,9 @@ Route::prefix('tailor')
         Route::patch('/orders/{order}/confirm-price', [TailorOrderController::class, 'confirmPrice'])->name('orders.confirm-price');
         Route::patch('/orders/{order}/status', [TailorOrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::patch('/orders/{order}/cancel', [TailorOrderController::class, 'cancel'])->name('orders.cancel');
+
+        // Review / Rating
+        Route::get('/reviews', [TailorReviewController::class, 'index'])->name('reviews.index');
     });
 
 // =============================================
