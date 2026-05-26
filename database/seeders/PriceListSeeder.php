@@ -61,10 +61,43 @@ class PriceListSeeder extends Seeder
                 'description' => 'Gamis wanita berbahan jersey, katun, atau sutra',
                 'base_price'  => 90000,
             ],
+            [
+                'name'        => 'Almamater',
+                'category'    => 'Seragam',
+                'description' => 'Jas almamater sekolah, kampus, komunitas, atau organisasi',
+                'base_price'  => 130000,
+            ],
+            [
+                'name'        => 'Seragam',
+                'category'    => 'Seragam',
+                'description' => 'Seragam sekolah, kantor, komunitas, atau organisasi',
+                'base_price'  => 85000,
+            ],
+            [
+                'name'        => 'Batik',
+                'category'    => 'Atasan',
+                'description' => 'Baju batik pria/wanita untuk kerja, acara formal, atau seragam',
+                'base_price'  => 80000,
+            ],
+            [
+                'name'        => 'Baju Pengantin',
+                'category'    => 'Formal',
+                'description' => 'Busana pengantin dan pakaian acara pernikahan',
+                'base_price'  => 250000,
+            ],
+            [
+                'name'        => 'Gaun',
+                'category'    => 'Terusan',
+                'description' => 'Gaun pesta, gaun formal, atau gaun acara khusus',
+                'base_price'  => 150000,
+            ],
         ];
 
         foreach ($priceLists as $priceList) {
-            PriceList::create($priceList);
+            PriceList::updateOrCreate(
+                ['name' => $priceList['name']],
+                $priceList
+            );
         }
     }
 }

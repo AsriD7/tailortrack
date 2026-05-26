@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tailor;
 
 use App\Http\Controllers\Controller;
+use App\Models\PriceList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +16,11 @@ class TailorProfileController extends Controller
     {
         $user    = Auth::user();
         $profile = $user->tailorProfile;
+        $priceLists = PriceList::orderBy('category')->orderBy('name')->get();
 
-        return view('tailor.profile.edit', compact('user', 'profile'));
+        $user->load('priceLists');
+
+        return view('tailor.profile.edit', compact('user', 'profile', 'priceLists'));
     }
 
     /**
@@ -35,6 +39,8 @@ class TailorProfileController extends Controller
             'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'phone'            => 'nullable|string|max:20',
             'address'          => 'nullable|string|max:500',
+            'price_list_ids'    => 'nullable|array',
+            'price_list_ids.*'  => 'exists:price_lists,id',
         ], [
             'shop_name.required'        => 'Nama toko wajib diisi.',
             'profile_photo.image'       => 'Foto profil harus berupa gambar.',
@@ -66,6 +72,8 @@ class TailorProfileController extends Controller
             ['user_id' => $user->id],
             $profileData
         );
+
+        $user->priceLists()->sync($request->input('price_list_ids', []));
 
         return back()->with('success', 'Profil berhasil diperbarui.');
     }

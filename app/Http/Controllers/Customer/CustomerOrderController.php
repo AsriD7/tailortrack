@@ -42,8 +42,8 @@ class CustomerOrderController extends Controller
             'Penjahit tidak ditemukan.'
         );
 
-        $tailor->load('tailorProfile');
-        $priceLists = PriceList::orderBy('category')->orderBy('name')->get();
+        $tailor->load(['tailorProfile', 'priceLists' => fn($q) => $q->orderBy('category')->orderBy('name')]);
+        $priceLists = $tailor->priceLists;
 
         return view('customer.orders.create', compact('tailor', 'priceLists'));
     }
@@ -76,6 +76,12 @@ class CustomerOrderController extends Controller
 
         $tailor    = User::findOrFail($request->tailor_id);
         $priceList = PriceList::findOrFail($request->price_list_id);
+
+        if (!$tailor->priceLists()->where('price_lists.id', $priceList->id)->exists()) {
+            return back()
+                ->withErrors(['price_list_id' => 'Layanan ini tidak tersedia untuk penjahit yang dipilih.'])
+                ->withInput();
+        }
 
         // Hitung estimasi harga
         $sizeExtra = match($request->size) {

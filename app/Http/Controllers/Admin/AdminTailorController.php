@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\PriceList;
 use App\Models\TailorProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,7 +41,9 @@ class AdminTailorController extends Controller
      */
     public function create()
     {
-        return view('admin.tailors.create');
+        $priceLists = PriceList::orderBy('category')->orderBy('name')->get();
+
+        return view('admin.tailors.create', compact('priceLists'));
     }
 
     /**
@@ -57,6 +60,8 @@ class AdminTailorController extends Controller
             'shop_name'      => 'required|string|max:255',
             'specialization' => 'nullable|string|max:255',
             'description'    => 'nullable|string|max:2000',
+            'price_list_ids' => 'nullable|array',
+            'price_list_ids.*' => 'exists:price_lists,id',
         ], [
             'name.required'      => 'Nama wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
@@ -86,6 +91,8 @@ class AdminTailorController extends Controller
             'is_available'   => true,
         ]);
 
+        $user->priceLists()->sync($request->input('price_list_ids', []));
+
         return redirect()->route('admin.tailors.index')
             ->with('success', "Akun penjahit {$user->name} berhasil dibuat.");
     }
@@ -97,7 +104,7 @@ class AdminTailorController extends Controller
     {
         abort_if($tailor->role !== UserRole::Tailor, 404);
 
-        $tailor->load(['tailorProfile', 'portfolios', 'tailorOrders' => fn($q) => $q->limit(5)->latest()]);
+        $tailor->load(['tailorProfile', 'portfolios', 'priceLists', 'tailorOrders' => fn($q) => $q->limit(5)->latest()]);
 
         return view('admin.tailors.show', compact('tailor'));
     }
@@ -109,9 +116,10 @@ class AdminTailorController extends Controller
     {
         abort_if($tailor->role !== UserRole::Tailor, 404);
 
-        $tailor->load('tailorProfile');
+        $tailor->load(['tailorProfile', 'priceLists']);
+        $priceLists = PriceList::orderBy('category')->orderBy('name')->get();
 
-        return view('admin.tailors.edit', compact('tailor'));
+        return view('admin.tailors.edit', compact('tailor', 'priceLists'));
     }
 
     /**
@@ -130,6 +138,8 @@ class AdminTailorController extends Controller
             'specialization' => 'nullable|string|max:255',
             'description'    => 'nullable|string|max:2000',
             'is_available'   => 'nullable|boolean',
+            'price_list_ids'  => 'nullable|array',
+            'price_list_ids.*' => 'exists:price_lists,id',
         ], [
             'name.required'      => 'Nama wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
@@ -153,6 +163,8 @@ class AdminTailorController extends Controller
                 'is_available'   => $request->boolean('is_available', true),
             ]
         );
+
+        $tailor->priceLists()->sync($request->input('price_list_ids', []));
 
         return redirect()->route('admin.tailors.show', $tailor)
             ->with('success', 'Data penjahit berhasil diperbarui.');

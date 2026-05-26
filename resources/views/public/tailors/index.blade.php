@@ -77,6 +77,78 @@
 <section class="bg-slate-50 min-h-screen py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+        {{-- Search and skill filters --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 sm:p-6 mb-8">
+            <form method="GET" action="{{ route('tailors.index') }}" class="space-y-5">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+                    <div class="lg:col-span-5 relative">
+                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Cari nama toko, penjahit, atau keahlian..."
+                            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        >
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <select name="skill" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">Semua Keahlian</option>
+                            @foreach($skillOptions as $skill)
+                                <option value="{{ $skill }}" {{ request('skill') === $skill ? 'selected' : '' }}>
+                                    {{ $skill }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <select name="min_rating" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">Semua Rating</option>
+                            <option value="4" {{ request('min_rating') === '4' ? 'selected' : '' }}>Rating 4+</option>
+                            <option value="3" {{ request('min_rating') === '3' ? 'selected' : '' }}>Rating 3+</option>
+                        </select>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <select name="sort" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">Terbaru</option>
+                            <option value="rating" {{ request('sort') === 'rating' ? 'selected' : '' }}>Rating Tertinggi</option>
+                            <option value="popular" {{ request('sort') === 'popular' ? 'selected' : '' }}>Paling Banyak Order</option>
+                            <option value="portfolio" {{ request('sort') === 'portfolio' ? 'selected' : '' }}>Portfolio Terbanyak</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex flex-wrap gap-2">
+                        @foreach(array_slice($skillOptions, 0, 7) as $skill)
+                            <a href="{{ route('tailors.index', array_filter(array_merge(request()->except('page'), ['skill' => $skill]))) }}"
+                               class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-colors {{ request('skill') === $skill ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100' }}">
+                                {{ $skill }}
+                            </a>
+                        @endforeach
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        @if(request()->hasAny(['search', 'skill', 'min_rating', 'sort']))
+                            <a href="{{ route('tailors.index') }}"
+                               class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-600 text-sm font-semibold hover:bg-slate-200 transition-colors">
+                                Reset
+                            </a>
+                        @endif
+                        <button type="submit"
+                                class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+                            Cari Penjahit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         @if($tailors->isNotEmpty())
 
             {{-- Result count --}}
@@ -255,22 +327,36 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-slate-700 mb-2">Belum Ada Penjahit</h3>
-                <p class="text-slate-500 mb-8 max-w-md mx-auto">
-                    Saat ini belum ada penjahit yang terdaftar. Silakan cek kembali nanti atau daftar sebagai penjahit.
-                </p>
+                @if(request()->hasAny(['search', 'skill', 'min_rating', 'sort']))
+                    <h3 class="text-xl font-bold text-slate-700 mb-2">Penjahit Tidak Ditemukan</h3>
+                    <p class="text-slate-500 mb-8 max-w-md mx-auto">
+                        Tidak ada penjahit yang cocok dengan filter pencarian saat ini. Coba gunakan kata kunci atau keahlian lain.
+                    </p>
+                @else
+                    <h3 class="text-xl font-bold text-slate-700 mb-2">Belum Ada Penjahit</h3>
+                    <p class="text-slate-500 mb-8 max-w-md mx-auto">
+                        Saat ini belum ada penjahit yang terdaftar. Silakan cek kembali nanti atau daftar sebagai penjahit.
+                    </p>
+                @endif
                 <div class="flex flex-wrap justify-center gap-4">
-                    <a href="{{ route('landing') }}"
-                       class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        Kembali ke Beranda
-                    </a>
-                    <a href="{{ route('register') }}"
-                       class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
-                        Daftar Sebagai Penjahit
-                    </a>
+                    @if(request()->hasAny(['search', 'skill', 'min_rating', 'sort']))
+                        <a href="{{ route('tailors.index') }}"
+                           class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors">
+                            Reset Filter
+                        </a>
+                    @else
+                        <a href="{{ route('landing') }}"
+                           class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                            </svg>
+                            Kembali ke Beranda
+                        </a>
+                        <a href="{{ route('register') }}"
+                           class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
+                            Daftar Sebagai Penjahit
+                        </a>
+                    @endif
                 </div>
             </div>
 

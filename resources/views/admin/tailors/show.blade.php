@@ -179,6 +179,21 @@
                     </div>
                 </div>
             @endif
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <h3 class="font-semibold text-slate-800 mb-4">Layanan yang Diterima</h3>
+                @if($tailor->priceLists->isEmpty())
+                    <p class="text-sm text-slate-400">Belum ada layanan yang dipilih.</p>
+                @else
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($tailor->priceLists as $priceList)
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                                {{ $priceList->name }}
+                            </span>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
 
         {{-- Right Column --}}

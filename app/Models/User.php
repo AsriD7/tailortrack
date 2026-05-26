@@ -79,6 +79,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Layanan jahit yang diterima oleh penjahit ini.
+     */
+    public function priceLists()
+    {
+        return $this->belongsToMany(PriceList::class, 'tailor_price_lists', 'tailor_id', 'price_list_id')
+            ->withPivot('custom_price')
+            ->withTimestamps();
+    }
+
+    /**
      * Riwayat tracking yang diupdate oleh user ini.
      */
     public function trackingHistories()

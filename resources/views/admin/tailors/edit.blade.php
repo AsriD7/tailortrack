@@ -174,6 +174,37 @@
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            Layanan yang Diterima
+                        </label>
+                        @php
+                            $selectedPriceLists = old('price_list_ids', $tailor->priceLists->pluck('id')->all());
+                        @endphp
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl border border-slate-200 p-3">
+                            @foreach($priceLists as $priceList)
+                                <label class="flex items-start gap-3 rounded-lg px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox"
+                                           name="price_list_ids[]"
+                                           value="{{ $priceList->id }}"
+                                           class="mt-1 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                           {{ in_array($priceList->id, $selectedPriceLists) ? 'checked' : '' }}>
+                                    <span>
+                                        <span class="block text-sm font-semibold text-slate-700">{{ $priceList->name }}</span>
+                                        <span class="block text-xs text-slate-400">{{ $priceList->category }} &middot; {{ $priceList->formattedBasePrice() }}</span>
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Hanya layanan yang dipilih yang muncul saat customer membuat pesanan ke penjahit ini.</p>
+                        @error('price_list_ids')
+                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('price_list_ids.*')
+                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

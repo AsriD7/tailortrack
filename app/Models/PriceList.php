@@ -35,6 +35,16 @@ class PriceList extends Model
         return $this->hasMany(Order::class, 'price_list_id');
     }
 
+    /**
+     * Penjahit yang menyediakan layanan ini.
+     */
+    public function tailors()
+    {
+        return $this->belongsToMany(User::class, 'tailor_price_lists', 'price_list_id', 'tailor_id')
+            ->withPivot('custom_price')
+            ->withTimestamps();
+    }
+
     // ==========================================
     // Helper
     // ==========================================

@@ -138,22 +138,58 @@
 
                 {{-- Price List Selector --}}
                 <div>
-                    <label for="price_list_id" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
                         Jenis Pakaian / Layanan <span class="text-red-500">*</span>
                     </label>
-                    <select id="price_list_id" name="price_list_id"
-                            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white @error('price_list_id') border-red-400 @enderror"
-                            required>
-                        <option value="" data-price="0">-- Pilih jenis pakaian --</option>
+
+                    @if($priceLists->isNotEmpty())
+                        <div id="priceListSelector" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @foreach($priceLists as $priceList)
-                            <option value="{{ $priceList->id }}"
+                            @php $isSelected = old('price_list_id') == $priceList->id; @endphp
+                            <label class="price-list-option group relative rounded-2xl border-2 p-4 cursor-pointer transition-all {{ $isSelected ? 'border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40' }}">
+                                <input
+                                    type="radio"
+                                    name="price_list_id"
+                                    value="{{ $priceList->id }}"
                                     data-price="{{ $priceList->base_price }}"
-                                    {{ old('price_list_id') == $priceList->id ? 'selected' : '' }}>
-                                {{ $priceList->name }}
-                                &mdash; Rp {{ number_format($priceList->base_price, 0, ',', '.') }}
-                            </option>
+                                    class="sr-only"
+                                    required
+                                    {{ $isSelected ? 'checked' : '' }}
+                                >
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <h4 class="font-bold text-slate-800 text-sm">{{ $priceList->name }}</h4>
+                                            <span class="inline-flex px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold option-category">
+                                                {{ $priceList->category }}
+                                            </span>
+                                        </div>
+                                        @if($priceList->description)
+                                            <p class="text-xs text-slate-500 leading-relaxed mt-2 line-clamp-2">
+                                                {{ $priceList->description }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                    <div class="shrink-0 text-right">
+                                        <p class="text-sm font-extrabold text-indigo-600">
+                                            Rp {{ number_format($priceList->base_price, 0, ',', '.') }}
+                                        </p>
+                                        <div class="option-check mt-2 ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center {{ $isSelected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300 bg-white' }}">
+                                            <svg class="w-3 h-3 text-white {{ $isSelected ? '' : 'hidden' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
                         @endforeach
-                    </select>
+                        </div>
+                    @else
+                        <div class="mt-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-700 leading-relaxed">
+                            Penjahit ini belum memilih layanan yang diterima. Silakan hubungi penjahit atau pilih penjahit lain.
+                        </div>
+                    @endif
+
                     @error('price_list_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -297,7 +333,8 @@
                     Batal
                 </a>
                 <button type="submit"
-                        class="inline-flex items-center gap-2 gradient-brand text-white px-8 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
+                        class="inline-flex items-center gap-2 gradient-brand text-white px-8 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        {{ $priceLists->isEmpty() ? 'disabled' : '' }}>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -399,7 +436,6 @@
     const SURCHARGES = { S: 0, M: 0, L: 5000, XL: 10000, XXL: 15000, Custom: 20000 };
 
     // ─── DOM refs ─────────────────────────────────────────────────
-    const priceListSelect = document.getElementById('price_list_id');
     const quantityInput   = document.getElementById('quantity');
     const qtyMinus        = document.getElementById('qtyMinus');
     const qtyPlus         = document.getElementById('qtyPlus');
@@ -422,10 +458,14 @@
         return checked ? checked.value : 'M';
     }
 
+    function getSelectedPriceList() {
+        return document.querySelector('input[name="price_list_id"]:checked');
+    }
+
     // ─── Update estimate display ─────────────────────────────────
     function updateEstimate() {
-        const selectedOption = priceListSelect.options[priceListSelect.selectedIndex];
-        const basePrice  = parseInt(selectedOption?.dataset?.price || 0, 10);
+        const selectedPriceList = getSelectedPriceList();
+        const basePrice  = parseInt(selectedPriceList?.dataset?.price || 0, 10);
         const size       = getSelectedSize();
         const surcharge  = SURCHARGES[size] ?? 0;
         const qty        = Math.max(1, parseInt(quantityInput.value, 10) || 1);
@@ -435,6 +475,32 @@
         estSurge.textContent = surcharge > 0 ? ('+ ' + rupiah(surcharge)) : rupiah(0);
         estQty.textContent   = '×' + qty;
         estTotal.textContent = rupiah(total);
+    }
+
+    function updatePriceListStyles() {
+        document.querySelectorAll('.price-list-option').forEach(function (label) {
+            const radio = label.querySelector('input[type="radio"]');
+            const check = label.querySelector('.option-check');
+            const checkIcon = check ? check.querySelector('svg') : null;
+
+            if (radio.checked) {
+                label.classList.remove('border-slate-200', 'bg-white', 'hover:border-indigo-300', 'hover:bg-indigo-50/40');
+                label.classList.add('border-indigo-500', 'bg-indigo-50', 'shadow-sm');
+                if (check) {
+                    check.classList.remove('border-slate-300', 'bg-white');
+                    check.classList.add('border-indigo-500', 'bg-indigo-500');
+                }
+                if (checkIcon) checkIcon.classList.remove('hidden');
+            } else {
+                label.classList.remove('border-indigo-500', 'bg-indigo-50', 'shadow-sm');
+                label.classList.add('border-slate-200', 'bg-white', 'hover:border-indigo-300', 'hover:bg-indigo-50/40');
+                if (check) {
+                    check.classList.remove('border-indigo-500', 'bg-indigo-500');
+                    check.classList.add('border-slate-300', 'bg-white');
+                }
+                if (checkIcon) checkIcon.classList.add('hidden');
+            }
+        });
     }
 
     // ─── Size radio button styling ───────────────────────────────
@@ -463,7 +529,12 @@
     });
 
     // ─── Event listeners ─────────────────────────────────────────
-    priceListSelect.addEventListener('change', updateEstimate);
+    document.querySelectorAll('input[name="price_list_id"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            updatePriceListStyles();
+            updateEstimate();
+        });
+    });
     quantityInput.addEventListener('input', updateEstimate);
 
     document.querySelectorAll('input[name="size"]').forEach(function (radio) {
@@ -509,6 +580,7 @@
     });
 
     // ─── Init ────────────────────────────────────────────────────
+    updatePriceListStyles();
     updateSizeStyles();
     updateEstimate();
 })();
