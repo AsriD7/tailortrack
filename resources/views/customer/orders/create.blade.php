@@ -152,6 +152,23 @@
                         </p>
                     </div>
                 </div>
+                @if($workingDayLabels->isNotEmpty())
+                    <div class="mt-3 rounded-xl bg-indigo-50 border border-indigo-100 px-4 py-3 text-xs text-indigo-700">
+                        Hari kerja penjahit: <span class="font-semibold">{{ $workingDayLabels->implode(', ') }}</span>
+                    </div>
+                @endif
+                @if($unavailableDates->isNotEmpty())
+                    <div class="mt-3 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-xs text-red-700">
+                        <p class="font-semibold mb-1">Tanggal tidak tersedia:</p>
+                        <div class="flex flex-wrap gap-1.5">
+                            @foreach($unavailableDates as $date)
+                                <span class="inline-flex px-2 py-0.5 rounded-full bg-white/70 border border-red-100">
+                                    {{ $date->date->format('d M Y') }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
 
                 @if($isAtCapacity)
                     <div class="mt-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
@@ -326,8 +343,11 @@
                     </label>
                     <input type="date" id="deadline" name="deadline"
                            value="{{ old('deadline') }}"
-                           min="{{ now()->addDay()->format('Y-m-d') }}"
+                           min="{{ $minDeadline }}"
                            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('deadline') border-red-400 @enderror">
+                    <p class="text-xs text-slate-400 mt-1">
+                        Deadline minimal {{ \Illuminate\Support\Carbon::parse($minDeadline)->format('d M Y') }}{{ $workingDayLabels->isNotEmpty() ? ' dan harus jatuh pada hari kerja penjahit.' : '.' }}
+                    </p>
                     @error('deadline')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror

@@ -47,8 +47,19 @@ class CustomerOrderController extends Controller
         $activeOrdersCount = $tailor->activeTailorOrdersCount();
         $weeklyOrdersCount = $tailor->weeklyTailorOrdersCount();
         $isAtCapacity = $tailor->isAtOrderCapacity();
+        $estimatedDays = $tailor->tailorProfile?->estimated_processing_days;
+        $minDeadline = $estimatedDays ? now()->addDays($estimatedDays)->format('Y-m-d') : now()->addDay()->format('Y-m-d');
+        $workingDayLabels = collect($tailor->tailorProfile?->working_days ?? [])
+            ->map(fn($day) => \App\Models\TailorProfile::WORKING_DAY_LABELS[(int) $day] ?? null)
+            ->filter()
+            ->values();
+        $unavailableDates = $tailor->unavailableDates()
+            ->whereDate('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->limit(5)
+            ->get();
 
-        return view('customer.orders.create', compact('tailor', 'priceLists', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity'));
+        return view('customer.orders.create', compact('tailor', 'priceLists', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity', 'minDeadline', 'workingDayLabels', 'unavailableDates'));
     }
 
     /**
@@ -86,6 +97,38 @@ class CustomerOrderController extends Controller
             return back()
                 ->with('error', 'Penjahit sedang penuh dan belum dapat menerima pesanan baru.')
                 ->withInput();
+        }
+
+        if ($request->filled('deadline')) {
+            $deadline = Carbon::parse($request->deadline)->startOfDay();
+            $estimatedDays = $tailor->tailorProfile?->estimated_processing_days;
+
+            if ($estimatedDays && $deadline->lt(now()->addDays($estimatedDays)->startOfDay())) {
+                return back()
+                    ->withErrors(['deadline' => "Deadline minimal {$estimatedDays} hari dari hari ini sesuai estimasi pengerjaan penjahit."])
+                    ->withInput();
+            }
+
+            $workingDays = collect($tailor->tailorProfile?->working_days ?? [])
+                ->map(fn($day) => (int) $day)
+                ->all();
+
+            if (!empty($workingDays) && !in_array($deadline->dayOfWeek, $workingDays, true)) {
+                $labels = collect($workingDays)
+                    ->map(fn($day) => \App\Models\TailorProfile::WORKING_DAY_LABELS[$day] ?? null)
+                    ->filter()
+                    ->implode(', ');
+
+                return back()
+                    ->withErrors(['deadline' => "Deadline harus jatuh pada hari kerja penjahit: {$labels}."])
+                    ->withInput();
+            }
+
+            if ($tailor->unavailableDates()->whereDate('date', $deadline->toDateString())->exists()) {
+                return back()
+                    ->withErrors(['deadline' => 'Penjahit tidak tersedia pada tanggal deadline yang dipilih.'])
+                    ->withInput();
+            }
         }
 
         if (!$tailor->priceLists()->where('price_lists.id', $priceList->id)->exists()) {

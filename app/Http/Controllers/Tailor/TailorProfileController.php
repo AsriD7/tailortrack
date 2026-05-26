@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tailor;
 
 use App\Http\Controllers\Controller;
 use App\Models\PriceList;
+use App\Models\TailorUnavailableDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,10 +18,14 @@ class TailorProfileController extends Controller
         $user    = Auth::user();
         $profile = $user->tailorProfile;
         $priceLists = PriceList::orderBy('category')->orderBy('name')->get();
+        $unavailableDates = $user->unavailableDates()
+            ->whereDate('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->get();
 
         $user->load('priceLists');
 
-        return view('tailor.profile.edit', compact('user', 'profile', 'priceLists'));
+        return view('tailor.profile.edit', compact('user', 'profile', 'priceLists', 'unavailableDates'));
     }
 
     /**
@@ -39,6 +44,8 @@ class TailorProfileController extends Controller
             'max_active_orders' => 'nullable|integer|min:1|max:999',
             'max_weekly_orders' => 'nullable|integer|min:1|max:999',
             'estimated_processing_days' => 'nullable|integer|min:1|max:365',
+            'working_days'      => 'nullable|array',
+            'working_days.*'    => 'integer|min:0|max:6',
             'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'phone'            => 'nullable|string|max:20',
             'address'          => 'nullable|string|max:500',
@@ -65,6 +72,7 @@ class TailorProfileController extends Controller
             'max_active_orders' => $request->max_active_orders,
             'max_weekly_orders' => $request->max_weekly_orders,
             'estimated_processing_days' => $request->estimated_processing_days,
+            'working_days'      => $request->input('working_days', []),
         ];
 
         // Upload foto profil baru jika ada
@@ -82,5 +90,44 @@ class TailorProfileController extends Controller
         $user->priceLists()->sync($request->input('price_list_ids', []));
 
         return back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    /**
+     * Tambahkan tanggal libur khusus penjahit.
+     */
+    public function storeUnavailableDate(Request $request)
+    {
+        $validated = $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'reason' => 'nullable|string|max:255',
+        ], [
+            'date.required' => 'Tanggal libur wajib diisi.',
+            'date.after_or_equal' => 'Tanggal libur tidak boleh sebelum hari ini.',
+            'reason.max' => 'Alasan maksimal 255 karakter.',
+        ]);
+
+        TailorUnavailableDate::updateOrCreate(
+            [
+                'tailor_id' => Auth::id(),
+                'date' => $validated['date'],
+            ],
+            [
+                'reason' => $validated['reason'] ?? null,
+            ]
+        );
+
+        return back()->with('success', 'Tanggal tidak tersedia berhasil ditambahkan.');
+    }
+
+    /**
+     * Hapus tanggal libur khusus penjahit.
+     */
+    public function destroyUnavailableDate(TailorUnavailableDate $unavailableDate)
+    {
+        abort_if($unavailableDate->tailor_id !== Auth::id(), 403);
+
+        $unavailableDate->delete();
+
+        return back()->with('success', 'Tanggal tidak tersedia berhasil dihapus.');
     }
 }

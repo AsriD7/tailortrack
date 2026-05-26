@@ -215,6 +215,30 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Hari Kerja</label>
+                            @php
+                                $selectedWorkingDays = collect(old('working_days', [1, 2, 3, 4, 5, 6]))
+                                    ->map(fn($day) => (int) $day)
+                                    ->all();
+                            @endphp
+                            <div class="flex flex-wrap gap-2">
+                                @foreach(\App\Models\TailorProfile::WORKING_DAY_LABELS as $day => $label)
+                                    <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:border-indigo-300 hover:text-indigo-700 cursor-pointer">
+                                        <input type="checkbox" name="working_days[]" value="{{ $day }}"
+                                               class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                               {{ in_array($day, $selectedWorkingDays, true) ? 'checked' : '' }}>
+                                        {{ $label }}
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('working_days')
+                                <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                            @error('working_days.*')
+                                <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="sm:col-span-2">

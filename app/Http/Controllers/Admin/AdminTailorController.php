@@ -63,6 +63,8 @@ class AdminTailorController extends Controller
             'max_active_orders' => 'nullable|integer|min:1|max:999',
             'max_weekly_orders' => 'nullable|integer|min:1|max:999',
             'estimated_processing_days' => 'nullable|integer|min:1|max:365',
+            'working_days' => 'nullable|array',
+            'working_days.*' => 'integer|min:0|max:6',
             'price_list_ids' => 'nullable|array',
             'price_list_ids.*' => 'exists:price_lists,id',
         ], [
@@ -93,6 +95,7 @@ class AdminTailorController extends Controller
             'max_active_orders' => $request->max_active_orders,
             'max_weekly_orders' => $request->max_weekly_orders,
             'estimated_processing_days' => $request->estimated_processing_days,
+            'working_days' => $request->input('working_days', []),
             'is_verified'    => false,
             'is_available'   => true,
         ]);
@@ -147,6 +150,8 @@ class AdminTailorController extends Controller
             'max_active_orders' => 'nullable|integer|min:1|max:999',
             'max_weekly_orders' => 'nullable|integer|min:1|max:999',
             'estimated_processing_days' => 'nullable|integer|min:1|max:365',
+            'working_days' => 'nullable|array',
+            'working_days.*' => 'integer|min:0|max:6',
             'price_list_ids'  => 'nullable|array',
             'price_list_ids.*' => 'exists:price_lists,id',
         ], [
@@ -173,6 +178,7 @@ class AdminTailorController extends Controller
                 'max_active_orders' => $request->max_active_orders,
                 'max_weekly_orders' => $request->max_weekly_orders,
                 'estimated_processing_days' => $request->estimated_processing_days,
+                'working_days' => $request->input('working_days', []),
             ]
         );
 

@@ -346,6 +346,28 @@
                                 </div>
                             </div>
 
+                            @if($workingDayLabels->isNotEmpty())
+                                <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 mb-5">
+                                    <p class="text-[11px] text-indigo-500 font-medium mb-1">Hari Kerja</p>
+                                    <p class="text-xs text-indigo-700 font-semibold leading-relaxed">
+                                        {{ $workingDayLabels->implode(', ') }}
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if($unavailableDates->isNotEmpty())
+                                <div class="bg-red-50 border border-red-100 rounded-xl p-3 mb-5">
+                                    <p class="text-[11px] text-red-500 font-medium mb-2">Tanggal Tidak Tersedia</p>
+                                    <div class="flex flex-wrap gap-1.5">
+                                        @foreach($unavailableDates as $date)
+                                            <span class="inline-flex px-2 py-0.5 rounded-full bg-white/70 border border-red-100 text-[11px] font-semibold text-red-700">
+                                                {{ $date->date->format('d M Y') }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
                             @if($isAtCapacity)
                                 <div class="bg-red-50 border border-red-200 rounded-xl p-3 mb-5">
                                     <p class="text-xs text-red-700 leading-relaxed">

@@ -21,6 +21,7 @@ class TailorProfile extends Model
         'max_active_orders',
         'max_weekly_orders',
         'estimated_processing_days',
+        'working_days',
     ];
 
     /**
@@ -32,6 +33,17 @@ class TailorProfile extends Model
         'max_active_orders' => 'integer',
         'max_weekly_orders' => 'integer',
         'estimated_processing_days' => 'integer',
+        'working_days' => 'array',
+    ];
+
+    public const WORKING_DAY_LABELS = [
+        0 => 'Minggu',
+        1 => 'Senin',
+        2 => 'Selasa',
+        3 => 'Rabu',
+        4 => 'Kamis',
+        5 => 'Jumat',
+        6 => 'Sabtu',
     ];
 
     // ==========================================

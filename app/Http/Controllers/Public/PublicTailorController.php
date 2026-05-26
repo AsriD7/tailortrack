@@ -126,6 +126,15 @@ class PublicTailorController extends Controller
         $activeOrdersCount = $tailor->activeTailorOrdersCount();
         $weeklyOrdersCount = $tailor->weeklyTailorOrdersCount();
         $isAtCapacity = $tailor->isAtOrderCapacity();
+        $workingDayLabels = collect($tailor->tailorProfile?->working_days ?? [])
+            ->map(fn($day) => \App\Models\TailorProfile::WORKING_DAY_LABELS[(int) $day] ?? null)
+            ->filter()
+            ->values();
+        $unavailableDates = $tailor->unavailableDates()
+            ->whereDate('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->limit(5)
+            ->get();
         $ratingBreakdown = [];
         for ($i = 5; $i >= 1; $i--) {
             $count = $tailor->reviewsReceived()->where('rating', $i)->count();
@@ -135,6 +144,6 @@ class PublicTailorController extends Controller
             ];
         }
 
-        return view('public.tailors.show', compact('tailor', 'reviews', 'avgRating', 'reviewCount', 'ratingBreakdown', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity'));
+        return view('public.tailors.show', compact('tailor', 'reviews', 'avgRating', 'reviewCount', 'ratingBreakdown', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity', 'workingDayLabels', 'unavailableDates'));
     }
 }

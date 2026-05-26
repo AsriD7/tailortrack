@@ -190,6 +190,18 @@
                                 <p class="font-bold text-slate-700 mt-1">{{ $tailor->tailorProfile->estimated_processing_days ? $tailor->tailorProfile->estimated_processing_days . ' hari' : '-' }}</p>
                             </div>
                         </div>
+                        @if(!empty($tailor->tailorProfile->working_days))
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Hari Kerja</p>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($tailor->tailorProfile->working_days as $day)
+                                        <span class="inline-flex px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                                            {{ \App\Models\TailorProfile::WORKING_DAY_LABELS[(int) $day] ?? '-' }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endif

@@ -355,6 +355,35 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="mt-5">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Hari Kerja
+                        </label>
+                        @php
+                            $selectedWorkingDays = collect(old('working_days', $profile->working_days ?? [1, 2, 3, 4, 5, 6]))
+                                ->map(fn($day) => (int) $day)
+                                ->all();
+                        @endphp
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(\App\Models\TailorProfile::WORKING_DAY_LABELS as $day => $label)
+                                <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:border-indigo-300 hover:text-indigo-700 cursor-pointer">
+                                    <input type="checkbox"
+                                           name="working_days[]"
+                                           value="{{ $day }}"
+                                           class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                           {{ in_array($day, $selectedWorkingDays, true) ? 'checked' : '' }}>
+                                    {{ $label }}
+                                </label>
+                            @endforeach
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Deadline pesanan customer harus jatuh pada salah satu hari kerja ini.</p>
+                        @error('working_days')
+                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                        @error('working_days.*')
+                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 {{-- Services --}}
@@ -407,6 +436,73 @@
         </div>
 
     </form>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+            <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2zm5-7l4 4m0-4l-4 4"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-base font-semibold text-slate-800">Tanggal Tidak Tersedia</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Tanggal khusus libur/cuti di luar pola hari kerja mingguan.</p>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <form action="{{ route('tailor.profile.unavailable-dates.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-5">
+                @csrf
+                <div class="md:col-span-4">
+                    <label for="unavailable_date" class="block text-sm font-medium text-slate-700 mb-1.5">Tanggal</label>
+                    <input type="date" id="unavailable_date" name="date" min="{{ now()->format('Y-m-d') }}"
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('date') border-red-300 focus:ring-red-500 @enderror">
+                    @error('date')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="md:col-span-6">
+                    <label for="unavailable_reason" class="block text-sm font-medium text-slate-700 mb-1.5">Alasan</label>
+                    <input type="text" id="unavailable_reason" name="reason" value="{{ old('reason') }}"
+                           placeholder="Contoh: Libur keluarga, workshop tutup"
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('reason') border-red-300 focus:ring-red-500 @enderror">
+                    @error('reason')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="md:col-span-2 flex items-end">
+                    <button type="submit" class="w-full gradient-brand text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
+                        Tambah
+                    </button>
+                </div>
+            </form>
+
+            @if($unavailableDates->isEmpty())
+                <div class="rounded-xl bg-slate-50 border border-slate-100 px-4 py-6 text-center">
+                    <p class="text-sm text-slate-500">Belum ada tanggal tidak tersedia.</p>
+                </div>
+            @else
+                <div class="space-y-2">
+                    @foreach($unavailableDates as $date)
+                        <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-100 px-4 py-3">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">{{ $date->date->format('d M Y') }}</p>
+                                <p class="text-xs text-slate-500">{{ $date->reason ?: 'Tanpa alasan' }}</p>
+                            </div>
+                            <form action="{{ route('tailor.profile.unavailable-dates.destroy', $date) }}" method="POST"
+                                  onsubmit="return confirm('Hapus tanggal tidak tersedia ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-semibold hover:bg-red-100">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </div>
 </div>
 @endsection
 

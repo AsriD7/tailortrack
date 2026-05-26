@@ -90,6 +90,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Tanggal khusus saat penjahit tidak tersedia.
+     */
+    public function unavailableDates()
+    {
+        return $this->hasMany(TailorUnavailableDate::class, 'tailor_id');
+    }
+
+    /**
      * Riwayat tracking yang diupdate oleh user ini.
      */
     public function trackingHistories()

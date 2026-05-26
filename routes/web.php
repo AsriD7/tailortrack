@@ -86,6 +86,8 @@ Route::prefix('tailor')
         // Profil
         Route::get('/profile/edit', [TailorProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [TailorProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/unavailable-dates', [TailorProfileController::class, 'storeUnavailableDate'])->name('profile.unavailable-dates.store');
+        Route::delete('/profile/unavailable-dates/{unavailableDate}', [TailorProfileController::class, 'destroyUnavailableDate'])->name('profile.unavailable-dates.destroy');
 
         // Portfolio
         Route::resource('portfolios', TailorPortfolioController::class);
