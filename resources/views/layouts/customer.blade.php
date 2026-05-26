@@ -216,6 +216,11 @@
                                 </span>
                             @endif
                         </a>
+
+                        <a href="{{ route('customer.profile.edit') }}"
+                           class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.profile*') ? 'active' : '' }}">
+                            Profil Saya
+                        </a>
                     @endauth
 
                     {{-- Daftar Harga --}}
@@ -230,13 +235,13 @@
 
                     @auth
                         {{-- User avatar + name --}}
-                        <div class="hidden sm:flex items-center gap-3 pr-3 border-r border-gray-100">
+                        <a href="{{ route('customer.profile.edit') }}" class="hidden sm:flex items-center gap-3 pr-3 border-r border-gray-100 group">
                             <div class="w-9 h-9 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm ring-2 ring-indigo-100">
                                 {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                             </div>
 
                             <div class="text-left">
-                                <p class="text-sm font-semibold text-gray-800 leading-tight">
+                                <p class="text-sm font-semibold text-gray-800 group-hover:text-indigo-600 leading-tight transition-colors">
                                     {{ auth()->user()->name ?? 'User' }}
                                 </p>
 
@@ -248,7 +253,7 @@
                                     @endif
                                 </p>
                             </div>
-                        </div>
+                        </a>
 
                         {{-- Logout --}}
                         <form action="{{ route('logout') }}" method="POST">
@@ -323,6 +328,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
                         </svg>
                         Pesanan Saya
+                    </a>
+
+                    <a href="{{ route('customer.profile.edit') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.profile*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        Profil Saya
                     </a>
                 @endauth
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerOrderController;
 use App\Http\Controllers\Customer\CustomerPaymentController;
+use App\Http\Controllers\Customer\CustomerProfileController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\Public\PublicPriceListController;
@@ -51,6 +52,10 @@ Route::prefix('customer')
     ->middleware(['auth', 'customer'])
     ->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+
+        // Profil
+        Route::get('/profile/edit', [CustomerProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [CustomerProfileController::class, 'update'])->name('profile.update');
 
         // Order
         Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders.index');
