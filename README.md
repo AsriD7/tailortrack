@@ -1,58 +1,306 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<!-- Animated header using capsule-render -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=6366f1&height=200&section=header&text=TailorTrack&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Marketplace+Penjahit+Terpercaya+🧵&descAlignY=55&descAlign=50" width="100%"/>
 
-## About Laravel
+<!-- Typing SVG -->
+<a href="https://git.io/typing-svg">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&multiline=true&width=600&height=80&lines=✂️+Connecting+Customers+with+Tailors;👗+Custom+Fashion+Made+Easy;🧵+Jahit+Sesuai+Keinginanmu!" alt="Typing SVG" />
+</a>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<br/>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<!-- Badges -->
+[![Laravel](https://img.shields.io/badge/Laravel-13.8-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<br/>
 
-## Learning Laravel
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![GitHub branch](https://img.shields.io/badge/branch-senior-blueviolet?style=flat-square&logo=git)](https://github.com/AsriD7/tailortrack/tree/senior)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/AsriD7/tailortrack/pulls)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+</div>
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+<div align="center">
 
-## Agentic Development
+## 🌟 Apa itu TailorTrack?
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+</div>
 
-```bash
-composer require laravel/boost --dev
+**TailorTrack** adalah platform marketplace yang menghubungkan **pelanggan** dengan **penjahit berbakat** di seluruh Indonesia. Pesan baju custom impianmu, pantau proses jahit secara real-time, dan bayar dengan mudah — semuanya dalam satu platform! 🎉
 
-php artisan boost:install
+```
+🔍 Cari Penjahit  →  📋 Buat Order  →  💰 Bayar  →  ✅ Terima Jahitan!
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## ✨ Fitur Unggulan
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <h3>👗 Order Custom</h3>
+      Buat pesanan dengan detail ukuran, deskripsi, dan foto referensi. Penjahit konfirmasi harga sesuai kebutuhanmu.
+    </td>
+    <td align="center" width="33%">
+      <h3>📊 Tracking Real-time</h3>
+      Pantau status pesananmu dari <em>Menunggu Konfirmasi</em> hingga <em>Selesai</em> dengan riwayat lengkap.
+    </td>
+    <td align="center" width="33%">
+      <h3>💳 Sistem Pembayaran</h3>
+      Upload bukti pembayaran dan tunggu verifikasi admin. Aman dan transparan!
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <h3>🏪 Profil Penjahit</h3>
+      Lihat portofolio, spesialisasi, rating, dan pengalaman penjahit sebelum memesan.
+    </td>
+    <td align="center" width="33%">
+      <h3>⭐ Review & Rating</h3>
+      Berikan ulasan setelah pesanan selesai. Bantu pelanggan lain memilih penjahit terbaik!
+    </td>
+    <td align="center" width="33%">
+      <h3>🔐 Multi-Role System</h3>
+      Tiga peran berbeda: Customer, Penjahit, dan Admin — masing-masing dengan dashboard sendiri.
+    </td>
+  </tr>
+</table>
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🗺️ Alur Order
 
-## Security Vulnerabilities
+```mermaid
+flowchart LR
+    A[🙋 Customer\nBuat Order] --> B[✂️ Penjahit\nKonfirmasi Harga]
+    B --> C[💰 Customer\nUpload Bukti Bayar]
+    C --> D[🔍 Admin\nVerifikasi Payment]
+    D --> E[🧵 Penjahit\nMulai Jahit]
+    E --> F[✅ Selesai!\nCustomer Review]
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    style A fill:#3B82F6,color:#fff
+    style B fill:#8B5CF6,color:#fff
+    style C fill:#3B82F6,color:#fff
+    style D fill:#EF4444,color:#fff
+    style E fill:#8B5CF6,color:#fff
+    style F fill:#10B981,color:#fff
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 👥 Peran Pengguna
+
+<details>
+<summary><b>🙋 Customer (Pelanggan)</b> — klik untuk lihat detail</summary>
+<br/>
+
+| Fitur | Deskripsi |
+|-------|-----------|
+| 🔍 Cari Penjahit | Lihat daftar penjahit, profil, portofolio, dan rating |
+| 📋 Buat Order | Pesan custom dengan foto referensi & pilihan ukuran |
+| 💰 Bayar | Upload bukti pembayaran dengan mudah |
+| 📦 Tracking | Pantau status pesanan secara real-time |
+| ❌ Cancel Order | Batalkan pesanan saat masih menunggu konfirmasi |
+| ⭐ Review | Berikan rating & ulasan setelah pesanan selesai |
+
+</details>
+
+<details>
+<summary><b>✂️ Penjahit (Tailor)</b> — klik untuk lihat detail</summary>
+<br/>
+
+| Fitur | Deskripsi |
+|-------|-----------|
+| 🏪 Kelola Toko | Edit profil, spesialisasi, dan bio toko |
+| 🖼️ Portofolio | Showcase hasil karya terbaikmu |
+| 📬 Kelola Order | Terima, konfirmasi harga, dan update status |
+| 📊 Dashboard | Lihat statistik order dan pendapatan |
+
+</details>
+
+<details>
+<summary><b>🔑 Admin</b> — klik untuk lihat detail</summary>
+<br/>
+
+| Fitur | Deskripsi |
+|-------|-----------|
+| ✅ Verifikasi Penjahit | Setujui penjahit baru yang mendaftar |
+| 💳 Verifikasi Payment | Konfirmasi atau tolak bukti pembayaran |
+| 📋 Kelola Daftar Harga | Atur harga global untuk semua layanan |
+| 👥 Kelola Pengguna | Pantau dan kelola semua akun customer |
+| 📊 Laporan | Lihat semua order dan pembayaran di platform |
+
+</details>
+
+---
+
+## 🛠️ Tech Stack
+
+<div align="center">
+
+| Layer | Teknologi |
+|-------|-----------|
+| **Backend** | ![Laravel](https://img.shields.io/badge/Laravel_13.8-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![PHP](https://img.shields.io/badge/PHP_8.3+-777BB4?style=flat-square&logo=php&logoColor=white) |
+| **Frontend** | ![Blade](https://img.shields.io/badge/Blade_Templates-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white) |
+| **Build Tool** | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) |
+| **Database** | ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white) |
+| **Testing** | ![PHPUnit](https://img.shields.io/badge/PHPUnit_12-3776AB?style=flat-square&logo=php&logoColor=white) |
+
+</div>
+
+---
+
+## 🚀 Cara Menjalankan
+
+### Prasyarat
+
+Pastikan sudah terinstall:
+- **PHP** >= 8.3
+- **Composer**
+- **Node.js** >= 18 & npm
+
+### Instalasi
+
+```bash
+# 1. Clone repository
+git clone -b senior https://github.com/AsriD7/tailortrack.git
+cd tailortrack
+
+# 2. Install dependencies PHP
+composer install
+
+# 3. Salin file environment
+cp .env.example .env
+
+# 4. Generate application key
+php artisan key:generate
+
+# 5. Jalankan migrasi database
+php artisan migrate
+
+# 6. Install dependencies JavaScript
+npm install
+
+# 7. Build assets
+npm run build
+```
+
+### Jalankan Development Server
+
+```bash
+# Jalankan semua sekaligus (server + queue + logs + vite)
+composer run dev
+```
+
+Buka browser dan akses: **http://localhost:8000** 🎉
+
+### Seed Data (Opsional)
+
+```bash
+# Isi database dengan data contoh
+php artisan db:seed
+```
+
+---
+
+## 📁 Struktur Direktori
+
+```
+tailortrack/
+├── 📂 app/
+│   ├── 📂 Enums/              # OrderStatus, PaymentStatus, UserRole
+│   ├── 📂 Http/
+│   │   └── 📂 Controllers/
+│   │       ├── 📂 Admin/      # Controller admin panel
+│   │       ├── 📂 Auth/       # Login & Register
+│   │       ├── 📂 Customer/   # Dashboard customer
+│   │       ├── 📂 Public/     # Halaman publik
+│   │       └── 📂 Tailor/     # Dashboard penjahit
+│   └── 📂 Models/             # Eloquent Models
+├── 📂 database/
+│   ├── 📂 migrations/         # Skema database
+│   ├── 📂 factories/          # Factory untuk testing
+│   └── 📂 seeders/            # Data awal
+├── 📂 resources/views/        # Blade templates
+│   ├── 📂 admin/
+│   ├── 📂 customer/
+│   ├── 📂 tailor/
+│   └── 📂 public/
+└── 📂 routes/
+    └── 📄 web.php             # Semua routing
+```
+
+---
+
+## 🗃️ Database Schema
+
+```
+users ──────────────┬── tailor_profiles
+   │                │
+   ├── customer ────┤── orders ──── order_images
+   │                │      │
+   └── tailor ──────┘      ├── payments
+                           ├── tracking_histories
+                           └── reviews
+
+price_lists ─── orders
+portfolios  ─── tailor_profiles
+```
+
+---
+
+## 🧪 Menjalankan Test
+
+```bash
+composer test
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [x] ✅ Manajemen order & tracking
+- [x] ✅ Upload bukti pembayaran
+- [x] ✅ Sistem rating & review
+- [x] ✅ Portofolio penjahit
+- [ ] 🔔 Notifikasi email/push
+- [ ] 💳 Integrasi Midtrans / payment gateway
+- [ ] ☁️ Migrasi storage ke S3
+- [ ] 📱 REST API untuk mobile app
+- [ ] 🔐 Verifikasi email saat register
+
+---
+
+## 🤝 Kontribusi
+
+Kontribusi sangat diterima! Berikut caranya:
+
+1. **Fork** repository ini
+2. Buat branch fitur baru: `git checkout -b fitur/nama-fitur`
+3. Commit perubahanmu: `git commit -m 'Tambah fitur keren'`
+4. Push ke branch: `git push origin fitur/nama-fitur`
+5. Buat **Pull Request** 🚀
+
+---
+
+## 📜 Lisensi
+
+Didistribusikan di bawah lisensi **MIT**. Lihat [`LICENSE`](LICENSE) untuk informasi lebih lanjut.
+
+---
+
+<div align="center">
+
+Dibuat dengan ❤️ oleh [AsriD7](https://github.com/AsriD7)
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=6366f1&height=100&section=footer" width="100%"/>
+
+</div>
