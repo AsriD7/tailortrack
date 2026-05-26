@@ -543,5 +543,148 @@
 
     </div>{{-- end 2-col grid --}}
 
+    {{-- ================================================================
+         REVIEW SECTION (hanya tampil jika pesanan selesai)
+         ================================================================ --}}
+    @if($order->status === \App\Enums\OrderStatus::Selesai)
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100 flex items-center gap-3">
+            <div class="w-9 h-9 bg-yellow-50 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-base font-bold text-slate-800">Berikan Ulasan</h2>
+                <p class="text-xs text-slate-400 mt-0.5">Bagikan pengalaman Anda dengan penjahit ini</p>
+            </div>
+        </div>
+
+        <div class="p-6">
+            @if($order->review)
+                {{-- Ulasan sudah ada — tampilkan --}}
+                <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-5">
+                    <div class="flex items-start justify-between gap-4 mb-3">
+                        <div>
+                            <div class="flex items-center gap-1 mb-1">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="w-5 h-5 {{ $i <= $order->review->rating ? 'text-yellow-400' : 'text-slate-200' }}"
+                                         fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                @endfor
+                                <span class="ml-2 text-sm font-bold text-yellow-700">{{ $order->review->rating_label }}</span>
+                            </div>
+                            <p class="text-xs text-slate-400">
+                                Diulas pada {{ $order->review->created_at->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+                        {{-- Hapus ulasan --}}
+                        <form action="{{ route('customer.reviews.destroy', $order->review) }}" method="POST"
+                              onsubmit="return confirm('Hapus ulasan ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="text-xs text-red-400 hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded-lg transition-colors font-medium">
+                                Hapus
+                            </button>
+                        </form>
+                    </div>
+                    @if($order->review->comment)
+                        <div class="bg-white rounded-xl p-4 border border-yellow-100">
+                            <p class="text-sm text-slate-700 leading-relaxed">"{{ $order->review->comment }}"</p>
+                        </div>
+                    @else
+                        <p class="text-sm text-slate-400 italic">Tidak ada komentar tambahan.</p>
+                    @endif
+                </div>
+
+            @else
+                {{-- Form beri ulasan --}}
+                <form action="{{ route('customer.orders.review.store', $order) }}" method="POST" x-data="reviewForm()" @submit.prevent="submitForm">
+                    @csrf
+
+                    {{-- Bintang rating --}}
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-slate-700 mb-3">
+                            Rating Penjahit <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex items-center gap-2">
+                            @for($i = 1; $i <= 5; $i++)
+                            <button type="button"
+                                    @click="setRating({{ $i }})"
+                                    @mouseover="hovered = {{ $i }}"
+                                    @mouseleave="hovered = 0"
+                                    class="transition-transform hover:scale-110 focus:outline-none">
+                                <svg class="w-10 h-10 transition-colors"
+                                     :class="(hovered >= {{ $i }} || rating >= {{ $i }}) ? 'text-yellow-400' : 'text-slate-200'"
+                                     fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            </button>
+                            @endfor
+                            <span class="ml-3 text-sm font-semibold text-slate-500" x-text="ratingLabel"></span>
+                        </div>
+                        <input type="hidden" name="rating" :value="rating">
+                        @error('rating')
+                            <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Komentar --}}
+                    <div class="mb-6">
+                        <label for="comment" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                            Komentar <span class="text-slate-400 font-normal">(opsional)</span>
+                        </label>
+                        <textarea id="comment" name="comment" rows="3"
+                                  placeholder="Ceritakan pengalaman Anda dengan penjahit ini — kualitas jahitan, ketepatan waktu, pelayanan..."
+                                  maxlength="1000"
+                                  class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent resize-none transition-shadow @error('comment') border-red-400 @enderror">{{ old('comment') }}</textarea>
+                        <div class="flex justify-between mt-1">
+                            @error('comment')
+                                <p class="text-red-500 text-xs">{{ $message }}</p>
+                            @else
+                                <span></span>
+                            @enderror
+                            <p class="text-xs text-slate-400">Maks. 1000 karakter</p>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                            :disabled="rating === 0"
+                            :class="rating === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'"
+                            class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-md shadow-indigo-200">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        Kirim Ulasan
+                    </button>
+                </form>
+
+                @push('scripts')
+                <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+                <script>
+                    function reviewForm() {
+                        return {
+                            rating: {{ old('rating', 0) }},
+                            hovered: 0,
+                            get ratingLabel() {
+                                const labels = ['', 'Sangat Kurang', 'Kurang', 'Cukup', 'Puas', 'Sangat Puas'];
+                                return labels[this.hovered || this.rating] || 'Pilih rating';
+                            },
+                            setRating(val) { this.rating = val; },
+                            submitForm() {
+                                if (this.rating === 0) return;
+                                this.$el.submit();
+                            }
+                        }
+                    }
+                </script>
+                @endpush
+            @endif
+        </div>
+    </div>
+    @endif
+
 </div>{{-- end content wrapper --}}
 @endsection

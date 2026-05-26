@@ -103,6 +103,15 @@ class Order extends Model
         return $this->belongsTo(User::class, 'cancelled_by');
     }
 
+    /**
+     * Order ini memiliki satu ulasan dari customer.
+     */
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'order_id');
+    }
+
+
     // ==========================================
     // Method Helper
     // ==========================================

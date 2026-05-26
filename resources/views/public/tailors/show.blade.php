@@ -408,4 +408,120 @@
     </div>
 </section>
 
+{{-- ================================================================
+     REVIEWS SECTION
+     ================================================================ --}}
+<section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-800">Ulasan Pelanggan</h2>
+                <p class="text-slate-500 text-sm">{{ $reviewCount }} ulasan dari pelanggan</p>
+            </div>
+        </div>
+
+        @if($reviewCount > 0)
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+
+            {{-- Rating Summary --}}
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl border border-yellow-100 p-6 flex flex-col items-center justify-center text-center">
+                <p class="text-6xl font-extrabold text-yellow-500 leading-none mb-1">
+                    {{ number_format($avgRating, 1) }}
+                </p>
+                <div class="flex items-center justify-center gap-0.5 my-2">
+                    @for($i = 1; $i <= 5; $i++)
+                        @if($i <= round($avgRating))
+                            <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        @else
+                            <svg class="w-6 h-6 text-slate-200" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        @endif
+                    @endfor
+                </div>
+                <p class="text-slate-500 text-sm">dari {{ $reviewCount }} ulasan</p>
+
+                {{-- Rating breakdown bars --}}
+                <div class="w-full mt-4 space-y-1.5">
+                    @foreach($ratingBreakdown as $star => $data)
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="text-slate-500 w-3 text-right">{{ $star }}</span>
+                        <svg class="w-3 h-3 text-yellow-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <div class="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-yellow-400 h-2 rounded-full transition-all"
+                                 style="width: {{ $data['percent'] }}%"></div>
+                        </div>
+                        <span class="text-slate-400 w-6 text-left">{{ $data['count'] }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Review List --}}
+            <div class="lg:col-span-2 space-y-4">
+                @foreach($reviews as $review)
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                                {{ strtoupper(substr($review->customer->name ?? 'C', 0, 1)) }}
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-800 text-sm">{{ $review->customer->name ?? 'Pelanggan' }}</p>
+                                <p class="text-slate-400 text-xs">{{ $review->created_at->diffForHumans() }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-0.5 shrink-0">
+                            @for($i = 1; $i <= 5; $i++)
+                                <svg class="w-4 h-4 {{ $i <= $review->rating ? 'text-yellow-400' : 'text-slate-200' }}"
+                                     fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            @endfor
+                            <span class="ml-1.5 text-xs font-semibold text-yellow-600">{{ $review->rating_label }}</span>
+                        </div>
+                    </div>
+                    @if($review->comment)
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-sm text-slate-700 leading-relaxed">"{{ $review->comment }}"</p>
+                        </div>
+                    @else
+                        <p class="text-sm text-slate-400 italic">Tidak ada komentar.</p>
+                    @endif
+                </div>
+                @endforeach
+
+                {{-- Pagination --}}
+                @if($reviews->hasPages())
+                <div class="pt-2">{{ $reviews->links() }}</div>
+                @endif
+            </div>
+
+        </div>
+        @else
+        {{-- No reviews yet --}}
+        <div class="bg-slate-50 rounded-2xl border border-slate-100 p-12 text-center">
+            <div class="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700 mb-1">Belum ada ulasan</h3>
+            <p class="text-slate-400 text-sm max-w-xs mx-auto">Jadilah yang pertama memberikan ulasan setelah memesan dari penjahit ini!</p>
+        </div>
+        @endif
+
+    </div>
+</section>
+
 @endsection

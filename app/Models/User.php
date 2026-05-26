@@ -86,6 +86,39 @@ class User extends Authenticatable
         return $this->hasMany(TrackingHistory::class, 'updated_by');
     }
 
+    /**
+     * Ulasan yang diberikan oleh customer ini.
+     */
+    public function reviewsGiven()
+    {
+        return $this->hasMany(Review::class, 'customer_id');
+    }
+
+    /**
+     * Ulasan yang diterima oleh penjahit ini.
+     */
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'tailor_id');
+    }
+
+    /**
+     * Rata-rata rating penjahit ini.
+     */
+    public function getAvgRatingAttribute(): ?float
+    {
+        $avg = $this->reviewsReceived()->avg('rating');
+        return $avg ? round($avg, 1) : null;
+    }
+
+    /**
+     * Jumlah ulasan penjahit ini.
+     */
+    public function getReviewCountAttribute(): int
+    {
+        return $this->reviewsReceived()->count();
+    }
+
     // ==========================================
     // Method Helper Role
     // ==========================================

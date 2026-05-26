@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerOrderController;
 use App\Http\Controllers\Customer\CustomerPaymentController;
+use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\Public\PublicPriceListController;
 use App\Http\Controllers\Public\PublicTailorController;
@@ -60,6 +61,10 @@ Route::prefix('customer')
 
         // Payment
         Route::post('/orders/{order}/payment', [CustomerPaymentController::class, 'store'])->name('orders.payment');
+
+        // Review
+        Route::post('/orders/{order}/review', [ReviewController::class, 'store'])->name('orders.review.store');
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 
 // =============================================
