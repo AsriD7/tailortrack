@@ -113,7 +113,10 @@ class PublicTailorController extends Controller
             'Penjahit tidak ditemukan.'
         );
 
-        $tailor->load(['tailorProfile', 'portfolios']);
+        $tailor->load([
+            'tailorProfile',
+            'portfolios' => fn($q) => $q->orderByDesc('is_featured')->latest(),
+        ]);
 
         // Muat ulasan terbaru beserta nama customer
         $reviews = $tailor->reviewsReceived()

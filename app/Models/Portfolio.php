@@ -13,8 +13,50 @@ class Portfolio extends Model
         'tailor_id',
         'title',
         'category',
+        'client_type',
+        'price_range',
+        'completed_at',
+        'is_featured',
         'image',
         'description',
+    ];
+
+    /**
+     * Cast kolom ke tipe data yang sesuai.
+     */
+    protected $casts = [
+        'completed_at' => 'date',
+        'is_featured' => 'boolean',
+    ];
+
+    /**
+     * Kategori umum untuk portfolio penjahit.
+     */
+    public const CATEGORY_OPTIONS = [
+        'Atasan',
+        'Bawahan',
+        'Dress & Gaun',
+        'Kebaya',
+        'Jas & Setelan',
+        'Seragam',
+        'Almamater',
+        'Batik',
+        'Pakaian Anak',
+        'Permak',
+        'Lainnya',
+    ];
+
+    /**
+     * Tipe pelanggan/proyek untuk memberi konteks pada karya.
+     */
+    public const CLIENT_TYPE_OPTIONS = [
+        'Pribadi',
+        'Wisuda',
+        'Pernikahan',
+        'Kantor',
+        'Sekolah / Kampus',
+        'Komunitas',
+        'Lainnya',
     ];
 
     // ==========================================

@@ -263,28 +263,52 @@
                     </div>
 
                     @if($tailor->portfolios->isNotEmpty())
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             @foreach($tailor->portfolios as $portfolio)
-                            <div class="group relative rounded-xl overflow-hidden bg-slate-100 aspect-square">
-                                @if($portfolio->image)
-                                    <img src="{{ Storage::url($portfolio->image) }}"
-                                         alt="{{ $portfolio->title }}"
-                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                @else
-                                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
-                                        <svg class="w-10 h-10 mb-1" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                        <span class="text-xs">No image</span>
-                                    </div>
-                                @endif
-
-                                {{-- Hover overlay --}}
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-3">
-                                    <p class="text-white text-xs font-semibold line-clamp-1">{{ $portfolio->title }}</p>
-                                    @if($portfolio->category)
-                                        <p class="text-white/70 text-[10px] mt-0.5">{{ $portfolio->category }}</p>
+                            <div class="group rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                                <a href="{{ $portfolio->imageUrl }}" target="_blank" rel="noopener" class="block relative aspect-[4/3] overflow-hidden bg-slate-100">
+                                    @if($portfolio->image)
+                                        <img src="{{ $portfolio->imageUrl }}"
+                                             alt="{{ $portfolio->title }}"
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    @else
+                                        <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
+                                            <svg class="w-10 h-10 mb-1" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            <span class="text-xs">No image</span>
+                                        </div>
                                     @endif
+
+                                    @if($portfolio->is_featured)
+                                        <span class="absolute top-3 left-3 inline-flex px-2.5 py-1 rounded-full bg-amber-400 text-amber-950 text-xs font-bold shadow-sm">
+                                            Unggulan
+                                        </span>
+                                    @endif
+                                </a>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <h3 class="font-bold text-slate-800 text-sm leading-snug">{{ $portfolio->title }}</h3>
+                                        @if($portfolio->category)
+                                            <span class="shrink-0 inline-flex px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-semibold">
+                                                {{ $portfolio->category }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    @if($portfolio->description)
+                                        <p class="mt-2 text-xs text-slate-500 leading-relaxed line-clamp-2">{{ $portfolio->description }}</p>
+                                    @endif
+                                    <div class="mt-3 flex flex-wrap gap-1.5">
+                                        @if($portfolio->client_type)
+                                            <span class="inline-flex px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-semibold">{{ $portfolio->client_type }}</span>
+                                        @endif
+                                        @if($portfolio->price_range)
+                                            <span class="inline-flex px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-semibold">{{ $portfolio->price_range }}</span>
+                                        @endif
+                                        @if($portfolio->completed_at)
+                                            <span class="inline-flex px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-semibold">{{ $portfolio->completed_at->format('M Y') }}</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             @endforeach

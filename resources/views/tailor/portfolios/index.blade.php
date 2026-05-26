@@ -62,6 +62,48 @@
         </div>
     @endif
 
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Karya</p>
+            <p class="text-2xl font-extrabold text-slate-800 mt-1">{{ $stats['total'] ?? 0 }}</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Karya Unggulan</p>
+            <p class="text-2xl font-extrabold text-indigo-700 mt-1">{{ $stats['featured'] ?? 0 }}</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Kategori</p>
+            <p class="text-2xl font-extrabold text-slate-800 mt-1">{{ $stats['categories'] ?? 0 }}</p>
+        </div>
+    </div>
+
+    <form method="GET" action="{{ route('tailor.portfolios.index') }}" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+            <div class="md:col-span-5">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Cari judul, kategori, atau deskripsi..."
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            </div>
+            <div class="md:col-span-4">
+                <select name="category"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <option value="">Semua kategori</option>
+                    @foreach($categoryOptions as $category)
+                        <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>{{ $category }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <label class="md:col-span-2 inline-flex items-center gap-2 px-3 py-2.5 rounded-lg border border-slate-200 text-sm font-semibold text-slate-600">
+                <input type="checkbox" name="featured" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" {{ request()->boolean('featured') ? 'checked' : '' }}>
+                Unggulan
+            </label>
+            <button type="submit"
+                    class="md:col-span-1 inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors">
+                Cari
+            </button>
+        </div>
+    </form>
+
     @if($portfolios->count() > 0)
         {{-- Portfolio Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -90,6 +132,13 @@
                                 </span>
                             </div>
                         @endif
+                        @if($portfolio->is_featured)
+                            <div class="absolute top-3 right-3">
+                                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-400 text-amber-950 shadow-sm">
+                                    Unggulan
+                                </span>
+                            </div>
+                        @endif
                     </div>
 
                     {{-- Portfolio Info --}}
@@ -99,6 +148,18 @@
                         @if($portfolio->description)
                             <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ $portfolio->description }}</p>
                         @endif
+
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            @if($portfolio->client_type)
+                                <span class="inline-flex px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-semibold">{{ $portfolio->client_type }}</span>
+                            @endif
+                            @if($portfolio->price_range)
+                                <span class="inline-flex px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-semibold">{{ $portfolio->price_range }}</span>
+                            @endif
+                            @if($portfolio->completed_at)
+                                <span class="inline-flex px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-semibold">{{ $portfolio->completed_at->format('M Y') }}</span>
+                            @endif
+                        </div>
 
                         <div class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100">
                             <a href="{{ route('tailor.portfolios.edit', $portfolio) }}"

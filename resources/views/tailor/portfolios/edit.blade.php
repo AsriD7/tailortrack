@@ -172,13 +172,69 @@
                 <select id="category" name="category"
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('category') border-red-300 focus:ring-red-500 @enderror">
                     <option value="">-- Pilih Kategori --</option>
-                    @foreach(['Kebaya', 'Gaun Pengantin', 'Jas & Setelan', 'Seragam', 'Pakaian Kasual', 'Batik', 'Pakaian Anak', 'Lainnya'] as $cat)
+                    @foreach($categoryOptions as $cat)
                         <option value="{{ $cat }}" {{ old('category', $portfolio->category) === $cat ? 'selected' : '' }}>{{ $cat }}</option>
                     @endforeach
                 </select>
                 @error('category')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="client_type" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        Tipe Proyek
+                    </label>
+                    <select id="client_type" name="client_type"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('client_type') border-red-300 focus:ring-red-500 @enderror">
+                        <option value="">-- Pilih Tipe --</option>
+                        @foreach($clientTypeOptions as $type)
+                            <option value="{{ $type }}" {{ old('client_type', $portfolio->client_type) === $type ? 'selected' : '' }}>{{ $type }}</option>
+                        @endforeach
+                    </select>
+                    @error('client_type')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="price_range" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        Kisaran Harga
+                    </label>
+                    <input type="text" id="price_range" name="price_range"
+                           value="{{ old('price_range', $portfolio->price_range) }}"
+                           placeholder="Contoh: Rp 250.000 - Rp 500.000"
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('price_range') border-red-300 focus:ring-red-500 @enderror">
+                    @error('price_range')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="completed_at" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        Tanggal Selesai
+                    </label>
+                    <input type="date" id="completed_at" name="completed_at"
+                           value="{{ old('completed_at', $portfolio->completed_at?->format('Y-m-d')) }}"
+                           max="{{ now()->format('Y-m-d') }}"
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('completed_at') border-red-300 focus:ring-red-500 @enderror">
+                    @error('completed_at')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 bg-slate-50">
+                    <input type="checkbox" name="is_featured" value="1"
+                           class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                           {{ old('is_featured', $portfolio->is_featured) ? 'checked' : '' }}>
+                    <span>
+                        <span class="block text-sm font-semibold text-slate-700">Jadikan karya unggulan</span>
+                        <span class="block text-xs text-slate-500 mt-0.5">Ditampilkan lebih dulu di profil publik.</span>
+                    </span>
+                </label>
             </div>
 
             {{-- Description --}}

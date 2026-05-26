@@ -374,8 +374,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
-                    Foto Referensi
-                    <span class="ml-auto text-xs font-normal text-slate-400 normal-case">Maks. 5 foto</span>
+                    Referensi Desain
+                    <span id="imageCounter" class="ml-auto text-xs font-normal text-slate-400 normal-case">Maks. 5 foto</span>
                 </h3>
 
                 {{-- Drop Zone --}}
@@ -387,13 +387,12 @@
                                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                         </svg>
                         <div>
-                            <p class="text-sm font-medium text-slate-600 group-hover:text-indigo-700">Klik untuk unggah foto</p>
-                            <p class="text-xs text-slate-400 mt-0.5">PNG, JPG, JPEG &mdash; maks. 2MB per foto</p>
+                            <p class="text-sm font-medium text-slate-600 group-hover:text-indigo-700">Klik untuk unggah referensi desain</p>
+                            <p class="text-xs text-slate-400 mt-0.5">PNG, JPG, JPEG, WEBP - maks. 2MB per foto</p>
                         </div>
                     </div>
                     <input type="file" id="images" name="images[]"
-                           class="hidden" multiple accept="image/png,image/jpeg,image/jpg"
-                           max="5">
+                           class="hidden" multiple accept="image/png,image/jpeg,image/jpg,image/webp">
                 </label>
 
                 @error('images')
@@ -402,6 +401,10 @@
                 @error('images.*')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
+
+                <p class="text-xs text-slate-500 mt-3">
+                    Gunakan foto contoh model, warna, potongan, atau detail jahitan agar penjahit lebih mudah memahami pesanan.
+                </p>
 
                 {{-- Image Previews --}}
                 <div id="imagePreviewGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4 hidden"></div>
@@ -522,6 +525,7 @@
     const qtyPlus         = document.getElementById('qtyPlus');
     const imagesInput     = document.getElementById('images');
     const previewGrid     = document.getElementById('imagePreviewGrid');
+    const imageCounter    = document.getElementById('imageCounter');
     const serviceCategoryInput = document.getElementById('service_category');
     const emptyCategoryMessage = document.getElementById('emptyCategoryMessage');
 
@@ -686,6 +690,15 @@
     imagesInput.addEventListener('change', function () {
         previewGrid.innerHTML = '';
         const files = Array.from(this.files).slice(0, 5);
+        const dataTransfer = new DataTransfer();
+        files.forEach(function (file) {
+            dataTransfer.items.add(file);
+        });
+        this.files = dataTransfer.files;
+
+        if (imageCounter) {
+            imageCounter.textContent = files.length > 0 ? files.length + ' / 5 foto' : 'Maks. 5 foto';
+        }
 
         if (files.length === 0) {
             previewGrid.classList.add('hidden');
