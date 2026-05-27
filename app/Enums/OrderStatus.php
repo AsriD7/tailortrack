@@ -67,4 +67,43 @@ enum OrderStatus: string
             self::MenungguKonfirmasi,
         ];
     }
+
+    /**
+     * Status progres yang dikelola langsung oleh penjahit setelah payment diverifikasi admin.
+     */
+    public static function tailorProgressStatuses(): array
+    {
+        return [
+            self::Diproses,
+            self::Finishing,
+            self::SiapDiambil,
+            self::Selesai,
+        ];
+    }
+
+    /**
+     * Status lanjutan yang boleh dipilih penjahit dari status saat ini.
+     */
+    public function availableTailorProgressTargets(): array
+    {
+        $progress = self::tailorProgressStatuses();
+        $currentIndex = array_search($this, $progress, true);
+
+        if ($currentIndex === false || $this === self::Selesai) {
+            return [];
+        }
+
+        return array_slice($progress, $currentIndex + 1);
+    }
+
+    public function defaultTrackingDescription(): string
+    {
+        return match($this) {
+            self::Diproses => 'Pesanan mulai diproses oleh penjahit.',
+            self::Finishing => 'Pesanan masuk tahap finishing.',
+            self::SiapDiambil => 'Pesanan sudah siap diambil oleh customer.',
+            self::Selesai => 'Pesanan telah selesai dikerjakan oleh penjahit.',
+            default => "Status pesanan diperbarui menjadi {$this->label()}.",
+        };
+    }
 }

@@ -12,6 +12,11 @@ class Payment extends Model
      */
     protected $fillable = [
         'order_id',
+        'payment_type',
+        'amount',
+        'bank_name',
+        'bank_account_number',
+        'bank_account_name',
         'payment_proof',
         'payment_date',
         'status',
@@ -22,6 +27,7 @@ class Payment extends Model
      */
     protected $casts = [
         'status'       => PaymentStatus::class,
+        'amount'       => 'decimal:2',
         'payment_date' => 'date',
     ];
 
@@ -47,5 +53,19 @@ class Payment extends Model
     public function getPaymentProofUrlAttribute(): string
     {
         return asset('storage/' . $this->payment_proof);
+    }
+
+    public function getPaymentTypeLabelAttribute(): string
+    {
+        return $this->payment_type === 'dp' ? 'DP / Panjar' : 'Bayar Full';
+    }
+
+    public function formattedAmount(): string
+    {
+        if ($this->amount === null) {
+            return '-';
+        }
+
+        return 'Rp ' . number_format((float) $this->amount, 0, ',', '.');
     }
 }

@@ -78,17 +78,39 @@
             </div>
 
             {{-- Harga --}}
-            <div class="mt-5 pt-5 border-t border-slate-100 flex items-center justify-between">
+            <div class="mt-5 pt-5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <p class="text-xs text-slate-400 mb-1">Jumlah yang Harus Dibayar</p>
-                    <p class="text-2xl font-bold text-slate-800">Rp {{ number_format($payment->order->total_price ?? $payment->order->estimated_price ?? 0, 0, ',', '.') }}</p>
+                    <p class="text-xs text-slate-400 mb-1">Jenis Pembayaran</p>
+                    <p class="font-bold text-slate-800">{{ $payment->payment_type_label }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 mb-1">Nominal Transfer</p>
+                    <p class="text-2xl font-bold text-slate-800">{{ $payment->formattedAmount() }}</p>
                 </div>
                 @if($payment->payment_date)
-                <div class="text-right">
+                <div class="sm:text-right">
                     <p class="text-xs text-slate-400 mb-1">Tanggal Pembayaran</p>
                     <p class="font-semibold text-slate-700">{{ $payment->payment_date->format('d M Y') }}</p>
                 </div>
                 @endif
+            </div>
+
+            <div class="mt-5 bg-slate-50 rounded-xl p-4">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Rekening Tujuan</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                    <div>
+                        <p class="text-slate-400 text-xs">Bank</p>
+                        <p class="font-semibold text-slate-700">{{ $payment->bank_name ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs">No. Rekening</p>
+                        <p class="font-mono font-semibold text-slate-700">{{ $payment->bank_account_number ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs">Atas Nama</p>
+                        <p class="font-semibold text-slate-700">{{ $payment->bank_account_name ?? '-' }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -152,7 +174,7 @@
                     <p class="text-xs text-emerald-600">Bukti pembayaran valid</p>
                 </div>
             </div>
-            <p class="text-sm text-emerald-700 mb-4">Dengan menekan tombol ini, pesanan akan langsung diproses oleh penjahit.</p>
+            <p class="text-sm text-emerald-700 mb-4">Dengan menekan tombol ini, pembayaran {{ strtolower($payment->payment_type_label) }} akan diverifikasi dan pesanan masuk ke proses penjahit.</p>
             <form action="{{ route('admin.payments.verify', $payment) }}" method="POST" onsubmit="return confirm('Verifikasi pembayaran ini?')">
                 @csrf @method('PATCH')
                 <button type="submit" class="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-bold hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2">
@@ -204,6 +226,14 @@
 
         {{-- Info singkat --}}
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-sm space-y-2">
+            <div class="flex justify-between">
+                <span class="text-slate-400">Pembayaran</span>
+                <span class="font-medium text-slate-700">{{ $payment->payment_type_label }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Nominal</span>
+                <span class="font-medium text-slate-700">{{ $payment->formattedAmount() }}</span>
+            </div>
             <div class="flex justify-between">
                 <span class="text-slate-400">Upload pada</span>
                 <span class="font-medium text-slate-700">{{ $payment->created_at->format('d M Y H:i') }}</span>

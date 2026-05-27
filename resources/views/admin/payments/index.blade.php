@@ -35,8 +35,13 @@
                 <option value="{{ $status->value }}" {{ request('status') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
             @endforeach
         </select>
+        <select name="payment_type" class="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+            <option value="">Semua Jenis</option>
+            <option value="full" {{ request('payment_type') === 'full' ? 'selected' : '' }}>Bayar Full</option>
+            <option value="dp" {{ request('payment_type') === 'dp' ? 'selected' : '' }}>DP / Panjar</option>
+        </select>
         <button type="submit" class="gradient-brand text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">Filter</button>
-        @if(request()->has('status'))
+        @if(request()->hasAny(['status', 'payment_type']))
             <a href="{{ route('admin.payments.index') }}" class="text-sm text-slate-500 hover:text-slate-700">Reset</a>
         @endif
     </form>
@@ -50,7 +55,8 @@
                     <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Kode Order</th>
                     <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Customer</th>
                     <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Penjahit</th>
-                    <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Bayar</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Jenis</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Nominal Bayar</th>
                     <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Tgl Bayar</th>
                     <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
                     <th class="px-5 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide text-right">Aksi</th>
@@ -64,9 +70,14 @@
                     </td>
                     <td class="px-5 py-3.5 font-medium text-slate-700">{{ $payment->order->customer->name ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-slate-600">{{ $payment->order->tailor->tailorProfile->shop_name ?? $payment->order->tailor->name ?? '-' }}</td>
+                    <td class="px-5 py-3.5">
+                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $payment->payment_type === 'dp' ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700' }}">
+                            {{ $payment->payment_type_label }}
+                        </span>
+                    </td>
                     <td class="px-5 py-3.5 font-semibold text-slate-800">
-                        @if($payment->order->total_price)
-                            Rp {{ number_format($payment->order->total_price, 0, ',', '.') }}
+                        @if($payment->amount)
+                            {{ $payment->formattedAmount() }}
                         @else
                             <span class="text-slate-400">-</span>
                         @endif
@@ -83,7 +94,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-5 py-16 text-center">
+                    <td colspan="8" class="px-5 py-16 text-center">
                         <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
                             <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                         </div>

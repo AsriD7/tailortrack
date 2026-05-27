@@ -155,9 +155,19 @@
                 <a href="{{ $order->payment->paymentProofUrl }}" target="_blank">
                     <img src="{{ $order->payment->paymentProofUrl }}" alt="Bukti Bayar" class="w-32 h-32 object-cover rounded-xl border border-slate-200 hover:opacity-80 transition-opacity">
                 </a>
-                <div>
+                <div class="flex-1">
                     <p class="text-sm text-slate-500 mb-1">Status Pembayaran</p>
                     <span class="inline-flex px-3 py-1 rounded-full text-sm font-semibold {{ $order->payment->status->badgeColor() }}">{{ $order->payment->status->label() }}</span>
+                    <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                        <div class="rounded-lg bg-slate-50 px-3 py-2">
+                            <p class="text-xs text-slate-400">Jenis</p>
+                            <p class="font-semibold text-slate-700">{{ $order->payment->payment_type_label }}</p>
+                        </div>
+                        <div class="rounded-lg bg-slate-50 px-3 py-2">
+                            <p class="text-xs text-slate-400">Nominal</p>
+                            <p class="font-semibold text-slate-700">{{ $order->payment->formattedAmount() }}</p>
+                        </div>
+                    </div>
                     @if($order->payment->payment_date)
                     <p class="mt-2 text-sm text-slate-500">Tanggal: {{ $order->payment->payment_date->format('d M Y') }}</p>
                     @endif

@@ -411,17 +411,90 @@
                         </div>
                     </div>
 
-                    @if($order->total_price)
-                        <div class="bg-orange-50 border border-orange-100 rounded-xl p-3 mb-4">
-                            <p class="text-xs text-orange-700">Jumlah yang harus dibayar:</p>
-                            <p class="text-lg font-bold text-orange-800 mt-0.5">
-                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                            </p>
-                        </div>
-                    @endif
+                    @php
+                        $banks = config('payments.banks', []);
+                        $defaultBank = old('bank_key', config('payments.default_bank', array_key_first($banks)));
+                        $dpPercentage = max(1, min(100, (int) config('payments.dp_percentage', 50)));
+                        $totalPayment = (float) $order->total_price;
+                        $dpPayment = round($totalPayment * ($dpPercentage / 100));
+                    @endphp
+
+                    <div class="bg-orange-50 border border-orange-100 rounded-xl p-3 mb-4">
+                        <p class="text-xs text-orange-700">Total harga final:</p>
+                        <p class="text-lg font-bold text-orange-800 mt-0.5">
+                            Rp {{ number_format($totalPayment, 0, ',', '.') }}
+                        </p>
+                    </div>
 
                     <form action="{{ route('customer.orders.payment', $order) }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
+                        {{-- Bank Account --}}
+                        <div class="mb-4" data-bank-selector>
+                            <label for="bank_key" class="block text-sm font-semibold text-slate-700 mb-2">
+                                Pilih Rekening Tujuan <span class="text-red-500">*</span>
+                            </label>
+                            <select id="bank_key" name="bank_key"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent @error('bank_key') border-red-400 @enderror"
+                                    data-bank-select>
+                                @foreach($banks as $key => $bank)
+                                    <option value="{{ $key }}" {{ $defaultBank === $key ? 'selected' : '' }}>
+                                        {{ $bank['name'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('bank_key')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+
+                            <div class="mt-3">
+                                @foreach($banks as $key => $bank)
+                                    <div data-bank-card="{{ $key }}" class="{{ $defaultBank === $key ? '' : 'hidden' }} rounded-xl border border-orange-100 bg-orange-50 p-4">
+                                        <p class="text-xs font-semibold text-orange-700 uppercase tracking-wide mb-3">Transfer ke rekening</p>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between gap-3">
+                                                <span class="text-orange-700/70">Bank</span>
+                                                <span class="font-semibold text-orange-900 text-right">{{ $bank['name'] }}</span>
+                                            </div>
+                                            <div class="flex justify-between gap-3">
+                                                <span class="text-orange-700/70">No. Rekening</span>
+                                                <span class="font-mono font-bold text-orange-900 text-right break-all">{{ $bank['account_number'] }}</span>
+                                            </div>
+                                            <div class="flex justify-between gap-3">
+                                                <span class="text-orange-700/70">Atas Nama</span>
+                                                <span class="font-semibold text-orange-900 text-right">{{ $bank['account_name'] }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        {{-- Payment Type --}}
+                        <div class="mb-4">
+                            <p class="block text-sm font-semibold text-slate-700 mb-2">
+                                Pilihan Pembayaran <span class="text-red-500">*</span>
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <label class="flex items-start gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:border-orange-300 hover:bg-orange-50 transition-colors">
+                                    <input type="radio" name="payment_type" value="full" class="mt-1 text-orange-500 focus:ring-orange-400" {{ old('payment_type', 'full') === 'full' ? 'checked' : '' }}>
+                                    <span>
+                                        <span class="block text-sm font-bold text-slate-800">Bayar Full</span>
+                                        <span class="block text-xs text-slate-500 mt-0.5">Rp {{ number_format($totalPayment, 0, ',', '.') }}</span>
+                                    </span>
+                                </label>
+                                <label class="flex items-start gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:border-orange-300 hover:bg-orange-50 transition-colors">
+                                    <input type="radio" name="payment_type" value="dp" class="mt-1 text-orange-500 focus:ring-orange-400" {{ old('payment_type') === 'dp' ? 'checked' : '' }}>
+                                    <span>
+                                        <span class="block text-sm font-bold text-slate-800">DP / Panjar {{ $dpPercentage }}%</span>
+                                        <span class="block text-xs text-slate-500 mt-0.5">Rp {{ number_format($dpPayment, 0, ',', '.') }}</span>
+                                    </span>
+                                </label>
+                            </div>
+                            @error('payment_type')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                         {{-- Payment Proof Upload --}}
                         <div class="mb-4">
@@ -437,8 +510,22 @@
                                 <p class="text-xs font-medium text-orange-600">Klik untuk unggah</p>
                                 <p class="text-xs text-orange-400 mt-0.5">PNG, JPG – maks. 2MB</p>
                                 <input type="file" id="payment_proof" name="payment_proof"
-                                       class="hidden" accept="image/png,image/jpeg,image/jpg,application/pdf" required>
+                                       class="hidden" accept="image/png,image/jpeg,image/jpg" required data-payment-proof-input>
                             </label>
+                            <div class="hidden mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3" data-payment-proof-preview>
+                                <p class="text-xs text-slate-400 mb-1">File dipilih</p>
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-sm font-semibold text-slate-700 truncate" data-payment-proof-name></p>
+                                    <a href="#" target="_blank" rel="noopener"
+                                       class="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 hover:text-indigo-900"
+                                       data-payment-proof-link>
+                                        Lihat preview
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                             @error('payment_proof')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -691,3 +778,51 @@
 
 </div>{{-- end content wrapper --}}
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-bank-selector]').forEach((wrapper) => {
+            const select = wrapper.querySelector('[data-bank-select]');
+            const cards = wrapper.querySelectorAll('[data-bank-card]');
+
+            const syncBankCard = () => {
+                cards.forEach((card) => {
+                    card.classList.toggle('hidden', card.dataset.bankCard !== select.value);
+                });
+            };
+
+            select.addEventListener('change', syncBankCard);
+            syncBankCard();
+        });
+
+        document.querySelectorAll('[data-payment-proof-input]').forEach((input) => {
+            const form = input.closest('form');
+            const preview = form.querySelector('[data-payment-proof-preview]');
+            const fileName = form.querySelector('[data-payment-proof-name]');
+            const previewLink = form.querySelector('[data-payment-proof-link]');
+            let objectUrl = null;
+
+            input.addEventListener('change', () => {
+                if (objectUrl) {
+                    URL.revokeObjectURL(objectUrl);
+                    objectUrl = null;
+                }
+
+                const file = input.files && input.files[0];
+                if (!file) {
+                    preview.classList.add('hidden');
+                    fileName.textContent = '';
+                    previewLink.removeAttribute('href');
+                    return;
+                }
+
+                objectUrl = URL.createObjectURL(file);
+                fileName.textContent = file.name;
+                previewLink.href = objectUrl;
+                preview.classList.remove('hidden');
+            });
+        });
+    });
+</script>
+@endpush

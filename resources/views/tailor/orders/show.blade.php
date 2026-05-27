@@ -50,6 +50,11 @@
 @endsection
 
 @section('content')
+@php
+    $progressSteps = \App\Enums\OrderStatus::tailorProgressStatuses();
+    $currentProgressIndex = collect($progressSteps)->search(fn($status) => $status === $order->status);
+    $availableProgressStatuses = $order->status->availableTailorProgressTargets();
+@endphp
 <div class="space-y-5">
 
     {{-- Order Header --}}
@@ -86,6 +91,46 @@
             @endif
         </div>
     </div>
+
+    {{-- Progress Overview --}}
+    @if($currentProgressIndex !== false)
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <div class="flex items-center justify-between gap-3 mb-4">
+                <div>
+                    <h2 class="text-sm font-semibold text-slate-800">Progres Pengerjaan</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Langkah kerja yang terlihat oleh customer</p>
+                </div>
+                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $order->status->badgeColor() }}">
+                    {{ $order->status->label() }}
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                @foreach($progressSteps as $index => $status)
+                    @php
+                        $isDone = $index < $currentProgressIndex;
+                        $isCurrent = $index === $currentProgressIndex;
+                    @endphp
+                    <div class="rounded-xl border p-3 {{ $isCurrent ? 'border-indigo-200 bg-indigo-50' : ($isDone ? 'border-emerald-100 bg-emerald-50' : 'border-slate-100 bg-slate-50') }}">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold {{ $isCurrent ? 'bg-indigo-600 text-white' : ($isDone ? 'bg-emerald-500 text-white' : 'bg-white text-slate-400 border border-slate-200') }}">
+                                @if($isDone)
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                @else
+                                    {{ $index + 1 }}
+                                @endif
+                            </div>
+                            <p class="text-xs font-semibold {{ $isCurrent ? 'text-indigo-700' : ($isDone ? 'text-emerald-700' : 'text-slate-500') }}">
+                                {{ $status->label() }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     {{-- Main Content: 2-column Layout --}}
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
@@ -260,8 +305,8 @@
                 </div>
             @endif
 
-            {{-- Payment Proof --}}
-            @if($order->payment && $order->payment->proof_image)
+            {{-- Payment Status --}}
+            @if($order->payment)
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
                         <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -269,28 +314,24 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <h2 class="text-sm font-semibold text-slate-700">Bukti Pembayaran</h2>
+                        <h2 class="text-sm font-semibold text-slate-700">Status Pembayaran</h2>
                     </div>
                     <div class="p-5">
                         <div class="flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-xl p-3">
                             <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                 <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-emerald-800">Bukti Transfer Diterima</p>
-                                <p class="text-xs text-emerald-600">
-                                    {{ $order->payment->paid_at ? $order->payment->paid_at->format('d M Y, H:i') : 'Menunggu konfirmasi' }}
+                                <p class="text-sm font-medium text-emerald-800">{{ $order->payment->payment_type_label }} - {{ $order->payment->status->label() }}</p>
+                                <p class="text-xs text-emerald-600 mt-0.5">
+                                    Nominal: {{ $order->payment->formattedAmount() }} / Tanggal upload: {{ $order->payment->payment_date?->format('d M Y') ?? '-' }}
                                 </p>
                             </div>
-                            <a href="{{ asset('storage/' . $order->payment->proof_image) }}" target="_blank"
-                               class="flex-shrink-0 inline-flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-colors">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                </svg>
-                                Lihat
-                            </a>
+                            <span class="flex-shrink-0 inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold {{ $order->payment->status->badgeColor() }}">
+                                Verifikasi Admin
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -417,14 +458,7 @@
             @endif
 
             {{-- Update Progress --}}
-            @if(in_array($order->status->value, ['diproses', 'finishing', 'siap_diambil']))
-                @php
-                    $nextProgress = match($order->status->value) {
-                        'diproses' => ['value' => 'finishing', 'label' => 'Finishing', 'title' => 'Masuk Tahap Finishing', 'help' => 'Gunakan ini saat jahitan utama selesai dan masuk tahap detail akhir.'],
-                        'finishing' => ['value' => 'siap_diambil', 'label' => 'Siap Diambil', 'title' => 'Tandai Siap Diambil', 'help' => 'Gunakan ini saat pesanan sudah siap diambil atau dikirim ke customer.'],
-                        default => ['value' => 'selesai', 'label' => 'Selesai', 'title' => 'Selesaikan Pesanan', 'help' => 'Gunakan ini setelah customer menerima pesanan.'],
-                    };
-                @endphp
+            @if(count($availableProgressStatuses) > 0)
                 <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-emerald-100 flex items-center gap-2.5">
                         <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -433,8 +467,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-sm font-semibold text-slate-700">{{ $nextProgress['title'] }}</h2>
-                            <p class="text-xs text-slate-400 mt-0.5">Update progres pesanan untuk customer</p>
+                            <h2 class="text-sm font-semibold text-slate-700">Update Progres</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">Pilih status terbaru sesuai kondisi pesanan</p>
                         </div>
                     </div>
                     <div class="p-5">
@@ -444,16 +478,32 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 <p class="text-xs text-emerald-700">
-                                    {{ $nextProgress['help'] }}
+                                    Penjahit bisa melompat ke langkah yang lebih maju jika progres memang sudah melewati tahap sebelumnya.
                                 </p>
                             </div>
                         </div>
 
-                        <form action="{{ route('tailor.orders.update-status', $order) }}" method="POST"
-                              onsubmit="return confirm('Ubah status pesanan menjadi {{ $nextProgress['label'] }}?')">
+                        <form action="{{ route('tailor.orders.update-status', $order) }}" method="POST" class="space-y-4">
                             @csrf
                             @method('PATCH')
-                            <input type="hidden" name="status" value="{{ $nextProgress['value'] }}">
+
+                            <div>
+                                <p class="block text-xs font-semibold text-slate-700 mb-2">Status Baru</p>
+                                <div class="grid grid-cols-1 gap-2">
+                                    @foreach($availableProgressStatuses as $status)
+                                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:border-emerald-300 hover:bg-emerald-50/60 transition-colors">
+                                            <input type="radio" name="status" value="{{ $status->value }}" class="text-emerald-600 focus:ring-emerald-500" {{ old('status', $availableProgressStatuses[0]->value) === $status->value ? 'checked' : '' }}>
+                                            <span class="flex-1 min-w-0">
+                                                <span class="block text-sm font-semibold text-slate-800">{{ $status->label() }}</span>
+                                                <span class="block text-xs text-slate-500 mt-0.5">{{ $status->defaultTrackingDescription() }}</span>
+                                            </span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                                @error('status')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
 
                             <div class="mb-4">
                                 <label for="completion_note" class="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -465,11 +515,11 @@
                             </div>
 
                             <button type="submit"
-                                    class="w-full bg-emerald-500 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 shadow-sm">
+                                    class="w-full bg-emerald-500 text-white py-3 rounded-lg font-semibold text-sm hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 shadow-sm">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
-                                Tandai {{ $nextProgress['label'] }}
+                                Simpan Progres
                             </button>
                         </form>
                     </div>
@@ -510,15 +560,15 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                                 </svg>
                             </div>
-                            <p class="text-sm font-semibold text-blue-700">Pembayaran Diterima</p>
-                            <p class="text-xs text-slate-400 mt-1">Pembayaran telah dikonfirmasi. Silakan proses pesanan.</p>
+                            <p class="text-sm font-semibold text-blue-700">Menunggu Verifikasi Admin</p>
+                            <p class="text-xs text-slate-400 mt-1">Customer sudah upload bukti bayar. Pesanan bisa diproses setelah admin verifikasi.</p>
                         @endif
                     </div>
                 </div>
             @endif
 
             {{-- Tracking History --}}
-            @if($order->trackings && $order->trackings->count() > 0)
+            @if($order->trackingHistories->count() > 0)
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
                         <div class="w-7 h-7 bg-violet-100 rounded-lg flex items-center justify-center">
@@ -530,7 +580,7 @@
                     </div>
                     <div class="p-5">
                         <div class="space-y-0">
-                            @foreach($order->trackings->sortByDesc('created_at') as $tracking)
+                            @foreach($order->trackingHistories->sortByDesc('created_at') as $tracking)
                                 <div class="relative flex gap-3 {{ !$loop->last ? 'pb-5' : '' }}">
                                     {{-- Timeline Line --}}
                                     @if(!$loop->last)

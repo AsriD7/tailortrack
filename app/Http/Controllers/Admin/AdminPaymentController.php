@@ -24,6 +24,10 @@ class AdminPaymentController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('payment_type')) {
+            $query->where('payment_type', $request->payment_type);
+        }
+
         $payments = $query->latest()->paginate(15);
         $statuses = PaymentStatus::cases();
 

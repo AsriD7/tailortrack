@@ -83,8 +83,16 @@ class TailorOrderController extends Controller
     {
         abort_if($order->tailor_id !== Auth::id(), 403, 'Akses ditolak.');
 
+        $allowedStatuses = collect($order->status->availableTailorProgressTargets())
+            ->map->value
+            ->all();
+
+        if (empty($allowedStatuses)) {
+            return back()->with('error', 'Status pesanan saat ini belum dapat diubah oleh penjahit.');
+        }
+
         $request->validate([
-            'status'      => 'required|in:finishing,siap_diambil,selesai',
+            'status'      => ['required', 'in:' . implode(',', $allowedStatuses)],
             'description' => 'nullable|string|max:500',
         ], [
             'status.required' => 'Status wajib dipilih.',
@@ -93,26 +101,13 @@ class TailorOrderController extends Controller
 
         $newStatus = OrderStatus::from($request->status);
 
-        // Validasi transisi status yang diizinkan
-        $allowedTransitions = [
-            OrderStatus::Diproses->value => [OrderStatus::Finishing->value],
-            OrderStatus::Finishing->value => [OrderStatus::SiapDiambil->value],
-            OrderStatus::SiapDiambil->value => [OrderStatus::Selesai->value],
-        ];
-
-        if (!isset($allowedTransitions[$order->status->value]) ||
-            !in_array($newStatus->value, $allowedTransitions[$order->status->value])) {
+        if (!in_array($newStatus->value, $allowedStatuses, true)) {
             return back()->with('error', 'Transisi status tidak diizinkan.');
         }
 
         $order->update(['status' => $newStatus]);
 
-        $description = $request->description ?? match($newStatus) {
-            OrderStatus::Finishing => 'Pesanan masuk tahap finishing.',
-            OrderStatus::SiapDiambil => 'Pesanan sudah siap diambil oleh customer.',
-            OrderStatus::Selesai => 'Pesanan telah selesai dikerjakan oleh penjahit.',
-            default              => "Status pesanan diperbarui menjadi {$newStatus->label()}.",
-        };
+        $description = $request->description ?: $newStatus->defaultTrackingDescription();
 
         TrackingHistory::create([
             'order_id'    => $order->id,
