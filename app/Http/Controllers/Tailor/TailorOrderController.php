@@ -48,9 +48,9 @@ class TailorOrderController extends Controller
             return back()->with('error', 'Konfirmasi harga hanya dapat dilakukan saat pesanan menunggu konfirmasi.');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'total_price' => 'required|numeric|min:0',
-            'description' => 'nullable|string|max:500',
+            'confirm_note' => 'nullable|string|max:500',
         ], [
             'total_price.required' => 'Harga total wajib diisi.',
             'total_price.numeric'  => 'Harga total harus berupa angka.',
@@ -58,16 +58,17 @@ class TailorOrderController extends Controller
         ]);
 
         $order->update([
-            'total_price' => $request->total_price,
+            'total_price' => $validated['total_price'],
             'status'      => OrderStatus::MenungguPembayaran,
         ]);
+
+        $defaultDescription = "Harga pesanan dikonfirmasi oleh penjahit sebesar Rp " . number_format($validated['total_price'], 0, ',', '.') . ". Customer diminta melakukan pembayaran.";
 
         TrackingHistory::create([
             'order_id'    => $order->id,
             'updated_by'  => Auth::id(),
             'status'      => OrderStatus::MenungguPembayaran->value,
-            'description' => $request->description
-                ?? "Harga pesanan dikonfirmasi oleh penjahit sebesar Rp " . number_format($request->total_price, 0, ',', '.') . ". Customer diminta melakukan pembayaran.",
+            'description' => $validated['confirm_note'] ?: $defaultDescription,
             'created_at'  => Carbon::now(),
         ]);
 
@@ -76,14 +77,14 @@ class TailorOrderController extends Controller
     }
 
     /**
-     * Penjahit update status order (dari diproses ke selesai).
+     * Penjahit update status order.
      */
     public function updateStatus(Request $request, Order $order)
     {
         abort_if($order->tailor_id !== Auth::id(), 403, 'Akses ditolak.');
 
         $request->validate([
-            'status'      => 'required|in:diproses,selesai',
+            'status'      => 'required|in:finishing,siap_diambil,selesai',
             'description' => 'nullable|string|max:500',
         ], [
             'status.required' => 'Status wajib dipilih.',
@@ -94,7 +95,9 @@ class TailorOrderController extends Controller
 
         // Validasi transisi status yang diizinkan
         $allowedTransitions = [
-            OrderStatus::Diproses->value => [OrderStatus::Selesai->value],
+            OrderStatus::Diproses->value => [OrderStatus::Finishing->value],
+            OrderStatus::Finishing->value => [OrderStatus::SiapDiambil->value],
+            OrderStatus::SiapDiambil->value => [OrderStatus::Selesai->value],
         ];
 
         if (!isset($allowedTransitions[$order->status->value]) ||
@@ -105,6 +108,8 @@ class TailorOrderController extends Controller
         $order->update(['status' => $newStatus]);
 
         $description = $request->description ?? match($newStatus) {
+            OrderStatus::Finishing => 'Pesanan masuk tahap finishing.',
+            OrderStatus::SiapDiambil => 'Pesanan sudah siap diambil oleh customer.',
             OrderStatus::Selesai => 'Pesanan telah selesai dikerjakan oleh penjahit.',
             default              => "Status pesanan diperbarui menjadi {$newStatus->label()}.",
         };

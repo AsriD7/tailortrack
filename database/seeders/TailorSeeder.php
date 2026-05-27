@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Models\Portfolio;
+use App\Models\PriceList;
 use App\Models\TailorProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -49,6 +50,7 @@ class TailorSeeder extends Seeder
                         'image'       => 'portfolios/portfolio-batik-tulis.jpg',
                     ],
                 ],
+                'services' => ['Kebaya', 'Batik'],
             ],
             [
                 'user' => [
@@ -82,6 +84,7 @@ class TailorSeeder extends Seeder
                         'image'       => 'portfolios/portfolio-dress-casual.jpg',
                     ],
                 ],
+                'services' => ['Gaun', 'Dress'],
             ],
             [
                 'user' => [
@@ -121,6 +124,7 @@ class TailorSeeder extends Seeder
                         'image'       => 'portfolios/portfolio-setelan-jas.jpg',
                     ],
                 ],
+                'services' => ['Kemeja', 'Jas', 'Batik'],
             ],
         ];
 
@@ -145,6 +149,9 @@ class TailorSeeder extends Seeder
                     $portfolioData
                 ));
             }
+
+            $serviceIds = PriceList::whereIn('name', $tailorData['services'] ?? [])->pluck('id');
+            $user->priceLists()->sync($serviceIds);
         }
     }
 }

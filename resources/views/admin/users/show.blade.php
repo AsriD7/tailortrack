@@ -114,7 +114,7 @@
                 </div>
                 <div class="flex gap-2 pt-1">
                     <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $user->tailorProfile->is_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
-                        {{ $user->tailorProfile->is_verified ? '✓ Terverifikasi' : 'Belum Verified' }}
+                        {{ $user->tailorProfile->is_verified ? 'Tampil di Publik' : 'Disembunyikan' }}
                     </span>
                     <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $user->tailorProfile->is_available ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500' }}">
                         {{ $user->tailorProfile->is_available ? 'Tersedia' : 'Tidak Tersedia' }}

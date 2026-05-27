@@ -148,6 +148,8 @@ class User extends Authenticatable
             OrderStatus::MenungguPembayaran->value,
             OrderStatus::Dibayar->value,
             OrderStatus::Diproses->value,
+            OrderStatus::Finishing->value,
+            OrderStatus::SiapDiambil->value,
         ];
     }
 

@@ -165,26 +165,26 @@
                         @enderror
                     </div>
 
-                    {{-- Verification Status --}}
+                    {{-- Publication Status --}}
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Status Verifikasi</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Status Publikasi</label>
                         <div class="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50">
                             @if($profile && $profile->is_verified)
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    Terverifikasi
+                                    Tampil di Publik
                                 </span>
-                                <span class="text-xs text-slate-500">Akun Anda telah diverifikasi admin.</span>
+                                <span class="text-xs text-slate-500">Profil Anda tampil di pencarian customer.</span>
                             @else
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    Menunggu Verifikasi
+                                    Disembunyikan
                                 </span>
-                                <span class="text-xs text-slate-500">Sedang ditinjau oleh admin.</span>
+                                <span class="text-xs text-slate-500">Profil belum tampil di pencarian customer.</span>
                             @endif
                         </div>
                         <p class="text-xs text-slate-400 mt-1">Status dikelola oleh admin.</p>

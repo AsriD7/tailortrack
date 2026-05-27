@@ -19,8 +19,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('experience_years')->nullable();
             $table->string('profile_photo')->nullable();
-            $table->boolean('is_verified')->default(false);
+            $table->boolean('is_verified')->default(true);
             $table->boolean('is_available')->default(true);
+            $table->unsignedInteger('max_active_orders')->nullable();
+            $table->unsignedInteger('max_weekly_orders')->nullable();
+            $table->unsignedInteger('estimated_processing_days')->nullable();
+            $table->json('working_days')->nullable();
             $table->timestamps();
         });
     }

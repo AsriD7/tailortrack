@@ -210,6 +210,11 @@
                         Cari Penjahit
                     </a>
 
+                    <a href="{{ route('price-lists.index') }}"
+                        class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('price-lists*') ? 'active' : '' }}">
+                        Daftar Harga
+                    </a>
+
                     {{-- Pesanan Saya khusus user login --}}
                     @auth
                         <a href="{{ route('customer.orders.index') }}"
@@ -242,10 +247,7 @@
                     @endauth
 
                     {{-- Daftar Harga --}}
-                    <a href="{{ route('price-lists.index') }}"
-                        class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('price-lists*') ? 'active' : '' }}">
-                        Daftar Harga
-                    </a>
+                    
                 </div>
 
                 {{-- Right Area --}}

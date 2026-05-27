@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('tailor_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->string('category')->nullable();
+            $table->string('client_type')->nullable();
+            $table->string('price_range')->nullable();
+            $table->date('completed_at')->nullable();
+            $table->boolean('is_featured')->default(false);
             $table->string('image');
             $table->text('description')->nullable();
             $table->timestamps();

@@ -73,7 +73,7 @@
      ===================================================================== --}}
 @section('content')
 
-    {{-- Hanya tampil alert jika profil belum lengkap ATAU belum terverifikasi --}}
+    {{-- Hanya tampil alert jika profil belum lengkap ATAU sedang disembunyikan admin --}}
     @if(!$tailorProfile || !$tailorProfile->shop_name)
         {{-- Profil belum diisi sama sekali --}}
         <div class="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4">
@@ -98,7 +98,7 @@
             </div>
         </div>
     @elseif($tailorProfile && $tailorProfile->shop_name && !$tailorProfile->is_verified)
-        {{-- Profil sudah diisi tapi belum diverifikasi admin --}}
+        {{-- Profil sudah diisi tapi sedang disembunyikan admin --}}
         <div class="mb-6 bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start gap-4">
             <div class="bg-blue-100 text-blue-600 p-2 rounded-lg shrink-0 mt-0.5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -107,9 +107,9 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <h4 class="font-semibold text-blue-800 text-sm">Menunggu Verifikasi Admin</h4>
+                <h4 class="font-semibold text-blue-800 text-sm">Profil Belum Tampil di Publik</h4>
                 <p class="text-blue-700 text-xs mt-0.5">
-                    Profil toko Anda sedang dalam proses verifikasi oleh admin. Anda akan mendapat notifikasi setelah diverifikasi.
+                    Profil toko Anda belum ditampilkan di halaman pencarian customer. Hubungi admin jika profil seharusnya sudah aktif.
                 </p>
             </div>
         </div>
@@ -166,8 +166,8 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-3xl font-bold text-slate-800">{{ $stats['diproses'] ?? 0 }}</p>
-            <p class="text-slate-400 text-xs mt-1">Sedang dikerjakan</p>
+            <p class="text-3xl font-bold text-slate-800">{{ ($stats['diproses'] ?? 0) + ($stats['finishing'] ?? 0) + ($stats['siap_diambil'] ?? 0) }}</p>
+            <p class="text-slate-400 text-xs mt-1">Proses, finishing, siap ambil</p>
         </div>
 
         {{-- Selesai --}}

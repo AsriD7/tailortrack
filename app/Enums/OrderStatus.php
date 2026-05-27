@@ -8,6 +8,8 @@ enum OrderStatus: string
     case MenungguPembayaran  = 'menunggu_pembayaran';
     case Dibayar             = 'dibayar';
     case Diproses            = 'diproses';
+    case Finishing           = 'finishing';
+    case SiapDiambil         = 'siap_diambil';
     case Selesai             = 'selesai';
     case Dibatalkan          = 'dibatalkan';
 
@@ -21,6 +23,8 @@ enum OrderStatus: string
             OrderStatus::MenungguPembayaran => 'Menunggu Pembayaran',
             OrderStatus::Dibayar            => 'Dibayar',
             OrderStatus::Diproses           => 'Diproses',
+            OrderStatus::Finishing          => 'Finishing',
+            OrderStatus::SiapDiambil        => 'Siap Diambil',
             OrderStatus::Selesai            => 'Selesai',
             OrderStatus::Dibatalkan         => 'Dibatalkan',
         };
@@ -36,6 +40,8 @@ enum OrderStatus: string
             OrderStatus::MenungguPembayaran => 'bg-orange-100 text-orange-700',
             OrderStatus::Dibayar            => 'bg-blue-100 text-blue-700',
             OrderStatus::Diproses           => 'bg-indigo-100 text-indigo-700',
+            OrderStatus::Finishing          => 'bg-purple-100 text-purple-700',
+            OrderStatus::SiapDiambil        => 'bg-teal-100 text-teal-700',
             OrderStatus::Selesai            => 'bg-emerald-100 text-emerald-700',
             OrderStatus::Dibatalkan         => 'bg-red-100 text-red-700',
         };

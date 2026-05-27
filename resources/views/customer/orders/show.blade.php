@@ -84,6 +84,8 @@
                         ['key' => 'menunggu_pembayaran', 'label' => 'Pembayaran'],
                         ['key' => 'dibayar',             'label' => 'Dibayar'],
                         ['key' => 'diproses',            'label' => 'Diproses'],
+                        ['key' => 'finishing',           'label' => 'Finishing'],
+                        ['key' => 'siap_diambil',        'label' => 'Siap Diambil'],
                         ['key' => 'selesai',             'label' => 'Selesai'],
                     ];
                     $statusValues = \App\Enums\OrderStatus::cases();

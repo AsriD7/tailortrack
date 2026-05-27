@@ -355,6 +355,9 @@
                                 <textarea id="confirm_note" name="confirm_note" rows="3"
                                           placeholder="Rincian harga atau pesan untuk customer..."
                                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none">{{ old('confirm_note') }}</textarea>
+                                @error('confirm_note')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <button type="submit"
@@ -411,8 +414,15 @@
                 </div>
             @endif
 
-            {{-- Complete Order Button (only if diproses) --}}
-            @if($order->status->value === 'diproses')
+            {{-- Update Progress --}}
+            @if(in_array($order->status->value, ['diproses', 'finishing', 'siap_diambil']))
+                @php
+                    $nextProgress = match($order->status->value) {
+                        'diproses' => ['value' => 'finishing', 'label' => 'Finishing', 'title' => 'Masuk Tahap Finishing', 'help' => 'Gunakan ini saat jahitan utama selesai dan masuk tahap detail akhir.'],
+                        'finishing' => ['value' => 'siap_diambil', 'label' => 'Siap Diambil', 'title' => 'Tandai Siap Diambil', 'help' => 'Gunakan ini saat pesanan sudah siap diambil atau dikirim ke customer.'],
+                        default => ['value' => 'selesai', 'label' => 'Selesai', 'title' => 'Selesaikan Pesanan', 'help' => 'Gunakan ini setelah customer menerima pesanan.'],
+                    };
+                @endphp
                 <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-emerald-100 flex items-center gap-2.5">
                         <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -421,8 +431,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-sm font-semibold text-slate-700">Selesaikan Pesanan</h2>
-                            <p class="text-xs text-slate-400 mt-0.5">Tandai pesanan sebagai selesai</p>
+                            <h2 class="text-sm font-semibold text-slate-700">{{ $nextProgress['title'] }}</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">Update progres pesanan untuk customer</p>
                         </div>
                     </div>
                     <div class="p-5">
@@ -432,23 +442,23 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 <p class="text-xs text-emerald-700">
-                                    Pastikan pesanan sudah benar-benar selesai sebelum menandainya. Customer akan mendapat notifikasi.
+                                    {{ $nextProgress['help'] }}
                                 </p>
                             </div>
                         </div>
 
                         <form action="{{ route('tailor.orders.update-status', $order) }}" method="POST"
-                              onsubmit="return confirm('Tandai pesanan ini sebagai selesai?')">
+                              onsubmit="return confirm('Ubah status pesanan menjadi {{ $nextProgress['label'] }}?')">
                             @csrf
                             @method('PATCH')
-                            <input type="hidden" name="status" value="selesai">
+                            <input type="hidden" name="status" value="{{ $nextProgress['value'] }}">
 
                             <div class="mb-4">
                                 <label for="completion_note" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                    Catatan Penyelesaian (Opsional)
+                                    Catatan untuk Customer (Opsional)
                                 </label>
                                 <textarea id="completion_note" name="description" rows="3"
-                                          placeholder="Catatan tambahan untuk customer mengenai pesanan yang selesai..."
+                                          placeholder="Contoh: Jahitan sudah masuk finishing, tinggal pasang kancing dan setrika..."
                                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none">{{ old('description') }}</textarea>
                             </div>
 
@@ -457,7 +467,7 @@
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
-                                Tandai Selesai
+                                Tandai {{ $nextProgress['label'] }}
                             </button>
                         </form>
                     </div>
@@ -465,7 +475,7 @@
             @endif
 
             {{-- Current Status Info (for non-actionable statuses) --}}
-            @if(!in_array($order->status->value, ['menunggu_konfirmasi', 'diproses']))
+            @if(!in_array($order->status->value, ['menunggu_konfirmasi', 'diproses', 'finishing', 'siap_diambil']))
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
                     <div class="text-center py-2">
                         @if($order->status->value === 'selesai')

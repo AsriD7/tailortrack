@@ -66,7 +66,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         @php
             $total      = $orders->total();
-            $diproses   = $orders->getCollection()->where('status.value', 'diproses')->count();
+            $diproses   = $orders->getCollection()->whereIn('status.value', ['diproses', 'finishing', 'siap_diambil'])->count();
             $selesai    = $orders->getCollection()->where('status.value', 'selesai')->count();
             $menunggu   = $orders->getCollection()->where('status.value', 'menunggu_konfirmasi')->count();
         @endphp
@@ -105,7 +105,7 @@
                 </svg>
             </div>
             <div>
-                <p class="text-xs text-slate-500 font-medium">Diproses</p>
+                <p class="text-xs text-slate-500 font-medium">Berjalan</p>
                 <p class="text-xl font-bold text-slate-800">{{ $diproses }}</p>
             </div>
         </div>

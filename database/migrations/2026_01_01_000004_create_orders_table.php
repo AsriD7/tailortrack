@@ -29,6 +29,8 @@ return new class extends Migration
                 'menunggu_pembayaran',
                 'dibayar',
                 'diproses',
+                'finishing',
+                'siap_diambil',
                 'selesai',
                 'dibatalkan',
             ])->default('menunggu_konfirmasi');

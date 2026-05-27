@@ -27,8 +27,8 @@ class AdminTailorController extends Controller
             });
         }
 
-        if ($request->filled('verified')) {
-            $query->whereHas('tailorProfile', fn($p) => $p->where('is_verified', $request->verified));
+        if ($request->filled('published')) {
+            $query->whereHas('tailorProfile', fn($p) => $p->where('is_verified', $request->published));
         }
 
         $tailors = $query->latest()->paginate(15);
@@ -96,7 +96,7 @@ class AdminTailorController extends Controller
             'max_weekly_orders' => $request->max_weekly_orders,
             'estimated_processing_days' => $request->estimated_processing_days,
             'working_days' => $request->input('working_days', []),
-            'is_verified'    => false,
+            'is_verified'    => true,
             'is_available'   => true,
         ]);
 
@@ -189,7 +189,7 @@ class AdminTailorController extends Controller
     }
 
     /**
-     * Admin memverifikasi akun penjahit.
+     * Admin mengatur apakah profil penjahit tampil di publik.
      */
     public function verify(User $tailor)
     {
@@ -203,9 +203,9 @@ class AdminTailorController extends Controller
 
         $profile->update(['is_verified' => !$profile->is_verified]);
 
-        $status = $profile->is_verified ? 'diverifikasi' : 'dibatalkan verifikasinya';
+        $status = $profile->is_verified ? 'ditampilkan di publik' : 'disembunyikan dari publik';
 
-        return back()->with('success', "Penjahit {$tailor->name} berhasil {$status}.");
+        return back()->with('success', "Profil penjahit {$tailor->name} berhasil {$status}.");
     }
 
     /**
