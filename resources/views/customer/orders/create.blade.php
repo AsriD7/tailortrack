@@ -297,6 +297,79 @@
                     @error('size')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
+
+                    <div id="standardSizeInfo" class="mt-3 rounded-xl bg-indigo-50 border border-indigo-100 p-4 text-sm text-indigo-800"></div>
+
+                    <div id="customMeasurementPanel" class="hidden mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Detail Ukuran Custom</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Pilih profil ukuran tersimpan atau isi manual untuk pesanan ini.</p>
+                            </div>
+                            <a href="{{ route('customer.measurements.create') }}"
+                               class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
+                                Tambah profil ukuran
+                            </a>
+                        </div>
+
+                        <div>
+                            <label for="measurement_id" class="block text-xs font-semibold text-slate-600 mb-1.5">Profil Ukuran</label>
+                            <select id="measurement_id" name="measurement_id"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                <option value="">Isi manual untuk pesanan ini</option>
+                                @foreach($measurements as $measurement)
+                                    <option value="{{ $measurement->id }}" @selected(old('measurement_id') == $measurement->id)>
+                                        {{ $measurement->label }}{{ $measurement->gender ? ' - ' . $measurement->gender : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('measurement_id')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div id="manualMeasurementFields" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            @php
+                                $customFields = [
+                                    'custom_height_cm' => ['Tinggi Badan', 'cm'],
+                                    'custom_weight_kg' => ['Berat Badan', 'kg'],
+                                    'custom_chest_cm' => ['Lingkar Dada', 'cm'],
+                                    'custom_waist_cm' => ['Lingkar Pinggang', 'cm'],
+                                    'custom_hip_cm' => ['Lingkar Pinggul', 'cm'],
+                                    'custom_shoulder_cm' => ['Lebar Bahu', 'cm'],
+                                    'custom_sleeve_length_cm' => ['Panjang Lengan', 'cm'],
+                                    'custom_shirt_length_cm' => ['Panjang Baju', 'cm'],
+                                    'custom_pants_length_cm' => ['Panjang Celana/Rok', 'cm'],
+                                    'custom_thigh_cm' => ['Lingkar Paha', 'cm'],
+                                ];
+                            @endphp
+
+                            @foreach($customFields as $field => [$label, $unit])
+                                <div>
+                                    <label for="{{ $field }}" class="block text-xs font-semibold text-slate-600 mb-1">{{ $label }}</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.1" min="1" max="300" id="{{ $field }}" name="{{ $field }}"
+                                               value="{{ old($field) }}"
+                                               class="w-full px-3 py-2 pr-10 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 @error($field) border-red-400 @enderror">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-slate-400">{{ $unit }}</span>
+                                    </div>
+                                    @error($field)
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            @endforeach
+
+                            <div class="sm:col-span-2 lg:col-span-3">
+                                <label for="custom_measurement_notes" class="block text-xs font-semibold text-slate-600 mb-1">Catatan Ukuran Custom</label>
+                                <textarea id="custom_measurement_notes" name="custom_measurement_notes" rows="2" maxlength="500"
+                                          placeholder="Contoh: bagian pinggang dibuat longgar, lengan jangan terlalu ketat..."
+                                          class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none @error('custom_measurement_notes') border-red-400 @enderror">{{ old('custom_measurement_notes') }}</textarea>
+                                @error('custom_measurement_notes')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- Quantity --}}
@@ -518,6 +591,7 @@
 (function () {
     // ─── Size surcharges ──────────────────────────────────────────
     const SURCHARGES = { S: 0, M: 0, L: 5000, XL: 10000, XXL: 15000, Custom: 20000 };
+    const STANDARD_SIZE_DETAILS = @json($standardSizeDetails);
 
     // ─── DOM refs ─────────────────────────────────────────────────
     const quantityInput   = document.getElementById('quantity');
@@ -528,6 +602,10 @@
     const imageCounter    = document.getElementById('imageCounter');
     const serviceCategoryInput = document.getElementById('service_category');
     const emptyCategoryMessage = document.getElementById('emptyCategoryMessage');
+    const standardSizeInfo = document.getElementById('standardSizeInfo');
+    const customMeasurementPanel = document.getElementById('customMeasurementPanel');
+    const measurementSelect = document.getElementById('measurement_id');
+    const manualMeasurementFields = document.getElementById('manualMeasurementFields');
 
     const estBase    = document.getElementById('est-base-price');
     const estSurge   = document.getElementById('est-surcharge');
@@ -642,6 +720,35 @@
         });
     }
 
+    function updateMeasurementUi() {
+        const size = getSelectedSize();
+        const isCustom = size === 'Custom';
+
+        if (customMeasurementPanel) {
+            customMeasurementPanel.classList.toggle('hidden', !isCustom);
+        }
+
+        if (standardSizeInfo) {
+            if (isCustom) {
+                standardSizeInfo.classList.add('hidden');
+            } else {
+                const details = STANDARD_SIZE_DETAILS[size] || {};
+                const rows = Object.entries(details)
+                    .map(function ([label, value]) {
+                        return '<div class="rounded-lg bg-white/70 border border-indigo-100 px-3 py-2"><p class="text-[11px] text-indigo-500 font-semibold">' + label + '</p><p class="text-sm font-bold text-indigo-800">' + value + '</p></div>';
+                    })
+                    .join('');
+
+                standardSizeInfo.innerHTML = '<p class="font-bold mb-2">Acuan ukuran standar ' + size + '</p><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">' + rows + '</div><p class="text-xs text-indigo-600 mt-2">Acuan ini membantu penjahit membaca ukuran standar. Untuk ukuran badan detail, pilih Custom.</p>';
+                standardSizeInfo.classList.remove('hidden');
+            }
+        }
+
+        if (manualMeasurementFields && measurementSelect) {
+            manualMeasurementFields.classList.toggle('opacity-50', Boolean(measurementSelect.value));
+        }
+    }
+
     // ─── Quantity stepper ────────────────────────────────────────
     qtyMinus.addEventListener('click', function () {
         const v = parseInt(quantityInput.value, 10);
@@ -682,9 +789,14 @@
     document.querySelectorAll('input[name="size"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
             updateSizeStyles();
+            updateMeasurementUi();
             updateEstimate();
         });
     });
+
+    if (measurementSelect) {
+        measurementSelect.addEventListener('change', updateMeasurementUi);
+    }
 
     // ─── Image preview ───────────────────────────────────────────
     imagesInput.addEventListener('change', function () {
@@ -735,6 +847,7 @@
     updateVisibleServices();
     updatePriceListStyles();
     updateSizeStyles();
+    updateMeasurementUi();
     updateEstimate();
 })();
 </script>

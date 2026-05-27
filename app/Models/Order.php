@@ -20,6 +20,7 @@ class Order extends Model
         'item_name',
         'description',
         'size',
+        'measurement_snapshot',
         'quantity',
         'estimated_price',
         'total_price',
@@ -39,8 +40,56 @@ class Order extends Model
         'estimated_price' => 'decimal:2',
         'total_price'     => 'decimal:2',
         'deadline'        => 'date',
+        'measurement_snapshot' => 'array',
         'cancelled_at'    => 'datetime',
         'quantity'        => 'integer',
+    ];
+
+    public const SIZE_SURCHARGES = [
+        'S' => 0,
+        'M' => 0,
+        'L' => 5000,
+        'XL' => 10000,
+        'XXL' => 15000,
+        'Custom' => 20000,
+    ];
+
+    public const STANDARD_SIZE_DETAILS = [
+        'S' => [
+            'Lingkar Dada' => '86-90 cm',
+            'Lingkar Pinggang' => '70-74 cm',
+            'Lingkar Pinggul' => '88-92 cm',
+            'Lebar Bahu' => '38-40 cm',
+            'Panjang Baju' => '64-66 cm',
+        ],
+        'M' => [
+            'Lingkar Dada' => '91-96 cm',
+            'Lingkar Pinggang' => '75-80 cm',
+            'Lingkar Pinggul' => '93-98 cm',
+            'Lebar Bahu' => '40-42 cm',
+            'Panjang Baju' => '66-68 cm',
+        ],
+        'L' => [
+            'Lingkar Dada' => '97-102 cm',
+            'Lingkar Pinggang' => '81-86 cm',
+            'Lingkar Pinggul' => '99-104 cm',
+            'Lebar Bahu' => '42-44 cm',
+            'Panjang Baju' => '68-70 cm',
+        ],
+        'XL' => [
+            'Lingkar Dada' => '103-110 cm',
+            'Lingkar Pinggang' => '87-94 cm',
+            'Lingkar Pinggul' => '105-112 cm',
+            'Lebar Bahu' => '44-46 cm',
+            'Panjang Baju' => '70-72 cm',
+        ],
+        'XXL' => [
+            'Lingkar Dada' => '111-118 cm',
+            'Lingkar Pinggang' => '95-102 cm',
+            'Lingkar Pinggul' => '113-120 cm',
+            'Lebar Bahu' => '46-48 cm',
+            'Panjang Baju' => '72-74 cm',
+        ],
     ];
 
     // ==========================================
@@ -139,6 +188,21 @@ class Order extends Model
         return $prefix . $newNumber;
     }
 
+    public static function standardSizeSnapshot(string $size): ?array
+    {
+        if (!isset(self::STANDARD_SIZE_DETAILS[$size])) {
+            return null;
+        }
+
+        return [
+            'type' => 'standard',
+            'label' => 'Ukuran ' . $size,
+            'size' => $size,
+            'details' => self::STANDARD_SIZE_DETAILS[$size],
+            'notes' => 'Ukuran standar sebagai acuan awal. Penjahit tetap dapat menyesuaikan berdasarkan model pakaian.',
+        ];
+    }
+
     /**
      * Cek apakah order boleh dibatalkan oleh user tertentu.
      */
@@ -170,14 +234,7 @@ class Order extends Model
         $basePrice = $this->priceList ? (float) $this->priceList->base_price : 0;
 
         // Tambahan harga berdasarkan ukuran
-        $sizeExtra = match($this->size) {
-            'S', 'M' => 0,
-            'L'      => 5000,
-            'XL'     => 10000,
-            'XXL'    => 15000,
-            'Custom' => 20000,
-            default  => 0,
-        };
+        $sizeExtra = self::SIZE_SURCHARGES[$this->size] ?? 0;
 
         return ($basePrice + $sizeExtra) * $this->quantity;
     }

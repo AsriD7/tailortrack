@@ -64,6 +64,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Profil ukuran yang disimpan oleh customer.
+     */
+    public function measurements()
+    {
+        return $this->hasMany(CustomerMeasurement::class, 'customer_id');
+    }
+
+    /**
      * Order yang diterima oleh penjahit ini.
      */
     public function tailorOrders()

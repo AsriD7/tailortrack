@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdminTailorController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\CustomerMeasurementController;
 use App\Http\Controllers\Customer\CustomerOrderController;
 use App\Http\Controllers\Customer\CustomerPaymentController;
 use App\Http\Controllers\Customer\CustomerProfileController;
@@ -58,6 +59,14 @@ Route::prefix('customer')
         // Profil
         Route::get('/profile/edit', [CustomerProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [CustomerProfileController::class, 'update'])->name('profile.update');
+
+        // Profil Ukuran
+        Route::get('/measurements', [CustomerMeasurementController::class, 'index'])->name('measurements.index');
+        Route::get('/measurements/create', [CustomerMeasurementController::class, 'create'])->name('measurements.create');
+        Route::post('/measurements', [CustomerMeasurementController::class, 'store'])->name('measurements.store');
+        Route::get('/measurements/{measurement}/edit', [CustomerMeasurementController::class, 'edit'])->name('measurements.edit');
+        Route::put('/measurements/{measurement}', [CustomerMeasurementController::class, 'update'])->name('measurements.update');
+        Route::delete('/measurements/{measurement}', [CustomerMeasurementController::class, 'destroy'])->name('measurements.destroy');
 
         // Order
         Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders.index');

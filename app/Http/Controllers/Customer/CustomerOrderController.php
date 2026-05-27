@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Enums\OrderStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\CustomerMeasurement;
 use App\Models\Order;
 use App\Models\OrderImage;
 use App\Models\PriceList;
@@ -58,8 +59,10 @@ class CustomerOrderController extends Controller
             ->orderBy('date')
             ->limit(5)
             ->get();
+        $measurements = Auth::user()->measurements()->latest()->get();
+        $standardSizeDetails = Order::STANDARD_SIZE_DETAILS;
 
-        return view('customer.orders.create', compact('tailor', 'priceLists', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity', 'minDeadline', 'workingDayLabels', 'unavailableDates'));
+        return view('customer.orders.create', compact('tailor', 'priceLists', 'activeOrdersCount', 'weeklyOrdersCount', 'isAtCapacity', 'minDeadline', 'workingDayLabels', 'unavailableDates', 'measurements', 'standardSizeDetails'));
     }
 
     /**
@@ -72,6 +75,18 @@ class CustomerOrderController extends Controller
             'price_list_id'  => 'required|exists:price_lists,id',
             'description'    => 'nullable|string|max:1000',
             'size'           => 'required|in:S,M,L,XL,XXL,Custom',
+            'measurement_id' => 'nullable|exists:customer_measurements,id',
+            'custom_height_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_weight_kg' => 'nullable|numeric|min:1|max:300',
+            'custom_chest_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_waist_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_hip_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_shoulder_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_sleeve_length_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_shirt_length_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_pants_length_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_thigh_cm' => 'nullable|numeric|min:1|max:300',
+            'custom_measurement_notes' => 'nullable|string|max:500',
             'quantity'       => 'required|integer|min:1|max:100',
             'deadline'       => 'nullable|date|after_or_equal:today',
             'note'           => 'nullable|string|max:500',
@@ -137,15 +152,15 @@ class CustomerOrderController extends Controller
                 ->withInput();
         }
 
+        $measurementSnapshot = $this->buildMeasurementSnapshot($request);
+        if ($request->size === 'Custom' && empty($measurementSnapshot['details'])) {
+            return back()
+                ->withErrors(['measurement_id' => 'Untuk ukuran Custom, pilih profil ukuran atau isi minimal satu detail ukuran manual.'])
+                ->withInput();
+        }
+
         // Hitung estimasi harga
-        $sizeExtra = match($request->size) {
-            'S', 'M' => 0,
-            'L'      => 5000,
-            'XL'     => 10000,
-            'XXL'    => 15000,
-            'Custom' => 20000,
-            default  => 0,
-        };
+        $sizeExtra = Order::SIZE_SURCHARGES[$request->size] ?? 0;
         $estimatedPrice = ((float)$priceList->base_price + $sizeExtra) * $request->quantity;
 
         // Buat order
@@ -158,6 +173,7 @@ class CustomerOrderController extends Controller
             'item_name'       => $priceList->name,
             'description'     => $request->description,
             'size'            => $request->size,
+            'measurement_snapshot' => $measurementSnapshot,
             'quantity'        => $request->quantity,
             'estimated_price' => $estimatedPrice,
             'total_price'     => null,
@@ -238,5 +254,52 @@ class CustomerOrderController extends Controller
 
         return redirect()->route('customer.orders.index')
             ->with('success', 'Pesanan berhasil dibatalkan.');
+    }
+
+    private function buildMeasurementSnapshot(Request $request): ?array
+    {
+        if ($request->size !== 'Custom') {
+            return Order::standardSizeSnapshot($request->size);
+        }
+
+        if ($request->filled('measurement_id')) {
+            $measurement = CustomerMeasurement::where('customer_id', Auth::id())
+                ->whereKey($request->measurement_id)
+                ->first();
+
+            if (!$measurement) {
+                abort(403, 'Profil ukuran tidak valid.');
+            }
+
+            return $measurement->detailSnapshot();
+        }
+
+        $fields = [
+            'custom_height_cm' => 'Tinggi Badan',
+            'custom_weight_kg' => 'Berat Badan',
+            'custom_chest_cm' => 'Lingkar Dada',
+            'custom_waist_cm' => 'Lingkar Pinggang',
+            'custom_hip_cm' => 'Lingkar Pinggul',
+            'custom_shoulder_cm' => 'Lebar Bahu',
+            'custom_sleeve_length_cm' => 'Panjang Lengan',
+            'custom_shirt_length_cm' => 'Panjang Baju',
+            'custom_pants_length_cm' => 'Panjang Celana/Rok',
+            'custom_thigh_cm' => 'Lingkar Paha',
+        ];
+
+        $details = [];
+        foreach ($fields as $field => $label) {
+            if ($request->filled($field)) {
+                $unit = $field === 'custom_weight_kg' ? 'kg' : 'cm';
+                $details[$label] = rtrim(rtrim((string) $request->{$field}, '0'), '.') . ' ' . $unit;
+            }
+        }
+
+        return [
+            'type' => 'custom_manual',
+            'label' => 'Ukuran Custom Manual',
+            'details' => $details,
+            'notes' => $request->custom_measurement_notes,
+        ];
     }
 }

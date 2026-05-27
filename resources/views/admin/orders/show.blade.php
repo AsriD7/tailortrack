@@ -73,6 +73,8 @@
                 </div>
             </div>
 
+            @include('orders._measurement_snapshot', ['order' => $order, 'wrapperClass' => 'mt-4 pt-4 border-t border-slate-100'])
+
             @if($order->description)
             <div class="mt-4 pt-4 border-t border-slate-100">
                 <p class="text-slate-400 text-xs mb-1">Deskripsi</p>

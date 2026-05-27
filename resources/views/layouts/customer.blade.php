@@ -240,6 +240,11 @@
                             @endif
                         </a>
 
+                        <a href="{{ route('customer.measurements.index') }}"
+                            class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.measurements*') ? 'active' : '' }}">
+                            Ukuran Saya
+                        </a>
+
                         <!-- <a href="{{ route('customer.profile.edit') }}"
                                 class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.profile*') ? 'active' : '' }}">
                                 Profil Sayaaaa
@@ -356,6 +361,14 @@
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
                         </svg>
                         Pesanan Saya
+                    </a>
+
+                    <a href="{{ route('customer.measurements.index') }}"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.measurements*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16M8 4v16m8-16v16" />
+                        </svg>
+                        Ukuran Saya
                     </a>
 
                     <a href="{{ route('customer.profile.edit') }}"

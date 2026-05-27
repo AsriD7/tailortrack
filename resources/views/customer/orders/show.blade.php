@@ -165,6 +165,7 @@
                         <dt class="text-xs font-medium text-slate-400 mb-0.5">Jumlah</dt>
                         <dd class="text-sm font-semibold text-slate-800">{{ $order->quantity }} pcs</dd>
                     </div>
+                    @include('orders._measurement_snapshot', ['order' => $order])
                     @if($order->deadline)
                         <div>
                             <dt class="text-xs font-medium text-slate-400 mb-0.5">Deadline</dt>

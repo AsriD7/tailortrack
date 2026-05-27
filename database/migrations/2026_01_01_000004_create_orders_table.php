@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('item_name');
             $table->text('description')->nullable();
             $table->enum('size', ['S', 'M', 'L', 'XL', 'XXL', 'Custom']);
+            $table->json('measurement_snapshot')->nullable();
             $table->integer('quantity')->default(1);
             $table->decimal('estimated_price', 12, 2)->nullable();
             $table->decimal('total_price', 12, 2)->nullable();

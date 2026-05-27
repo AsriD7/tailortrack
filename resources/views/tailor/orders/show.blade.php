@@ -185,6 +185,8 @@
                         @endif
                     </div>
 
+                    @include('orders._measurement_snapshot', ['order' => $order, 'wrapperClass' => 'mb-4'])
+
                     @if($order->description)
                         <div class="mb-4">
                             <p class="text-xs text-slate-400 mb-1">Deskripsi / Keterangan</p>
