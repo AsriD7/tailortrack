@@ -204,10 +204,14 @@
                         </a>
                     @endauth
 
-                    {{-- Cari Penjahit --}}
                     <a href="{{ route('tailors.index') }}"
                         class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('tailors*') ? 'active' : '' }}">
                         Cari Penjahit
+                    </a>
+
+                    <a href="{{ route('portfolios.index') }}"
+                        class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('portfolios*') ? 'active' : '' }}">
+                        Portfolio
                     </a>
 
                     <a href="{{ route('price-lists.index') }}"
@@ -353,6 +357,15 @@
                     Cari Penjahit
                 </a>
 
+                <a href="{{ route('portfolios.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('portfolios*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Portfolio
+                </a>
+
                 @auth
                     <a href="{{ route('customer.orders.index') }}"
                         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.orders*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
@@ -447,6 +460,9 @@
             <div class="flex gap-4">
                 <a href="{{ route('tailors.index') }}" class="hover:text-indigo-600 transition-colors">
                     Cari Penjahit
+                </a>
+                <a href="{{ route('portfolios.index') }}" class="hover:text-indigo-600 transition-colors">
+                    Portfolio
                 </a>
                 <a href="{{ route('price-lists.index') }}" class="hover:text-indigo-600 transition-colors">
                     Daftar Harga

@@ -16,6 +16,7 @@ use App\Http\Controllers\Customer\CustomerProfileController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\Public\PublicPriceListController;
+use App\Http\Controllers\Public\PublicPortfolioController;
 use App\Http\Controllers\Public\PublicTailorController;
 use App\Http\Controllers\Tailor\TailorDashboardController;
 use App\Http\Controllers\Tailor\TailorOrderController;
@@ -32,6 +33,8 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/tailors', [PublicTailorController::class, 'index'])->name('tailors.index');
 Route::get('/tailors/{tailor}', [PublicTailorController::class, 'show'])->name('tailors.show');
 Route::get('/price-lists', [PublicPriceListController::class, 'index'])->name('price-lists.index');
+Route::get('/portfolios', [PublicPortfolioController::class, 'index'])->name('portfolios.index');
+Route::get('/portfolios/{portfolio}', [PublicPortfolioController::class, 'show'])->name('portfolios.show');
 
 // =============================================
 // Auth Routes

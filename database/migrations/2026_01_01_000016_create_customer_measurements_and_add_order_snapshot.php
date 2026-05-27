@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('customer_measurements', function (Blueprint $table) {
@@ -27,16 +26,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('orders', function (Blueprint $table) {
-            $table->json('measurement_snapshot')->nullable()->after('size');
-        });
     }
 
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('measurement_snapshot');
-        });
 
         Schema::dropIfExists('customer_measurements');
     }

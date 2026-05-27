@@ -338,30 +338,40 @@
 <section class="bg-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div class="text-center mb-12">
-            <span class="inline-block px-4 py-1.5 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold mb-4">
-                Karya Terbaru
-            </span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-4">Portfolio Terbaru</h2>
-            <p class="text-slate-500 text-lg max-w-xl mx-auto">Lihat hasil karya terbaik dari penjahit-penjahit kami yang berpengalaman.</p>
+        <div class="flex items-end justify-between mb-12">
+            <div>
+                <span class="inline-block px-4 py-1.5 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold mb-4">
+                    Karya Terbaru
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-2">Portfolio Terbaru</h2>
+                <p class="text-slate-500 text-lg max-w-xl">Lihat hasil karya terbaik dari penjahit-penjahit kami yang berpengalaman.</p>
+            </div>
+            <a href="{{ route('portfolios.index') }}"
+               class="hidden sm:inline-flex items-center gap-2 text-purple-600 font-semibold text-sm hover:text-purple-800 transition-colors">
+                Lihat Semua
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
         </div>
 
         @if($portfolios->isNotEmpty())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($portfolios as $portfolio)
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 group">
+                <a href="{{ route('portfolios.show', $portfolio) }}"
+                   class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group block">
                     {{-- Portfolio image --}}
                     <div class="aspect-[4/3] overflow-hidden bg-slate-100 relative">
                         @if($portfolio->image)
                             <img src="{{ Storage::url($portfolio->image) }}"
                                  alt="{{ $portfolio->title }}"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @else
-                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
-                                <svg class="w-16 h-16 mb-2" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
+                                <svg class="w-14 h-14 mb-1" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
-                                <span class="text-sm">Tidak ada foto</span>
+                                <span class="text-xs">Tidak ada foto</span>
                             </div>
                         @endif
                         {{-- Category badge overlay --}}
@@ -372,10 +382,19 @@
                                 </span>
                             </div>
                         @endif
+                        {{-- Hover overlay --}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                            <span class="text-white text-sm font-semibold flex items-center gap-1.5">
+                                Lihat Detail
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </span>
+                        </div>
                     </div>
 
                     <div class="p-5">
-                        <h3 class="font-bold text-slate-800 mb-1 line-clamp-1">{{ $portfolio->title }}</h3>
+                        <h3 class="font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-purple-600 transition-colors">{{ $portfolio->title }}</h3>
                         @if($portfolio->tailor)
                             <p class="text-sm text-slate-500 flex items-center gap-1.5">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -385,8 +404,18 @@
                             </p>
                         @endif
                     </div>
-                </div>
+                </a>
                 @endforeach
+            </div>
+
+            <div class="text-center mt-10">
+                <a href="{{ route('portfolios.index') }}"
+                   class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity shadow-md shadow-purple-200">
+                    Lihat Semua Portfolio
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
             </div>
         @else
             <div class="text-center py-16 text-slate-400">
@@ -459,6 +488,205 @@
             </div>
         @endif
 
+    </div>
+</section>
+
+{{-- =====================================================================
+     KEUNGGULAN / WHY CHOOSE US
+     ===================================================================== --}}
+<section class="bg-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-sm font-semibold mb-4">
+                Kenapa Memilih Kami
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-4">Keunggulan TailorTrack</h2>
+            <p class="text-slate-500 text-lg max-w-2xl mx-auto">Platform terpercaya yang memberikan pengalaman terbaik dalam memesan jasa jahit secara online.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            {{-- Feature 1 --}}
+            <div class="relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-7 border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full -translate-x-8 -translate-y-8 group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center mb-5 shadow-lg shadow-indigo-200/50">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Penjahit Terverifikasi</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Setiap penjahit melewati proses verifikasi ketat untuk memastikan kualitas dan profesionalisme.</p>
+                </div>
+            </div>
+
+            {{-- Feature 2 --}}
+            <div class="relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-7 border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full -translate-x-8 -translate-y-8 group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center mb-5 shadow-lg shadow-purple-200/50">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Tracking Real-time</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Pantau progress pesanan Anda secara real-time dari mulai pengerjaan hingga selesai.</p>
+                </div>
+            </div>
+
+            {{-- Feature 3 --}}
+            <div class="relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-7 border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -translate-x-8 -translate-y-8 group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white flex items-center justify-center mb-5 shadow-lg shadow-emerald-200/50">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Harga Transparan</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Harga yang jelas dan sesuai anggaran. Tanpa biaya tersembunyi, tanpa kejutan.</p>
+                </div>
+            </div>
+
+            {{-- Feature 4 --}}
+            <div class="relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-7 border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -translate-x-8 -translate-y-8 group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center mb-5 shadow-lg shadow-amber-200/50">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Review & Rating</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Lihat ulasan jujur dari pelanggan sebelumnya untuk memilih penjahit yang tepat.</p>
+                </div>
+            </div>
+
+            {{-- Feature 5 --}}
+            <div class="relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-7 border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full -translate-x-8 -translate-y-8 group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-white flex items-center justify-center mb-5 shadow-lg shadow-rose-200/50">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Portfolio Lengkap</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Lihat portfolio karya setiap penjahit sebelum memesan. Pastikan hasilnya sesuai harapan.</p>
+                </div>
+            </div>
+
+            {{-- Feature 6 --}}
+            <div class="relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-7 border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full -translate-x-8 -translate-y-8 group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-600 text-white flex items-center justify-center mb-5 shadow-lg shadow-sky-200/50">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Komunikasi Mudah</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Diskusi langsung dengan penjahit untuk memastikan detail pesanan sesuai keinginan Anda.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{{-- =====================================================================
+     TESTIMONIAL
+     ===================================================================== --}}
+<section class="bg-slate-50 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-sm font-semibold mb-4">
+                Testimoni Pelanggan
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-4">Kata Mereka Tentang Kami</h2>
+            <p class="text-slate-500 text-lg max-w-xl mx-auto">Apa kata pelanggan yang sudah menggunakan layanan TailorTrack.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            {{-- Testimonial 1 --}}
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200 relative">
+                {{-- Quote icon --}}
+                <div class="absolute top-6 right-6">
+                    <svg class="w-10 h-10 text-indigo-100" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z"/>
+                    </svg>
+                </div>
+                {{-- Stars --}}
+                <div class="flex items-center gap-0.5 mb-4">
+                    @for($i = 0; $i < 5; $i++)
+                        <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    @endfor
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6 text-sm">"Sangat puas dengan layanan TailorTrack! Bisa memilih penjahit sesuai kebutuhan dan budget. Hasil jahitannya rapi dan sesuai ekspektasi."</p>
+                <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm">S</div>
+                    <div>
+                        <p class="font-semibold text-slate-800 text-sm">Sarah Putri</p>
+                        <p class="text-xs text-slate-400">Pelanggan sejak 2025</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Testimonial 2 --}}
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200 relative">
+                <div class="absolute top-6 right-6">
+                    <svg class="w-10 h-10 text-indigo-100" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z"/>
+                    </svg>
+                </div>
+                <div class="flex items-center gap-0.5 mb-4">
+                    @for($i = 0; $i < 5; $i++)
+                        <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    @endfor
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6 text-sm">"Saya pesan jas untuk wisuda di sini. Prosesnya mudah, bisa tracking progress, dan hasilnya luar biasa. Sangat recommended!"</p>
+                <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm">A</div>
+                    <div>
+                        <p class="font-semibold text-slate-800 text-sm">Ahmad Rizki</p>
+                        <p class="text-xs text-slate-400">Pelanggan sejak 2024</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Testimonial 3 --}}
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200 relative">
+                <div class="absolute top-6 right-6">
+                    <svg class="w-10 h-10 text-indigo-100" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z"/>
+                    </svg>
+                </div>
+                <div class="flex items-center gap-0.5 mb-4">
+                    @for($i = 0; $i < 5; $i++)
+                        <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    @endfor
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6 text-sm">"Sebagai ibu rumah tangga, TailorTrack memudahkan saya menemukan penjahit untuk seragam anak-anak. Tidak perlu keluar rumah, tinggal order online!"</p>
+                <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm">D</div>
+                    <div>
+                        <p class="font-semibold text-slate-800 text-sm">Dewi Anggraini</p>
+                        <p class="text-xs text-slate-400">Pelanggan sejak 2025</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </section>
 
