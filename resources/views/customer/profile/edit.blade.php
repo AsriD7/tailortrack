@@ -3,47 +3,46 @@
 @section('title', 'Profil Saya')
 
 @section('content')
-<div class="max-w-5xl mx-auto space-y-6">
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div class="mx-auto max-w-5xl space-y-6">
+    <section class="rounded-[2rem] bg-tailor-cream p-5 shadow-sm ring-1 ring-tailor-purple/10 sm:p-7">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-xl font-bold text-slate-800">Profil Saya</h1>
-                <p class="text-sm text-slate-500 mt-1">Perbarui informasi akun dan kontak Anda.</p>
+                <span class="inline-flex rounded-full bg-white px-4 py-2 text-xs font-black text-tailor-purple shadow-sm ring-1 ring-tailor-purple/10">Profil Customer</span>
+                <h1 class="mt-5 text-3xl font-black text-tailor-deep">Profil Saya</h1>
+                <p class="mt-2 text-sm leading-7 text-slate-600">Perbarui informasi akun dan kontak untuk kebutuhan pesanan.</p>
             </div>
-            <a href="{{ route('customer.dashboard') }}"
-               class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+            <a href="{{ route('customer.dashboard') }}" class="rounded-2xl bg-white px-5 py-3 text-center text-sm font-extrabold text-tailor-purple shadow-sm ring-1 ring-tailor-purple/10">
                 Kembali
             </a>
         </div>
+    </section>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3">
-            <aside class="p-6 bg-gradient-to-br from-indigo-600 to-purple-700 text-white">
-                <div class="w-20 h-20 rounded-2xl bg-white/20 flex items-center justify-center text-3xl font-extrabold shadow-inner mb-4">
+    <section class="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-tailor-purple/10">
+        <div class="grid lg:grid-cols-[320px_1fr]">
+            <aside class="brand-gradient p-6 text-white">
+                <div class="grid h-20 w-20 place-items-center rounded-3xl bg-white/15 text-3xl font-black shadow-inner">
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
-                <h2 class="text-lg font-bold">{{ $user->name }}</h2>
-                <p class="text-indigo-100 text-sm mt-1 break-all">{{ $user->email }}</p>
+                <h2 class="mt-5 text-xl font-black">{{ $user->name }}</h2>
+                <p class="mt-1 break-all text-sm font-semibold text-white/65">{{ $user->email }}</p>
 
-                <div class="mt-6 space-y-3 text-sm">
-                    <div class="bg-white/10 rounded-xl p-4">
-                        <p class="text-indigo-100 text-xs font-medium">Nomor Telepon</p>
-                        <p class="font-semibold mt-1">{{ $user->phone ?: 'Belum diisi' }}</p>
+                <div class="mt-6 space-y-3">
+                    <div class="rounded-2xl bg-white/10 p-4">
+                        <p class="text-xs font-bold text-white/60">Nomor Telepon</p>
+                        <p class="mt-1 text-sm font-black">{{ $user->phone ?: 'Belum diisi' }}</p>
                     </div>
-                    <div class="bg-white/10 rounded-xl p-4">
-                        <p class="text-indigo-100 text-xs font-medium">Alamat</p>
-                        <p class="font-semibold mt-1 leading-relaxed">{{ $user->address ?: 'Belum diisi' }}</p>
+                    <div class="rounded-2xl bg-white/10 p-4">
+                        <p class="text-xs font-bold text-white/60">Alamat</p>
+                        <p class="mt-1 text-sm font-black leading-7">{{ $user->address ?: 'Belum diisi' }}</p>
                     </div>
                 </div>
             </aside>
 
-            <section class="lg:col-span-2 p-6">
+            <div class="p-5 sm:p-7">
                 @if ($errors->any())
-                    <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
-                        <p class="font-semibold mb-1">Terdapat kesalahan pada formulir:</p>
-                        <ul class="list-disc list-inside space-y-0.5 text-xs">
+                    <div class="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        <p class="font-black">Terdapat kesalahan pada formulir:</p>
+                        <ul class="mt-2 list-inside list-disc space-y-1 text-xs font-semibold">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -55,129 +54,67 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="grid gap-5 sm:grid-cols-2">
                         <div>
-                            <label for="name" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                                Nama Lengkap <span class="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value="{{ old('name', $user->name) }}"
-                                required
-                                class="w-full px-4 py-2.5 border {{ $errors->has('name') ? 'border-red-400 bg-red-50 focus:ring-red-400' : 'border-slate-200 focus:ring-indigo-500' }} rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
-                            >
-                            @error('name')
-                                <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                            @enderror
+                            <label for="name" class="mb-2 block text-sm font-black text-tailor-deep">Nama Lengkap</label>
+                            <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required
+                                   class="h-12 w-full rounded-2xl border px-4 text-sm font-semibold outline-none transition {{ $errors->has('name') ? 'border-red-300 bg-red-50 focus:ring-red-100' : 'border-tailor-purple/10 bg-tailor-cream focus:border-tailor-gold focus:bg-white focus:ring-tailor-gold/20' }} focus:ring-4">
+                            @error('name') <p class="mt-2 text-xs font-semibold text-red-600">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
-                            <label for="email" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                                Email <span class="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value="{{ old('email', $user->email) }}"
-                                required
-                                class="w-full px-4 py-2.5 border {{ $errors->has('email') ? 'border-red-400 bg-red-50 focus:ring-red-400' : 'border-slate-200 focus:ring-indigo-500' }} rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
-                            >
-                            @error('email')
-                                <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                            @enderror
+                            <label for="email" class="mb-2 block text-sm font-black text-tailor-deep">Email</label>
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
+                                   class="h-12 w-full rounded-2xl border px-4 text-sm font-semibold outline-none transition {{ $errors->has('email') ? 'border-red-300 bg-red-50 focus:ring-red-100' : 'border-tailor-purple/10 bg-tailor-cream focus:border-tailor-gold focus:bg-white focus:ring-tailor-gold/20' }} focus:ring-4">
+                            @error('email') <p class="mt-2 text-xs font-semibold text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
                     <div>
-                        <label for="phone" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Nomor Telepon
-                        </label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value="{{ old('phone', $user->phone) }}"
-                            placeholder="08xx-xxxx-xxxx"
-                            class="w-full px-4 py-2.5 border {{ $errors->has('phone') ? 'border-red-400 bg-red-50 focus:ring-red-400' : 'border-slate-200 focus:ring-indigo-500' }} rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
-                        >
-                        @error('phone')
-                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                        @enderror
+                        <label for="phone" class="mb-2 block text-sm font-black text-tailor-deep">Nomor Telepon</label>
+                        <input type="tel" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="08xx-xxxx-xxxx"
+                               class="h-12 w-full rounded-2xl border px-4 text-sm font-semibold outline-none transition {{ $errors->has('phone') ? 'border-red-300 bg-red-50 focus:ring-red-100' : 'border-tailor-purple/10 bg-tailor-cream focus:border-tailor-gold focus:bg-white focus:ring-tailor-gold/20' }} focus:ring-4">
+                        @error('phone') <p class="mt-2 text-xs font-semibold text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label for="address" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Alamat
-                        </label>
-                        <textarea
-                            id="address"
-                            name="address"
-                            rows="4"
-                            placeholder="Alamat lengkap untuk kebutuhan komunikasi pesanan"
-                            class="w-full px-4 py-2.5 border {{ $errors->has('address') ? 'border-red-400 bg-red-50 focus:ring-red-400' : 'border-slate-200 focus:ring-indigo-500' }} rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent resize-none"
-                        >{{ old('address', $user->address) }}</textarea>
-                        @error('address')
-                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                        @enderror
+                        <label for="address" class="mb-2 block text-sm font-black text-tailor-deep">Alamat</label>
+                        <textarea id="address" name="address" rows="4" placeholder="Alamat lengkap untuk kebutuhan komunikasi pesanan"
+                                  class="w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none transition {{ $errors->has('address') ? 'border-red-300 bg-red-50 focus:ring-red-100' : 'border-tailor-purple/10 bg-tailor-cream focus:border-tailor-gold focus:bg-white focus:ring-tailor-gold/20' }} focus:ring-4">{{ old('address', $user->address) }}</textarea>
+                        @error('address') <p class="mt-2 text-xs font-semibold text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="border-t border-slate-100 pt-6">
-                        <h3 class="font-bold text-slate-800 text-sm">Ubah Password</h3>
-                        <p class="text-xs text-slate-500 mt-1 mb-4">Kosongkan bagian ini jika tidak ingin mengganti password.</p>
+                    <div class="rounded-3xl bg-tailor-cream p-5">
+                        <h3 class="font-black text-tailor-deep">Ubah Password</h3>
+                        <p class="mt-1 text-xs font-semibold text-slate-500">Kosongkan bagian ini jika tidak ingin mengganti password.</p>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="mt-5 grid gap-5 sm:grid-cols-2">
                             <div>
-                                <label for="password" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                                    Password Baru
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    autocomplete="new-password"
-                                    class="w-full px-4 py-2.5 border {{ $errors->has('password') ? 'border-red-400 bg-red-50 focus:ring-red-400' : 'border-slate-200 focus:ring-indigo-500' }} rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
-                                >
-                                @error('password')
-                                    <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                                @enderror
+                                <label for="password" class="mb-2 block text-sm font-black text-tailor-deep">Password Baru</label>
+                                <input type="password" id="password" name="password" autocomplete="new-password"
+                                       class="h-12 w-full rounded-2xl border px-4 text-sm font-semibold outline-none transition {{ $errors->has('password') ? 'border-red-300 bg-red-50 focus:ring-red-100' : 'border-tailor-purple/10 bg-white focus:border-tailor-gold focus:ring-tailor-gold/20' }} focus:ring-4">
+                                @error('password') <p class="mt-2 text-xs font-semibold text-red-600">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label for="password_confirmation" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                                    Konfirmasi Password Baru
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password_confirmation"
-                                    name="password_confirmation"
-                                    autocomplete="new-password"
-                                    class="w-full px-4 py-2.5 border border-slate-200 focus:ring-indigo-500 rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent"
-                                >
+                                <label for="password_confirmation" class="mb-2 block text-sm font-black text-tailor-deep">Konfirmasi Password Baru</label>
+                                <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password"
+                                       class="h-12 w-full rounded-2xl border border-tailor-purple/10 bg-white px-4 text-sm font-semibold outline-none transition focus:border-tailor-gold focus:ring-4 focus:ring-tailor-gold/20">
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
-                        <a href="{{ route('customer.dashboard') }}"
-                           class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
+                        <a href="{{ route('customer.dashboard') }}" class="rounded-2xl bg-slate-100 px-5 py-3 text-center text-sm font-extrabold text-slate-600">
                             Batal
                         </a>
-                        <button
-                            type="submit"
-                            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all shadow-md shadow-indigo-200"
-                        >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
+                        <button type="submit" class="rounded-2xl brand-gradient px-6 py-3 text-sm font-extrabold text-white shadow-soft">
                             Simpan Perubahan
                         </button>
                     </div>
                 </form>
-            </section>
+            </div>
         </div>
-    </div>
+    </section>
 </div>
 @endsection

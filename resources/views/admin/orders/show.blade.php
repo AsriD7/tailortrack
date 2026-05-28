@@ -37,11 +37,11 @@
     {{-- Kolom Kiri --}}
     <div class="lg:col-span-2 space-y-6">
         {{-- Order Header Card --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <div class="flex items-start justify-between mb-6">
                 <div>
                     <p class="text-xs text-slate-400 mb-1">Kode Pesanan</p>
-                    <h2 class="font-mono text-xl font-bold text-indigo-700">{{ $order->order_code }}</h2>
+                    <h2 class="font-mono text-xl font-bold text-tailor-purple">{{ $order->order_code }}</h2>
                 </div>
                 <span class="inline-flex px-3 py-1.5 rounded-full text-sm font-semibold {{ $order->status->badgeColor() }}">{{ $order->status->label() }}</span>
             </div>
@@ -92,7 +92,7 @@
 
         {{-- Customer & Tailor Info --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
                     <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center">
                         <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -103,10 +103,10 @@
                 <p class="text-sm text-slate-500">{{ $order->customer->email }}</p>
                 <p class="text-sm text-slate-500 mt-1">{{ $order->customer->phone ?? '-' }}</p>
             </div>
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <div class="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
+                    <div class="w-7 h-7 bg-tailor-soft rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-tailor-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
                     </div>
                     Penjahit
                 </h3>
@@ -117,16 +117,16 @@
         </div>
 
         {{-- Harga --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Informasi Harga</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-slate-50 rounded-xl p-4">
                     <p class="text-xs text-slate-400 mb-1">Estimasi Harga</p>
                     <p class="text-xl font-bold text-slate-700">Rp {{ number_format($order->estimated_price ?? 0, 0, ',', '.') }}</p>
                 </div>
-                <div class="bg-indigo-50 rounded-xl p-4">
-                    <p class="text-xs text-indigo-400 mb-1">Harga Final (Penjahit)</p>
-                    <p class="text-xl font-bold text-indigo-700">
+                <div class="bg-tailor-soft rounded-xl p-4">
+                    <p class="text-xs text-tailor-purple/55 mb-1">Harga Final (Penjahit)</p>
+                    <p class="text-xl font-bold text-tailor-purple">
                         {{ $order->total_price ? 'Rp ' . number_format($order->total_price, 0, ',', '.') : 'Menunggu konfirmasi' }}
                     </p>
                 </div>
@@ -135,7 +135,7 @@
 
         {{-- Gambar Referensi --}}
         @if($order->orderImages->isNotEmpty())
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Gambar Referensi ({{ $order->orderImages->count() }})</h3>
             <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                 @foreach($order->orderImages as $img)
@@ -149,7 +149,7 @@
 
         {{-- Pembayaran --}}
         @if($order->payment)
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Bukti Pembayaran</h3>
             <div class="flex items-start gap-4">
                 <a href="{{ $order->payment->paymentProofUrl }}" target="_blank">
@@ -172,8 +172,8 @@
                     <p class="mt-2 text-sm text-slate-500">Tanggal: {{ $order->payment->payment_date->format('d M Y') }}</p>
                     @endif
                     <div class="mt-3">
-                        <a href="{{ route('admin.payments.show', $order->payment) }}" class="gradient-brand text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 inline-flex">
-                            Kelola Pembayaran →
+                        <a href="{{ route('admin.payments.show', $order->payment) }}" class="brand-gradient text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 inline-flex">
+                            Kelola Pembayaran
                         </a>
                     </div>
                 </div>
@@ -197,7 +197,7 @@
         {{-- Admin Cancel Order --}}
         @php $canCancel = $order->canBeCancelledBy(auth()->user()); @endphp
         @if($canCancel)
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-1">Batalkan Pesanan</h3>
             <p class="text-xs text-slate-400 mb-4">Sebagai admin, Anda dapat membatalkan pesanan ini.</p>
             <form action="{{ route('admin.orders.cancel', $order) }}" method="POST" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?')">
@@ -216,7 +216,7 @@
         @endif
 
         {{-- Tracking History --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Riwayat Tracking</h3>
             @if($order->trackingHistories->isEmpty())
                 <p class="text-slate-400 text-sm text-center py-4">Belum ada riwayat.</p>
@@ -226,11 +226,11 @@
                 <div class="space-y-4">
                     @foreach($order->trackingHistories as $track)
                     <div class="relative flex gap-4">
-                        <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 border-white">
-                            <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></div>
+                        <div class="w-7 h-7 bg-tailor-soft rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 border-white">
+                            <div class="w-2.5 h-2.5 bg-tailor-purple rounded-full"></div>
                         </div>
                         <div class="flex-1 pb-1">
-                            <p class="text-xs font-semibold text-indigo-700 mb-0.5">{{ \App\Enums\OrderStatus::tryFrom($track->status)?->label() ?? $track->status }}</p>
+                            <p class="text-xs font-semibold text-tailor-purple mb-0.5">{{ \App\Enums\OrderStatus::tryFrom($track->status)?->label() ?? $track->status }}</p>
                             @if($track->description)
                             <p class="text-xs text-slate-600">{{ $track->description }}</p>
                             @endif

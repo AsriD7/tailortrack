@@ -72,9 +72,9 @@
             @method('PUT')
 
             {{-- Account Info --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div class="w-10 h-10 brand-gradient rounded-xl flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -90,7 +90,7 @@
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Lengkap <span class="text-red-500">*</span></label>
                         <input type="text" name="name" value="{{ old('name', $tailor->name) }}" required
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('name') ? 'border-red-400 bg-red-50' : '' }}"
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('name') ? 'border-red-400 bg-red-50' : '' }}"
                                placeholder="Masukkan nama lengkap">
                         @error('name')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -100,7 +100,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Email <span class="text-red-500">*</span></label>
                         <input type="email" name="email" value="{{ old('email', $tailor->email) }}" required
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('email') ? 'border-red-400 bg-red-50' : '' }}"
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('email') ? 'border-red-400 bg-red-50' : '' }}"
                                placeholder="email@example.com">
                         @error('email')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -110,7 +110,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Nomor Telepon</label>
                         <input type="text" name="phone" value="{{ old('phone', $tailor->phone) }}"
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('phone') ? 'border-red-400 bg-red-50' : '' }}"
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('phone') ? 'border-red-400 bg-red-50' : '' }}"
                                placeholder="08xxxxxxxxxx">
                         @error('phone')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -120,7 +120,7 @@
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Alamat</label>
                         <textarea name="address" rows="2"
-                                  class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('address') ? 'border-red-400 bg-red-50' : '' }}"
+                                  class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('address') ? 'border-red-400 bg-red-50' : '' }}"
                                   placeholder="Alamat lengkap">{{ old('address', $tailor->address) }}</textarea>
                         @error('address')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -130,7 +130,7 @@
             </div>
 
             {{-- Shop Info --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +148,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Toko</label>
                         <input type="text" name="shop_name" value="{{ old('shop_name', $tailor->tailorProfile?->shop_name) }}"
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('shop_name') ? 'border-red-400 bg-red-50' : '' }}"
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('shop_name') ? 'border-red-400 bg-red-50' : '' }}"
                                placeholder="Nama toko atau usaha">
                         @error('shop_name')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -158,7 +158,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Spesialisasi</label>
                         <input type="text" name="specialization" value="{{ old('specialization', $tailor->tailorProfile?->specialization) }}"
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('specialization') ? 'border-red-400 bg-red-50' : '' }}"
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('specialization') ? 'border-red-400 bg-red-50' : '' }}"
                                placeholder="cth: Kebaya, Jas, Batik">
                         @error('specialization')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -168,7 +168,7 @@
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Deskripsi</label>
                         <textarea name="description" rows="4"
-                                  class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('description') ? 'border-red-400 bg-red-50' : '' }}"
+                                  class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('description') ? 'border-red-400 bg-red-50' : '' }}"
                                   placeholder="Ceritakan tentang keahlian dan pengalaman penjahit...">{{ old('description', $tailor->tailorProfile?->description) }}</textarea>
                         @error('description')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -181,7 +181,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5">Maks. Pesanan Aktif</label>
                                 <input type="number" name="max_active_orders" min="1" max="999" value="{{ old('max_active_orders', $tailor->tailorProfile?->max_active_orders) }}"
-                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('max_active_orders') ? 'border-red-400 bg-red-50' : '' }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('max_active_orders') ? 'border-red-400 bg-red-50' : '' }}"
                                        placeholder="10">
                                 @error('max_active_orders')
                                     <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -190,7 +190,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5">Maks. / Minggu</label>
                                 <input type="number" name="max_weekly_orders" min="1" max="999" value="{{ old('max_weekly_orders', $tailor->tailorProfile?->max_weekly_orders) }}"
-                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('max_weekly_orders') ? 'border-red-400 bg-red-50' : '' }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('max_weekly_orders') ? 'border-red-400 bg-red-50' : '' }}"
                                        placeholder="5">
                                 @error('max_weekly_orders')
                                     <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -199,7 +199,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5">Estimasi Pengerjaan</label>
                                 <input type="number" name="estimated_processing_days" min="1" max="365" value="{{ old('estimated_processing_days', $tailor->tailorProfile?->estimated_processing_days) }}"
-                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent {{ $errors->has('estimated_processing_days') ? 'border-red-400 bg-red-50' : '' }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent {{ $errors->has('estimated_processing_days') ? 'border-red-400 bg-red-50' : '' }}"
                                        placeholder="7 hari">
                                 @error('estimated_processing_days')
                                     <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
@@ -215,9 +215,9 @@
                             @endphp
                             <div class="flex flex-wrap gap-2">
                                 @foreach(\App\Models\TailorProfile::WORKING_DAY_LABELS as $day => $label)
-                                    <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:border-indigo-300 hover:text-indigo-700 cursor-pointer">
+                                    <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:border-tailor-purple/30 hover:text-tailor-purple cursor-pointer">
                                         <input type="checkbox" name="working_days[]" value="{{ $day }}"
-                                               class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                               class="rounded border-slate-300 text-tailor-purple focus:ring-tailor-gold"
                                                {{ in_array($day, $selectedWorkingDays, true) ? 'checked' : '' }}>
                                         {{ $label }}
                                     </label>
@@ -245,7 +245,7 @@
                                     <input type="checkbox"
                                            name="price_list_ids[]"
                                            value="{{ $priceList->id }}"
-                                           class="mt-1 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                           class="mt-1 rounded border-slate-300 text-tailor-purple focus:ring-tailor-gold"
                                            {{ in_array($priceList->id, $selectedPriceLists) ? 'checked' : '' }}>
                                     <span>
                                         <span class="block text-sm font-semibold text-slate-700">{{ $priceList->name }}</span>
@@ -272,7 +272,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                        class="gradient-brand text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
+                        class="brand-gradient text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
                     Simpan Perubahan
                 </button>
             </div>

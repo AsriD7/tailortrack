@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="@yield('meta-description', 'TailorTrack - Platform pemesanan jasa jahit terpercaya.')">
-    <title>@yield('title', 'TailorTrack') - Platform Jasa Jahit</title>
+    <meta name="description" content="@yield('meta-description', 'TailorTrack - Platform pemesanan jasa jahit custom, tracking pesanan, portofolio penjahit, dan pembayaran sederhana.')">
+    <title>@yield('title', 'TailorTrack') - Platform Jasa Jahit Custom</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('storage\images\tailortrack-icon.svg') }}">
 
-    {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    {{-- Tailwind CSS CDN --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
                     colors: {
-                        primary: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
+                        tailor: {
+                            purple: '#4C0D7A',
+                            deep: '#2E064F',
+                            gold: '#F0B34F',
+                            cream: '#FFF9F0',
+                            soft: '#F3E8FF',
+                            ink: '#1F1330'
                         }
+                    },
+                    boxShadow: {
+                        soft: '0 18px 45px -18px rgba(76, 13, 122, 0.28)',
+                        gold: '0 16px 35px -18px rgba(240, 179, 79, 0.75)'
                     }
                 }
             }
@@ -36,474 +40,230 @@
     </script>
 
     <style>
-        * {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .gradient-brand {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        .nav-link {
-            position: relative;
-            transition: color 0.15s ease;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            border-radius: 2px 2px 0 0;
-            transform: scaleX(0);
-            transition: transform 0.2s ease;
-        }
-
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            transform: scaleX(1);
-        }
-
-        .nav-link.active {
-            color: #4f46e5;
-            font-weight: 600;
-        }
-
-        .card-hover {
-            transition: all 0.25s ease;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-
-        #mobile-menu {
-            transition: all 0.25s ease;
-        }
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .brand-gradient { background: linear-gradient(135deg, #4C0D7A 0%, #6D28D9 55%, #2E064F 100%); }
+        .brand-text { background: linear-gradient(135deg, #4C0D7A 0%, #6D28D9 65%, #F0B34F 105%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-gradient { background: linear-gradient(135deg, #F8D48B 0%, #F0B34F 100%); }
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(76, 13, 122, 0.08); }
+        .nav-link { position: relative; color: #6B6475; transition: color .18s ease; }
+        .nav-link::after { content: ''; position: absolute; left: 1rem; right: 1rem; bottom: -1.08rem; height: 3px; border-radius: 999px; background: linear-gradient(90deg, #4C0D7A, #F0B34F); transform: scaleX(0); transform-origin: center; transition: transform .22s ease; }
+        .nav-link:hover, .nav-link.active { color: #4C0D7A; }
+        .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
+        .brand-logo { display: block; height: auto; object-fit: contain; }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: #FFF9F0; }
+        ::-webkit-scrollbar-thumb { background: #D7B7F1; border-radius: 999px; }
     </style>
 
     @stack('styles')
 </head>
 
-<body class="bg-gray-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="flex min-h-screen flex-col bg-tailor-cream text-tailor-ink antialiased">
+    @php
+        $dashboardRoute = null;
+        if (auth()->check()) {
+            $role = auth()->user()->role;
+            $dashboardRoute = match($role) {
+                \App\Enums\UserRole::Admin => route('admin.dashboard'),
+                \App\Enums\UserRole::Tailor => route('tailor.dashboard'),
+                default => route('customer.dashboard'),
+            };
+        }
 
-    {{-- ================================================================
-    FLASH MESSAGES
-    ================================================================ --}}
+        $pendingCount = 0;
+        if (auth()->check() && auth()->user()->role === \App\Enums\UserRole::Customer && method_exists(auth()->user(), 'customerOrders')) {
+            $pendingCount = auth()->user()->customerOrders()->whereIn('status', ['menunggu_pembayaran', 'menunggu_konfirmasi'])->count();
+        }
+    @endphp
+
     @if(session('success'))
-        <div id="flash-success"
-            class="fixed top-4 right-4 z-[100] flex items-center gap-3 bg-emerald-500 text-white px-5 py-3.5 rounded-2xl shadow-xl text-sm font-medium max-w-sm border border-emerald-400">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>{{ session('success') }}</span>
-            <button onclick="document.getElementById('flash-success').remove()"
-                class="ml-auto opacity-70 hover:opacity-100 text-lg leading-none">✕</button>
+        <div id="flash-success" class="fixed right-5 top-5 z-[100] max-w-sm rounded-2xl border border-emerald-200 bg-white px-5 py-4 text-sm font-semibold text-emerald-700 shadow-soft">
+            <div class="flex items-start gap-3">
+                <span class="grid h-8 w-8 place-items-center rounded-full bg-emerald-50 text-xs font-black">OK</span>
+                <span class="pt-1">{{ session('success') }}</span>
+                <button onclick="document.getElementById('flash-success').remove()" class="ml-auto text-slate-400 hover:text-slate-700">x</button>
+            </div>
         </div>
     @endif
 
     @if(session('error'))
-        <div id="flash-error"
-            class="fixed top-4 right-4 z-[100] flex items-center gap-3 bg-red-500 text-white px-5 py-3.5 rounded-2xl shadow-xl text-sm font-medium max-w-sm border border-red-400">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>{{ session('error') }}</span>
-            <button onclick="document.getElementById('flash-error').remove()"
-                class="ml-auto opacity-70 hover:opacity-100 text-lg leading-none">✕</button>
+        <div id="flash-error" class="fixed right-5 top-5 z-[100] max-w-sm rounded-2xl border border-red-200 bg-white px-5 py-4 text-sm font-semibold text-red-700 shadow-soft">
+            <div class="flex items-start gap-3">
+                <span class="grid h-8 w-8 place-items-center rounded-full bg-red-50 font-black">!</span>
+                <span class="pt-1">{{ session('error') }}</span>
+                <button onclick="document.getElementById('flash-error').remove()" class="ml-auto text-slate-400 hover:text-slate-700">x</button>
+            </div>
         </div>
     @endif
 
-    {{-- ================================================================
-    NAVBAR
-    ================================================================ --}}
-    <nav class="bg-white/95 backdrop-blur border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between">
-
-                {{-- Logo --}}
-                <a href="{{ route('landing') }}" class="flex items-center gap-2.5 shrink-0">
-                    <div
-                        class="w-9 h-9 gradient-brand rounded-xl flex items-center justify-center shadow-md shadow-indigo-200">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
-                        </svg>
-                    </div>
-
-                    <div class="flex items-center gap-1.5">
-                        <span
-                            class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                            TailorTrack
-                        </span>
-                        {{-- <span
-                            class="text-[10px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-full font-bold">
-                            2.0
-                        </span> --}}
-                    </div>
-                </a>
-
-                {{-- Desktop Nav Links --}}
-                <div class="hidden md:flex items-center h-full gap-1">
-
-                    {{-- Beranda --}}
-                    @auth
-                        <a href="{{ route('customer.dashboard') }}"
-                            class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.dashboard*') ? 'active' : '' }}">
-                            Beranda
-                        </a>
-                    @else
-                        <a href="{{ route('landing') }}"
-                            class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('landing') ? 'active' : '' }}">
-                            Beranda
-                        </a>
-                    @endauth
-
-                    <a href="{{ route('tailors.index') }}"
-                        class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('tailors*') ? 'active' : '' }}">
-                        Cari Penjahit
+    <div class="hidden border-b border-tailor-purple/10 bg-tailor-deep text-white lg:block">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:px-6 lg:px-8">
+            <div class="flex items-center gap-6 text-white/80">
+                <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-tailor-gold"></span> Platform jasa jahit custom berbasis tracking</span>
+                <span>Upload desain - Pantau pesanan - Pembayaran terverifikasi</span>
+            </div>
+            <div class="flex items-center gap-5 text-white/80">
+                @auth
+                    <a href="{{ $dashboardRoute }}" class="hover:text-tailor-gold">
+                        {{ auth()->user()->role === \App\Enums\UserRole::Customer ? 'Dashboard Saya' : 'Dashboard' }}
                     </a>
-
-                    <a href="{{ route('portfolios.index') }}"
-                        class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('portfolios*') ? 'active' : '' }}">
-                        Portfolio
-                    </a>
-
-                    <a href="{{ route('price-lists.index') }}"
-                        class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('price-lists*') ? 'active' : '' }}">
-                        Daftar Harga
-                    </a>
-
-                    {{-- Pesanan Saya khusus user login --}}
-                    @auth
-                        <a href="{{ route('customer.orders.index') }}"
-                            class="nav-link px-4 h-full flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.orders*') ? 'active' : '' }}">
-                            Pesanan Saya
-
-                            @php
-                                $pendingCount = 0;
-
-                                if (auth()->check() && method_exists(auth()->user(), 'customerOrders')) {
-                                    $pendingCount = auth()->user()
-                                        ->customerOrders()
-                                        ->whereIn('status', ['menunggu_pembayaran', 'menunggu_konfirmasi'])
-                                        ->count();
-                                }
-                            @endphp
-
-                            @if($pendingCount > 0)
-                                <span
-                                    class="bg-red-500 text-white text-[10px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center">
-                                    {{ $pendingCount }}
-                                </span>
-                            @endif
-                        </a>
-
-                        <a href="{{ route('customer.measurements.index') }}"
-                            class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.measurements*') ? 'active' : '' }}">
-                            Ukuran Saya
-                        </a>
-
-                        <!-- <a href="{{ route('customer.profile.edit') }}"
-                                class="nav-link px-4 h-full flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 {{ request()->routeIs('customer.profile*') ? 'active' : '' }}">
-                                Profil Sayaaaa
-                            </a> -->
-                    @endauth
-
-                    {{-- Daftar Harga --}}
-                    
-                </div>
-
-                {{-- Right Area --}}
-                <div class="flex items-center gap-3">
-
-                    @auth
-                        {{-- User avatar + name --}}
-                        <a href="{{ route('customer.profile.edit') }}"
-                            class="hidden sm:flex items-center gap-3 pr-3 border-r border-gray-100 group">
-                            <div
-                                class="w-9 h-9 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm ring-2 ring-indigo-100">
-                                {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                            </div>
-
-                            <div class="text-left">
-                                <p
-                                    class="text-sm font-semibold text-gray-800 group-hover:text-indigo-600 leading-tight transition-colors">
-                                    {{ auth()->user()->name ?? 'User' }}
-                                </p>
-
-                                <p class="text-[11px] text-gray-400 leading-tight">
-                                    @if(isset(auth()->user()->role))
-                                        {{ ucfirst(strtolower(auth()->user()->role->value ?? auth()->user()->role)) }}
-                                    @else
-                                        Pelanggan
-                                    @endif
-                                </p>
-                            </div>
-                        </a>
-
-                        {{-- Logout --}}
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit"
-                                class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 text-sm font-medium px-3 py-2 rounded-lg transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                                <span class="hidden sm:inline">Logout</span>
-                            </button>
-                        </form>
-                    @endauth
-
-                    @guest
-                        {{-- Login/Register --}}
-                        <a href="{{ route('login') }}"
-                            class="hidden sm:inline-flex text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">
-                            Masuk
-                        </a>
-
-                        <a href="{{ route('register') }}" class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold">
-                            Daftar Gratis
-                        </a>
-                    @endguest
-
-                    {{-- Mobile menu button --}}
-                    <button id="mobile-menu-btn" type="button"
-                        class="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
+                    @if(auth()->user()->role === \App\Enums\UserRole::Customer)
+                        <a href="{{ route('customer.orders.index') }}" class="hover:text-tailor-gold">Pesanan Saya</a>
+                    @endif
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="hover:text-tailor-gold">Logout</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="hover:text-tailor-gold">Masuk</a>
+                    <a href="{{ route('register') }}" class="hover:text-tailor-gold">Daftar</a>
+                @endauth
             </div>
         </div>
+    </div>
 
-        {{-- Mobile Menu --}}
-        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
-            <div class="px-4 py-3 space-y-1">
-
-                @auth
-                    <a href="{{ route('customer.dashboard') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.dashboard*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        Beranda
-                    </a>
-                @else
-                    <a href="{{ route('landing') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('landing') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        Beranda
-                    </a>
-                @endauth
-
-                <a href="{{ route('tailors.index') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('tailors*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Cari Penjahit
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-20 items-center justify-between gap-4">
+                <a href="{{ route('landing') }}" class="flex shrink-0 items-center gap-3" aria-label="TailorTrack Home">
+                    <img src="{{ asset('storage\images\tailortrack-icon.svg') }}" alt="" class="brand-logo h-12 w-12 rounded-2xl shadow-soft ring-1 ring-tailor-purple/10">
+                    <span class="text-2xl font-black tracking-tight brand-text">TailorTrack</span>
                 </a>
 
-                <a href="{{ route('portfolios.index') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('portfolios*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    Portfolio
-                </a>
+                <div class="hidden flex-1 justify-center lg:flex">
+                    <form action="{{ route('tailors.index') }}" method="GET" class="relative w-full max-w-md">
+                        <input type="search" name="search" placeholder="Cari penjahit, kebaya, jas, dress..." class="w-full rounded-2xl border border-tailor-purple/10 bg-white/80 py-3 pl-11 pr-4 text-sm font-medium text-tailor-ink outline-none shadow-sm transition focus:border-tailor-gold focus:ring-4 focus:ring-tailor-gold/20">
+                        <svg class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-tailor-purple/45" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                    </form>
+                </div>
 
-                @auth
-                    <a href="{{ route('customer.orders.index') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.orders*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                        </svg>
-                        Pesanan Saya
-                    </a>
+                <div class="hidden items-center gap-1 lg:flex">
+                    <a href="{{ route('landing') }}" class="nav-link {{ request()->routeIs('landing') ? 'active' : '' }} px-4 py-2 text-sm font-bold">Beranda</a>
+                    <a href="{{ route('tailors.index') }}" class="nav-link {{ request()->routeIs('tailors*') ? 'active' : '' }} px-4 py-2 text-sm font-bold">Penjahit</a>
+                    <a href="{{ route('portfolios.index') }}" class="nav-link {{ request()->routeIs('portfolios*') ? 'active' : '' }} px-4 py-2 text-sm font-bold">Portfolio</a>
+                    <a href="{{ route('price-lists.index') }}" class="nav-link {{ request()->routeIs('price-lists*') ? 'active' : '' }} px-4 py-2 text-sm font-bold">Harga</a>
+                </div>
 
-                    <a href="{{ route('customer.measurements.index') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.measurements*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16M8 4v16m8-16v16" />
-                        </svg>
-                        Ukuran Saya
-                    </a>
-
-                    <a href="{{ route('customer.profile.edit') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('customer.profile*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        Profil Saya
-                    </a>
-                @endauth
-
-                <a href="{{ route('price-lists.index') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('price-lists*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a2 2 0 012-2z" />
-                    </svg>
-                    Daftar Harga
-                </a>
-
-                @guest
-                    <div class="pt-3 mt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
-                        <a href="{{ route('login') }}"
-                            class="text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 bg-slate-50 hover:bg-slate-100">
-                            Masuk
+                <div class="hidden shrink-0 items-center gap-3 lg:flex">
+                    @auth
+                        @if(auth()->user()->role === \App\Enums\UserRole::Customer)
+                            <a href="{{ route('customer.orders.index') }}" class="relative rounded-2xl border border-tailor-purple/10 bg-white px-4 py-3 text-sm font-extrabold text-tailor-purple shadow-sm transition hover:border-tailor-gold/50 hover:bg-tailor-cream">
+                                Pesanan
+                                @if($pendingCount > 0)
+                                    <span class="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-tailor-gold px-1 text-[10px] text-tailor-deep">{{ $pendingCount }}</span>
+                                @endif
+                            </a>
+                        @endif
+                        <a href="{{ $dashboardRoute }}" class="rounded-2xl brand-gradient px-5 py-3 text-sm font-extrabold text-white shadow-soft transition hover:-translate-y-0.5">
+                            {{ auth()->user()->role === \App\Enums\UserRole::Customer ? 'Dashboard Saya' : 'Dashboard' }}
                         </a>
-                        <a href="{{ route('register') }}"
-                            class="text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white gradient-brand">
-                            Daftar
-                        </a>
-                    </div>
-                @endguest
-
-                @auth
-                    <div class="pt-3 mt-3 border-t border-gray-100">
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit"
-                                class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100">
+                            <button type="submit" class="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-extrabold text-red-600 transition hover:bg-red-100">
                                 Logout
                             </button>
                         </form>
+                    @else
+                        <a href="{{ route('login') }}" class="rounded-2xl px-4 py-3 text-sm font-extrabold text-tailor-purple hover:bg-tailor-soft">Masuk</a>
+                        <a href="{{ route('register') }}" class="rounded-2xl brand-gradient px-5 py-3 text-sm font-extrabold text-white shadow-soft transition hover:-translate-y-0.5">Mulai Pesan</a>
+                    @endauth
+                </div>
+
+                <button id="mobile-menu-btn" class="rounded-2xl bg-white p-3 text-tailor-purple shadow-sm ring-1 ring-tailor-purple/10 lg:hidden" aria-label="Buka menu">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden border-t border-tailor-purple/10 bg-white lg:hidden">
+            <div class="mx-auto max-w-7xl space-y-2 px-4 py-4 sm:px-6">
+                <form action="{{ route('tailors.index') }}" method="GET" class="relative mb-3">
+                    <input type="search" name="search" placeholder="Cari jasa jahit..." class="w-full rounded-2xl border border-tailor-purple/10 bg-tailor-cream py-3 pl-10 pr-4 text-sm outline-none">
+                    <svg class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-tailor-purple/45" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                </form>
+                <a href="{{ route('landing') }}" class="block rounded-xl px-4 py-3 text-sm font-bold {{ request()->routeIs('landing') ? 'bg-tailor-soft text-tailor-purple' : 'text-slate-600 hover:bg-tailor-cream' }}">Beranda</a>
+                <a href="{{ route('tailors.index') }}" class="block rounded-xl px-4 py-3 text-sm font-bold {{ request()->routeIs('tailors*') ? 'bg-tailor-soft text-tailor-purple' : 'text-slate-600 hover:bg-tailor-cream' }}">Penjahit</a>
+                <a href="{{ route('portfolios.index') }}" class="block rounded-xl px-4 py-3 text-sm font-bold {{ request()->routeIs('portfolios*') ? 'bg-tailor-soft text-tailor-purple' : 'text-slate-600 hover:bg-tailor-cream' }}">Portfolio</a>
+                <a href="{{ route('price-lists.index') }}" class="block rounded-xl px-4 py-3 text-sm font-bold {{ request()->routeIs('price-lists*') ? 'bg-tailor-soft text-tailor-purple' : 'text-slate-600 hover:bg-tailor-cream' }}">Daftar Harga</a>
+                @auth
+                    @if(auth()->user()->role === \App\Enums\UserRole::Customer)
+                        <a href="{{ route('customer.orders.index') }}" class="block rounded-xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-tailor-cream">Pesanan Saya</a>
+                    @endif
+                    <a href="{{ $dashboardRoute }}" class="block rounded-xl bg-tailor-purple px-4 py-3 text-center text-sm font-extrabold text-white">
+                        {{ auth()->user()->role === \App\Enums\UserRole::Customer ? 'Dashboard Saya' : 'Dashboard' }}
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="pt-2">@csrf<button type="submit" class="w-full rounded-xl bg-red-50 px-4 py-3 text-sm font-extrabold text-red-600">Logout</button></form>
+                @else
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <a href="{{ route('login') }}" class="rounded-xl bg-tailor-soft px-4 py-3 text-center text-sm font-extrabold text-tailor-purple">Masuk</a>
+                        <a href="{{ route('register') }}" class="rounded-xl brand-gradient px-4 py-3 text-center text-sm font-extrabold text-white">Daftar</a>
                     </div>
                 @endauth
-
             </div>
         </div>
     </nav>
 
-    {{-- ================================================================
-    PAGE CONTENT
-    ================================================================ --}}
     <main class="flex-1">
         @hasSection('fullwidth')
             @yield('content')
         @else
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 @yield('content')
             </div>
         @endif
     </main>
 
-    {{-- ================================================================
-    FOOTER
-    ================================================================ --}}
-    <footer class="border-t border-gray-100 bg-white mt-auto">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
-            <p>
-                © {{ date('Y') }}
-                <span class="font-semibold text-indigo-600">TailorTrack</span>
-                — Platform Jasa Jahit Terpercaya
-            </p>
-
-            <div class="flex gap-4">
-                <a href="{{ route('tailors.index') }}" class="hover:text-indigo-600 transition-colors">
-                    Cari Penjahit
-                </a>
-                <a href="{{ route('portfolios.index') }}" class="hover:text-indigo-600 transition-colors">
-                    Portfolio
-                </a>
-                <a href="{{ route('price-lists.index') }}" class="hover:text-indigo-600 transition-colors">
-                    Daftar Harga
-                </a>
-
-                @guest
-                    <a href="{{ route('register') }}" class="hover:text-indigo-600 transition-colors">
-                        Daftar
-                    </a>
-                @endguest
+    <footer class="border-t border-tailor-purple/10 bg-white">
+        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
+                <div>
+                    <div class="flex items-center">
+                        <img src="{{ asset('storage\images\tailortrack-logo.svg') }}" alt="TailorTrack" class="brand-logo h-14 w-auto max-w-[220px]">
+                    </div>
+                    <p class="mt-4 max-w-md text-sm leading-7 text-slate-500">Platform jasa jahit custom yang membantu pelanggan menemukan penjahit, mengirim detail pesanan, melacak proses jahitan, dan mengelola pembayaran secara lebih rapi.</p>
+                </div>
+                <div>
+                    <h4 class="font-extrabold text-tailor-deep">Menu</h4>
+                    <div class="mt-4 grid gap-3 text-sm font-semibold text-slate-500">
+                        <a href="{{ route('tailors.index') }}" class="hover:text-tailor-purple">Cari Penjahit</a>
+                        <a href="{{ route('portfolios.index') }}" class="hover:text-tailor-purple">Portfolio</a>
+                        <a href="{{ route('price-lists.index') }}" class="hover:text-tailor-purple">Daftar Harga</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-extrabold text-tailor-deep">Akun</h4>
+                    <div class="mt-4 grid gap-3 text-sm font-semibold text-slate-500">
+                        @guest
+                            <a href="{{ route('login') }}" class="hover:text-tailor-purple">Masuk</a>
+                            <a href="{{ route('register') }}" class="hover:text-tailor-purple">Daftar</a>
+                        @else
+                            <a href="{{ $dashboardRoute }}" class="hover:text-tailor-purple">Dashboard</a>
+                            <form action="{{ route('logout') }}" method="POST">@csrf<button class="text-left hover:text-red-600">Logout</button></form>
+                        @endguest
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-tailor-purple/10 pt-6 text-xs font-semibold text-slate-400 sm:flex-row">
+                <p>&copy; {{ date('Y') }} TailorTrack. Platform Jasa Jahit Terpercaya.</p>
+                <p>Needle - Thread - Tracking - Completion</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Auto-dismiss flash messages
         setTimeout(function () {
             ['flash-success', 'flash-error'].forEach(function (id) {
-                var el = document.getElementById(id);
-                if (el) {
-                    el.style.transition = 'opacity 0.4s';
-                    el.style.opacity = '0';
-                    setTimeout(function () {
-                        el.remove();
-                    }, 400);
-                }
+                const el = document.getElementById(id);
+                if (el) { el.style.transition = 'opacity .4s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 400); }
             });
         }, 4000);
 
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', function () {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) menu.classList.toggle('hidden');
+        });
     </script>
 
     @stack('scripts')
 </body>
-
 </html>

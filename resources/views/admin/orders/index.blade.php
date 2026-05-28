@@ -27,24 +27,24 @@
 
 @section('content')
 {{-- Filter Bar --}}
-<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6">
+<div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-4 mb-6">
     <form method="GET" action="{{ route('admin.orders.index') }}" class="flex flex-wrap items-center gap-3">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kode order..."
-            class="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48">
-        <select name="status" class="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+            class="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold w-48">
+        <select name="status" class="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold bg-white">
             <option value="">Semua Status</option>
             @foreach($statuses as $status)
                 <option value="{{ $status->value }}" {{ request('status') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
             @endforeach
         </select>
-        <button type="submit" class="gradient-brand text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">Filter</button>
+        <button type="submit" class="brand-gradient text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">Filter</button>
         @if(request()->hasAny(['search','status']))
             <a href="{{ route('admin.orders.index') }}" class="text-sm text-slate-500 hover:text-slate-700">Reset</a>
         @endif
     </form>
 </div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+<div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
@@ -63,7 +63,7 @@
                 @forelse($orders as $order)
                 <tr class="hover:bg-slate-50/60 transition-colors">
                     <td class="px-5 py-3.5">
-                        <span class="font-mono text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-semibold">{{ $order->order_code }}</span>
+                        <span class="font-mono text-xs bg-tailor-soft text-tailor-purple px-2 py-1 rounded font-semibold">{{ $order->order_code }}</span>
                     </td>
                     <td class="px-5 py-3.5">
                         <div class="flex items-center gap-2">

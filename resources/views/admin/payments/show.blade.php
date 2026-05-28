@@ -37,11 +37,11 @@
     {{-- Kolom Kiri: Detail Pembayaran --}}
     <div class="lg:col-span-2 space-y-6">
         {{-- Info Pesanan --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <div class="flex items-start justify-between mb-5">
                 <div>
                     <p class="text-xs text-slate-400 mb-1">Kode Pesanan</p>
-                    <a href="{{ route('admin.orders.show', $payment->order) }}" class="font-mono text-xl font-bold text-indigo-700 hover:text-indigo-800">{{ $payment->order->order_code }}</a>
+                    <a href="{{ route('admin.orders.show', $payment->order) }}" class="font-mono text-xl font-bold text-tailor-purple hover:text-tailor-deep">{{ $payment->order->order_code }}</a>
                 </div>
                 <span class="inline-flex px-3 py-1.5 rounded-full text-sm font-semibold {{ $payment->status->badgeColor() }}">{{ $payment->status->label() }}</span>
             </div>
@@ -66,7 +66,7 @@
                 <div class="bg-slate-50 rounded-xl p-4">
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Penjahit</p>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold">
+                        <div class="w-10 h-10 bg-tailor-soft rounded-full flex items-center justify-center text-tailor-purple font-bold">
                             {{ strtoupper(substr($payment->order->tailor->tailorProfile->shop_name ?? $payment->order->tailor->name ?? '?', 0, 1)) }}
                         </div>
                         <div>
@@ -115,7 +115,7 @@
         </div>
 
         {{-- Bukti Pembayaran --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Bukti Pembayaran</h3>
             <div class="flex flex-col items-center">
                 <a href="{{ $payment->paymentProofUrl }}" target="_blank" class="block group">
@@ -124,7 +124,7 @@
                 </a>
                 <p class="mt-3 text-xs text-slate-400">Klik gambar untuk memperbesar</p>
                 <a href="{{ $payment->paymentProofUrl }}" target="_blank"
-                    class="mt-2 flex items-center gap-2 text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                    class="mt-2 flex items-center gap-2 text-tailor-purple hover:text-tailor-purple text-sm font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     Buka di Tab Baru
                 </a>
@@ -132,7 +132,7 @@
         </div>
 
         {{-- Tracking History --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Riwayat Pesanan</h3>
             @if($payment->order->trackingHistories->isEmpty())
                 <p class="text-slate-400 text-sm text-center py-4">Belum ada riwayat.</p>
@@ -142,11 +142,11 @@
                 <div class="space-y-4">
                     @foreach($payment->order->trackingHistories as $track)
                     <div class="relative flex gap-4">
-                        <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 border-white">
-                            <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></div>
+                        <div class="w-7 h-7 bg-tailor-soft rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 border-white">
+                            <div class="w-2.5 h-2.5 bg-tailor-purple rounded-full"></div>
                         </div>
                         <div class="flex-1 pb-1">
-                            <p class="text-xs font-semibold text-indigo-700 mb-0.5">{{ \App\Enums\OrderStatus::tryFrom($track->status)?->label() ?? $track->status }}</p>
+                            <p class="text-xs font-semibold text-tailor-purple mb-0.5">{{ \App\Enums\OrderStatus::tryFrom($track->status)?->label() ?? $track->status }}</p>
                             @if($track->description)
                             <p class="text-xs text-slate-600">{{ $track->description }}</p>
                             @endif
@@ -211,7 +211,7 @@
         </div>
         @else
         {{-- Sudah diproses --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6 text-center">
             <div class="w-14 h-14 {{ $payment->status->value === 'verified' ? 'bg-emerald-100' : 'bg-red-100' }} rounded-full flex items-center justify-center mx-auto mb-3">
                 @if($payment->status->value === 'verified')
                     <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -225,7 +225,7 @@
         @endif
 
         {{-- Info singkat --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-sm space-y-2">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-5 text-sm space-y-2">
             <div class="flex justify-between">
                 <span class="text-slate-400">Pembayaran</span>
                 <span class="font-medium text-slate-700">{{ $payment->payment_type_label }}</span>

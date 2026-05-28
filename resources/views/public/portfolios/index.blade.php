@@ -1,174 +1,152 @@
 @extends('layouts.customer')
 
 @section('title', 'Portfolio Karya Penjahit')
-@section('meta-description', 'Lihat portfolio dan hasil karya terbaik dari penjahit-penjahit profesional di TailorTrack.')
+@section('meta-description', 'Lihat portfolio dan hasil karya terbaik dari penjahit profesional di TailorTrack.')
+@section('fullwidth', true)
 
 @section('content')
+<section class="bg-tailor-cream">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <nav class="mb-8 flex items-center gap-2 text-sm font-semibold text-slate-500">
+            <a href="{{ route('landing') }}" class="hover:text-tailor-purple">Beranda</a>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+            <span class="text-tailor-purple">Portfolio</span>
+        </nav>
 
-{{-- Page Header --}}
-<div class="mb-8">
-    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-1">
-                <span class="gradient-text">Portfolio</span> Karya Penjahit
-            </h1>
-            <p class="text-slate-500 text-sm sm:text-base">Lihat hasil karya terbaik dari penjahit-penjahit profesional kami.</p>
+        <div class="grid gap-8 lg:grid-cols-[1fr_0.62fr] lg:items-end">
+            <div>
+                <span class="inline-flex rounded-full bg-white px-4 py-2 text-sm font-extrabold text-tailor-purple shadow-sm ring-1 ring-tailor-purple/10">
+                    Inspirasi jahitan
+                </span>
+                <h1 class="mt-5 max-w-3xl text-4xl font-black leading-tight text-tailor-deep sm:text-5xl">
+                    Lihat hasil karya penjahit sebelum mulai pesan.
+                </h1>
+                <p class="mt-5 max-w-2xl text-base leading-8 text-slate-600">
+                    Gunakan portfolio untuk membandingkan gaya, detail finishing, dan jenis layanan yang sesuai dengan kebutuhan kamu.
+                </p>
+            </div>
+            <div class="rounded-3xl bg-white p-5 shadow-soft ring-1 ring-tailor-purple/10">
+                <p class="text-xs font-black uppercase tracking-[0.18em] text-tailor-purple/55">Total Karya</p>
+                <p class="mt-2 text-4xl font-black text-tailor-deep">{{ $portfolios->total() }}</p>
+                <p class="mt-2 text-sm font-semibold text-slate-500">Portfolio tersedia di TailorTrack</p>
+            </div>
         </div>
     </div>
+</section>
 
-    {{-- Search & Filter --}}
-    <form method="GET" action="{{ route('portfolios.index') }}" class="flex flex-col sm:flex-row gap-3">
-        <div class="relative flex-1">
-            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Cari judul, deskripsi, atau nama penjahit..."
-                   class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none transition-all bg-white">
-        </div>
+<section class="bg-white py-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <form method="GET" action="{{ route('portfolios.index') }}" class="rounded-3xl border border-tailor-purple/10 bg-white p-4 shadow-soft sm:p-5">
+            <div class="grid gap-3 md:grid-cols-[1fr_260px_auto]">
+                <label class="relative">
+                    <span class="sr-only">Cari portfolio</span>
+                    <svg class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-tailor-purple/45" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                    </svg>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul, deskripsi, atau nama penjahit..." class="h-12 w-full rounded-2xl border border-tailor-purple/10 bg-tailor-cream pl-12 pr-4 text-sm font-semibold text-tailor-ink outline-none transition focus:border-tailor-gold focus:bg-white focus:ring-4 focus:ring-tailor-gold/20">
+                </label>
 
-        <select name="category" onchange="this.form.submit()"
-                class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none bg-white cursor-pointer">
-            <option value="">Semua Kategori</option>
-            @foreach($categories as $cat)
-                <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-            @endforeach
-        </select>
+                <select name="category" class="h-12 rounded-2xl border border-tailor-purple/10 bg-tailor-cream px-4 text-sm font-semibold text-tailor-ink outline-none transition focus:border-tailor-gold focus:bg-white focus:ring-4 focus:ring-tailor-gold/20">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                    @endforeach
+                </select>
 
-        <button type="submit" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-semibold inline-flex items-center justify-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            Cari
-        </button>
-    </form>
-</div>
+                <button type="submit" class="rounded-2xl brand-gradient px-6 py-3 text-sm font-extrabold text-white shadow-soft transition hover:-translate-y-0.5">
+                    Cari
+                </button>
+            </div>
 
-{{-- Active Filters --}}
-@if(request('search') || request('category'))
-<div class="flex flex-wrap items-center gap-2 mb-6">
-    <span class="text-sm text-slate-500">Filter aktif:</span>
-    @if(request('search'))
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium">
-            "{{ request('search') }}"
-            <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="hover:text-indigo-900">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-            </a>
-        </span>
-    @endif
-    @if(request('category'))
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-medium">
-            {{ request('category') }}
-            <a href="{{ request()->fullUrlWithQuery(['category' => null]) }}" class="hover:text-purple-900">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-            </a>
-        </span>
-    @endif
-    <a href="{{ route('portfolios.index') }}" class="text-xs text-slate-400 hover:text-red-500 transition-colors ml-1">Reset semua</a>
-</div>
-@endif
-
-{{-- Portfolio Grid --}}
-@if($portfolios->isNotEmpty())
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        @foreach($portfolios as $portfolio)
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden card-hover group">
-            {{-- Portfolio Image --}}
-            <div class="aspect-[4/3] overflow-hidden bg-slate-100 relative">
-                @if($portfolio->image)
-                    <img src="{{ Storage::url($portfolio->image) }}"
-                         alt="{{ $portfolio->title }}"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                @else
-                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
-                        <svg class="w-12 h-12 mb-1" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <span class="text-xs">Tidak ada foto</span>
-                    </div>
-                @endif
-
-                {{-- Category badge --}}
-                @if($portfolio->category)
-                    <div class="absolute top-3 left-3">
-                        <span class="inline-flex px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-xs font-semibold">
-                            {{ $portfolio->category }}
-                        </span>
-                    </div>
-                @endif
-
-                {{-- Featured badge --}}
-                @if($portfolio->is_featured)
-                    <div class="absolute top-3 right-3">
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-400/90 backdrop-blur-sm text-yellow-900 text-xs font-bold">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                            Unggulan
-                        </span>
-                    </div>
-                @endif
-
-                {{-- Hover overlay --}}
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                    <a href="{{ route('portfolios.show', $portfolio) }}"
-                       class="inline-flex items-center gap-1.5 text-white text-sm font-semibold hover:underline">
-                        Lihat Detail
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
+            @if(request('search') || request('category'))
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                    <span class="text-sm font-semibold text-slate-500">Filter aktif:</span>
+                    @if(request('search'))
+                        <span class="rounded-full bg-tailor-soft px-3 py-1 text-xs font-black text-tailor-purple">{{ request('search') }}</span>
+                    @endif
+                    @if(request('category'))
+                        <span class="rounded-full bg-tailor-soft px-3 py-1 text-xs font-black text-tailor-purple">{{ request('category') }}</span>
+                    @endif
+                    <a href="{{ route('portfolios.index') }}" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500 hover:bg-slate-200">Reset</a>
                 </div>
-            </div>
+            @endif
+        </form>
+    </div>
+</section>
 
-            {{-- Info --}}
-            <div class="p-4">
-                <a href="{{ route('portfolios.show', $portfolio) }}">
-                    <h3 class="font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-indigo-600 transition-colors">
-                        {{ $portfolio->title }}
-                    </h3>
-                </a>
-                @if($portfolio->description)
-                    <p class="text-slate-500 text-sm line-clamp-2 mb-3">{{ $portfolio->description }}</p>
-                @endif
+<section class="bg-white pb-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        @if($portfolios->isNotEmpty())
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                @foreach($portfolios as $portfolio)
+                    <a href="{{ route('portfolios.show', $portfolio) }}" class="group overflow-hidden rounded-3xl border border-tailor-purple/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
+                        <div class="relative aspect-[4/3] overflow-hidden bg-tailor-soft">
+                            @if($portfolio->image)
+                                <img src="{{ Storage::url($portfolio->image) }}" alt="{{ $portfolio->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                            @else
+                                <div class="grid h-full w-full place-items-center text-tailor-purple/35">
+                                    <svg class="h-14 w-14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4-4 3 3 5-6 4 5M4 6h16v12H4V6z"/>
+                                    </svg>
+                                </div>
+                            @endif
 
-                {{-- Tailor info --}}
-                @if($portfolio->tailor)
-                    <div class="flex items-center gap-2 pt-3 border-t border-slate-50">
-                        @if($portfolio->tailor->tailorProfile && $portfolio->tailor->tailorProfile->photo)
-                            <img src="{{ Storage::url($portfolio->tailor->tailorProfile->photo) }}"
-                                 alt="{{ $portfolio->tailor->tailorProfile->shop_name }}"
-                                 class="w-6 h-6 rounded-full object-cover ring-1 ring-slate-200">
-                        @else
-                            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold ring-1 ring-slate-200">
-                                {{ strtoupper(substr($portfolio->tailor->tailorProfile->shop_name ?? $portfolio->tailor->name, 0, 1)) }}
+                            <div class="absolute left-3 top-3 flex flex-wrap gap-2">
+                                @if($portfolio->category)
+                                    <span class="rounded-full bg-white/90 px-3 py-1 text-xs font-black text-tailor-purple shadow-sm">{{ $portfolio->category }}</span>
+                                @endif
+                                @if($portfolio->is_featured)
+                                    <span class="rounded-full bg-tailor-gold px-3 py-1 text-xs font-black text-tailor-deep shadow-sm">Unggulan</span>
+                                @endif
                             </div>
-                        @endif
-                        <a href="{{ route('tailors.show', $portfolio->tailor) }}"
-                           class="text-xs text-slate-500 hover:text-indigo-600 transition-colors font-medium truncate">
-                            {{ $portfolio->tailor->tailorProfile->shop_name ?? $portfolio->tailor->name }}
-                        </a>
-                    </div>
-                @endif
+                        </div>
+
+                        <div class="p-5">
+                            <h3 class="line-clamp-1 text-lg font-black text-tailor-deep">{{ $portfolio->title }}</h3>
+                            @if($portfolio->description)
+                                <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ $portfolio->description }}</p>
+                            @endif
+
+                            @if($portfolio->tailor)
+                                <div class="mt-5 flex items-center gap-3 border-t border-tailor-purple/10 pt-4">
+                                    @if($portfolio->tailor->tailorProfile && $portfolio->tailor->tailorProfile->photo)
+                                        <img src="{{ Storage::url($portfolio->tailor->tailorProfile->photo) }}" alt="{{ $portfolio->tailor->tailorProfile->shop_name }}" class="h-9 w-9 rounded-xl object-cover ring-2 ring-tailor-soft">
+                                    @else
+                                        <div class="grid h-9 w-9 place-items-center rounded-xl brand-gradient text-xs font-black text-white">
+                                            {{ strtoupper(substr($portfolio->tailor->tailorProfile->shop_name ?? $portfolio->tailor->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <div class="min-w-0">
+                                        <p class="truncate text-sm font-black text-tailor-deep">{{ $portfolio->tailor->tailorProfile->shop_name ?? $portfolio->tailor->name }}</p>
+                                        <p class="text-xs font-semibold text-slate-400">Penjahit</p>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </a>
+                @endforeach
             </div>
-        </div>
-        @endforeach
-    </div>
 
-    {{-- Pagination --}}
-    <div class="mt-8">
-        {{ $portfolios->links() }}
+            @if($portfolios->hasPages())
+                <div class="mt-10 flex justify-center">
+                    <div class="rounded-3xl border border-tailor-purple/10 bg-white p-3 shadow-sm">
+                        {{ $portfolios->links() }}
+                    </div>
+                </div>
+            @endif
+        @else
+            <div class="rounded-3xl border border-dashed border-tailor-purple/20 bg-tailor-cream p-10 text-center sm:p-14">
+                <div class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-white text-tailor-purple shadow-sm">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4-4 3 3 5-6 4 5M4 6h16v12H4V6z"/>
+                    </svg>
+                </div>
+                <h2 class="mt-6 text-2xl font-black text-tailor-deep">Belum ada portfolio</h2>
+                <p class="mx-auto mt-3 max-w-md text-sm leading-7 text-slate-500">Portfolio dari penjahit akan muncul di sini.</p>
+            </div>
+        @endif
     </div>
-@else
-    <div class="text-center py-20">
-        <div class="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-            <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-        </div>
-        <h3 class="text-lg font-bold text-slate-600 mb-1">Belum ada portfolio</h3>
-        <p class="text-slate-400 text-sm">Portfolio dari penjahit akan muncul di sini.</p>
-    </div>
-@endif
-
+</section>
 @endsection

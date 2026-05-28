@@ -40,7 +40,26 @@
 @endsection
 
 @section('content')
-<div class="max-w-2xl mx-auto">
+<div class="mx-auto max-w-3xl space-y-6">
+
+    <section class="overflow-hidden rounded-[2rem] border border-tailor-purple/10 bg-white shadow-soft">
+        <div class="relative brand-gradient p-5 text-white sm:p-7">
+            <div class="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(240,179,79,0.35),transparent_55%)] sm:block"></div>
+            <div class="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.24em] text-tailor-gold">Tambah Portfolio</p>
+                    <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Unggah karya baru</h1>
+                    <p class="mt-2 max-w-2xl text-sm font-medium leading-6 text-white/75">
+                        Gunakan foto yang jelas, judul spesifik, dan kategori yang tepat agar customer cepat memahami kualitas karya Anda.
+                    </p>
+                </div>
+                <button type="submit" form="portfolioCreateForm"
+                        class="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-tailor-purple shadow-sm transition hover:bg-tailor-cream">
+                    Simpan Portfolio
+                </button>
+            </div>
+        </div>
+    </section>
 
     @if($errors->any())
         <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3.5 rounded-xl mb-6">
@@ -58,10 +77,10 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
-            <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="w-8 h-8 bg-tailor-soft rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-tailor-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
             </div>
@@ -71,7 +90,7 @@
             </div>
         </div>
 
-        <form action="{{ route('tailor.portfolios.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-5">
+        <form id="portfolioCreateForm" action="{{ route('tailor.portfolios.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-5">
             @csrf
 
             {{-- Image Upload --}}
@@ -86,7 +105,7 @@
                      ondragover="handleDragOver(event)"
                      ondragleave="handleDragLeave(event)"
                      ondrop="handleDrop(event)"
-                     class="relative border-2 border-dashed border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30 transition-all group">
+                     class="relative border-2 border-dashed border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:border-tailor-purple/40 hover:bg-tailor-soft/30 transition-all group">
 
                     {{-- Preview (hidden by default) --}}
                     <div id="image-preview-container" class="hidden">
@@ -103,13 +122,13 @@
 
                     {{-- Placeholder --}}
                     <div id="image-placeholder" class="flex flex-col items-center justify-center py-12 px-6 text-center">
-                        <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center mb-3 group-hover:bg-indigo-100 transition-colors">
-                            <svg class="w-7 h-7 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-14 h-14 bg-tailor-soft rounded-xl flex items-center justify-center mb-3 group-hover:bg-tailor-soft transition-colors">
+                            <svg class="w-7 h-7 text-tailor-purple/55" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                             </svg>
                         </div>
                         <p class="text-sm font-medium text-slate-600">Klik atau seret gambar ke sini</p>
-                        <p class="text-xs text-slate-400 mt-1">JPG, PNG, WebP · Maks. 5MB</p>
+                        <p class="text-xs text-slate-400 mt-1">JPG, PNG, WebP - Maks. 5MB</p>
                     </div>
                 </div>
 
@@ -127,7 +146,7 @@
                 <input type="text" id="title" name="title"
                        value="{{ old('title') }}"
                        placeholder="Contoh: Kebaya Modern Pengantin 2024"
-                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('title') border-red-300 focus:ring-red-500 @enderror">
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('title') border-red-300 focus:ring-red-500 @enderror">
                 @error('title')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -139,7 +158,7 @@
                     Kategori
                 </label>
                 <select id="category" name="category"
-                        class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('category') border-red-300 focus:ring-red-500 @enderror">
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('category') border-red-300 focus:ring-red-500 @enderror">
                     <option value="">-- Pilih Kategori --</option>
                     @foreach($categoryOptions as $cat)
                         <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
@@ -156,7 +175,7 @@
                         Tipe Proyek
                     </label>
                     <select id="client_type" name="client_type"
-                            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('client_type') border-red-300 focus:ring-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('client_type') border-red-300 focus:ring-red-500 @enderror">
                         <option value="">-- Pilih Tipe --</option>
                         @foreach($clientTypeOptions as $type)
                             <option value="{{ $type }}" {{ old('client_type') === $type ? 'selected' : '' }}>{{ $type }}</option>
@@ -174,7 +193,7 @@
                     <input type="text" id="price_range" name="price_range"
                            value="{{ old('price_range') }}"
                            placeholder="Contoh: Rp 250.000 - Rp 500.000"
-                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('price_range') border-red-300 focus:ring-red-500 @enderror">
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('price_range') border-red-300 focus:ring-red-500 @enderror">
                     @error('price_range')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -189,7 +208,7 @@
                     <input type="date" id="completed_at" name="completed_at"
                            value="{{ old('completed_at') }}"
                            max="{{ now()->format('Y-m-d') }}"
-                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('completed_at') border-red-300 focus:ring-red-500 @enderror">
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('completed_at') border-red-300 focus:ring-red-500 @enderror">
                     @error('completed_at')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -197,7 +216,7 @@
 
                 <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 bg-slate-50">
                     <input type="checkbox" name="is_featured" value="1"
-                           class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                           class="rounded border-slate-300 text-tailor-purple focus:ring-tailor-gold"
                            {{ old('is_featured') ? 'checked' : '' }}>
                     <span>
                         <span class="block text-sm font-semibold text-slate-700">Jadikan karya unggulan</span>
@@ -213,23 +232,23 @@
                 </label>
                 <textarea id="description" name="description" rows="4"
                           placeholder="Ceritakan detail karya ini: bahan yang digunakan, teknik khusus, atau keunikannya..."
-                          class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('description') border-red-300 focus:ring-red-500 @enderror">{{ old('description') }}</textarea>
+                          class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent resize-none @error('description') border-red-300 focus:ring-red-500 @enderror">{{ old('description') }}</textarea>
                 @error('description')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             {{-- Actions --}}
-            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+            <div class="flex flex-col-reverse gap-3 pt-2 border-t border-slate-100 sm:flex-row sm:items-center sm:justify-between">
                 <a href="{{ route('tailor.portfolios.index') }}"
-                   class="bg-slate-100 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors flex items-center gap-2">
+                   class="flex items-center justify-center gap-2 rounded-lg bg-slate-100 px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
                     Kembali
                 </a>
                 <button type="submit"
-                        class="gradient-brand text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
+                        class="brand-gradient flex items-center justify-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
@@ -265,16 +284,16 @@
 
     function handleDragOver(e) {
         e.preventDefault();
-        document.getElementById('image-dropzone').classList.add('border-indigo-500', 'bg-indigo-50/50');
+        document.getElementById('image-dropzone').classList.add('border-tailor-purple', 'bg-tailor-soft/50');
     }
 
     function handleDragLeave(e) {
-        document.getElementById('image-dropzone').classList.remove('border-indigo-500', 'bg-indigo-50/50');
+        document.getElementById('image-dropzone').classList.remove('border-tailor-purple', 'bg-tailor-soft/50');
     }
 
     function handleDrop(e) {
         e.preventDefault();
-        document.getElementById('image-dropzone').classList.remove('border-indigo-500', 'bg-indigo-50/50');
+        document.getElementById('image-dropzone').classList.remove('border-tailor-purple', 'bg-tailor-soft/50');
         const file = e.dataTransfer.files[0];
         if (file) {
             // Transfer to input

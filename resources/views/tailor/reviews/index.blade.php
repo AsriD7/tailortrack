@@ -7,7 +7,7 @@
 @section('content')
 <div class="space-y-6">
 
-    {{-- ── Stats Header ── --}}
+    {{-- -- Stats Header -- --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
         {{-- Avg Rating Card --}}
@@ -17,7 +17,7 @@
             <div class="relative">
                 <p class="text-white/80 text-xs font-semibold uppercase tracking-wide mb-2">Rating Rata-rata</p>
                 <p class="text-5xl font-black leading-none mb-1">
-                    {{ $avgRating ? number_format($avgRating, 1) : '—' }}
+                    {{ $avgRating ? number_format($avgRating, 1) : '-' }}
                 </p>
                 <div class="flex items-center gap-0.5 mt-2">
                     @for($i = 1; $i <= 5; $i++)
@@ -32,11 +32,11 @@
         </div>
 
         {{-- Total Reviews --}}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-6 shadow-soft border border-tailor-purple/10">
             <div class="flex items-center justify-between mb-4">
                 <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Total Ulasan</p>
-                <div class="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <div class="w-9 h-9 bg-tailor-soft rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-tailor-purple" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
                     </svg>
                 </div>
@@ -46,7 +46,7 @@
         </div>
 
         {{-- Rating Breakdown --}}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-6 shadow-soft border border-tailor-purple/10">
             <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide mb-4">Distribusi Rating</p>
             <div class="space-y-2">
                 @foreach($breakdown as $star => $data)
@@ -66,8 +66,8 @@
         </div>
     </div>
 
-    {{-- ── Review List ── --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    {{-- -- Review List -- --}}
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
             <div>
                 <h2 class="text-base font-bold text-slate-800">Daftar Ulasan</h2>
@@ -91,7 +91,7 @@
                 <div class="p-6 hover:bg-slate-50/60 transition-colors">
                     <div class="flex items-start gap-4">
                         {{-- Avatar --}}
-                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-tailor-purple to-tailor-deep flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm">
                             {{ strtoupper(substr($review->customer->name ?? 'C', 0, 1)) }}
                         </div>
 
@@ -99,7 +99,7 @@
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                                 <div>
                                     <p class="font-bold text-slate-800 text-sm">{{ $review->customer->name ?? 'Pelanggan' }}</p>
-                                    <p class="text-slate-400 text-xs">{{ $review->created_at->translatedFormat('d F Y') }} · {{ $review->created_at->diffForHumans() }}</p>
+                                    <p class="text-slate-400 text-xs">{{ $review->created_at->translatedFormat('d F Y') }} - {{ $review->created_at->diffForHumans() }}</p>
                                 </div>
                                 <div class="flex items-center gap-1 shrink-0">
                                     @for($i = 1; $i <= 5; $i++)
@@ -120,7 +120,7 @@
                                     </svg>
                                     {{ $review->order->order_code }}
                                     @if($review->order->item_name)
-                                        · {{ $review->order->item_name }}
+                                        - {{ $review->order->item_name }}
                                     @endif
                                 </div>
                             @endif

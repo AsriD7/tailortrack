@@ -102,7 +102,7 @@
         Semua Pesanan
     </a>
     <a href="{{ route('admin.tailors.index') }}"
-       class="gradient-brand text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition flex items-center gap-2">
+       class="brand-gradient text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
@@ -121,7 +121,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
 
         {{-- Total Customer --}}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-6 shadow-soft border border-tailor-purple/10">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-slate-500 text-xs font-medium leading-tight">Total Customer</span>
                 <div class="bg-sky-50 p-2 rounded-lg shrink-0">
@@ -136,7 +136,7 @@
         </div>
 
         {{-- Total Penjahit --}}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-6 shadow-soft border border-tailor-purple/10">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-slate-500 text-xs font-medium leading-tight">Total Penjahit</span>
                 <div class="bg-violet-50 p-2 rounded-lg shrink-0">
@@ -151,7 +151,7 @@
         </div>
 
         {{-- Total Pesanan --}}
-        <div class="gradient-brand text-white rounded-2xl p-6 shadow-lg shadow-indigo-200/50 relative overflow-hidden">
+        <div class="brand-gradient text-white rounded-2xl p-6 shadow-lg shadow-tailor-purple/20 relative overflow-hidden">
             <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
             <div class="absolute -right-2 -bottom-6 w-14 h-14 bg-white/10 rounded-full"></div>
             <div class="relative">
@@ -170,7 +170,7 @@
         </div>
 
         {{-- Pembayaran Pending --}}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-6 shadow-soft border border-tailor-purple/10">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-slate-500 text-xs font-medium leading-tight">Pembayaran Pending</span>
                 <div class="bg-orange-50 p-2 rounded-lg shrink-0">
@@ -185,7 +185,7 @@
         </div>
 
         {{-- Total Revenue --}}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative overflow-hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-soft border border-tailor-purple/10 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-3xl opacity-50"></div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
@@ -209,7 +209,7 @@
     {{-- ------------------------------------------------------------------ --}}
     {{-- RECENT ORDERS TABLE                                                  --}}
     {{-- ------------------------------------------------------------------ --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
 
         {{-- Card header --}}
         <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100">
@@ -218,7 +218,7 @@
                 <p class="text-slate-400 text-xs mt-0.5">Transaksi terkini di seluruh platform</p>
             </div>
             <a href="{{ route('admin.orders.index') }}"
-               class="text-indigo-600 hover:text-indigo-700 text-sm font-semibold flex items-center gap-1 transition">
+               class="text-tailor-purple hover:text-tailor-purple text-sm font-semibold flex items-center gap-1 transition">
                 Lihat Semua
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -261,7 +261,7 @@
 
                                 {{-- Order code --}}
                                 <td class="px-6 py-4">
-                                    <span class="font-mono font-semibold text-indigo-600 text-xs bg-indigo-50 px-2.5 py-1 rounded-md">
+                                    <span class="font-mono font-semibold text-tailor-purple text-xs bg-tailor-soft px-2.5 py-1 rounded-md">
                                         {{ $order->order_code }}
                                     </span>
                                 </td>
@@ -286,7 +286,7 @@
                                 {{-- Tailor shop name --}}
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-full gradient-brand flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                        <div class="w-8 h-8 rounded-full brand-gradient flex items-center justify-center text-white text-xs font-bold shrink-0">
                                             {{ mb_substr($order->tailor->shop_name ?? 'T', 0, 1) }}
                                         </div>
                                         <span class="font-medium text-slate-700">
@@ -319,7 +319,7 @@
                                 {{-- Action --}}
                                 <td class="px-6 py-4 text-center">
                                     <a href="{{ route('admin.orders.show', $order) }}"
-                                       class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 font-semibold text-xs px-3 py-1.5 rounded-lg transition">
+                                       class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-tailor-soft text-slate-600 hover:text-tailor-purple font-semibold text-xs px-3 py-1.5 rounded-lg transition">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                   d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />

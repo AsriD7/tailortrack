@@ -52,9 +52,9 @@
     {{-- Kolom Kiri: Info User --}}
     <div class="space-y-6">
         {{-- Profile Card --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <div class="flex flex-col items-center text-center mb-6">
-                <div class="w-20 h-20 rounded-full gradient-brand flex items-center justify-center text-white text-3xl font-bold mb-3">
+                <div class="w-20 h-20 rounded-full brand-gradient flex items-center justify-center text-white text-3xl font-bold mb-3">
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
                 <h2 class="text-xl font-bold text-slate-800">{{ $user->name }}</h2>
@@ -97,7 +97,7 @@
 
         {{-- Tailor Profile (jika penjahit) --}}
         @if($user->isTailor() && $user->tailorProfile)
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Profil Toko</h3>
             <div class="space-y-3 text-sm">
                 <div>
@@ -122,7 +122,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-slate-100">
-                <a href="{{ route('admin.tailors.show', $user) }}" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Kelola Profil Penjahit →</a>
+                <a href="{{ route('admin.tailors.show', $user) }}" class="text-tailor-purple hover:text-tailor-deep text-sm font-medium">Kelola Profil Penjahit</a>
             </div>
         </div>
         @endif
@@ -131,7 +131,7 @@
     {{-- Kolom Kanan: Riwayat Order --}}
     <div class="lg:col-span-2 space-y-6">
         @if($user->isCustomer())
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Riwayat Pesanan Customer</h3>
             @if($user->customerOrders->isEmpty())
                 <div class="text-center py-8">
@@ -156,7 +156,7 @@
                             @foreach($user->customerOrders as $order)
                             <tr class="hover:bg-slate-50/60 transition-colors">
                                 <td class="px-4 py-3">
-                                    <a href="{{ route('admin.orders.show', $order) }}" class="font-mono text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-semibold hover:bg-indigo-100">{{ $order->order_code }}</a>
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="font-mono text-xs bg-tailor-soft text-tailor-purple px-2 py-1 rounded font-semibold hover:bg-tailor-soft">{{ $order->order_code }}</a>
                                 </td>
                                 <td class="px-4 py-3 font-medium text-slate-700">{{ $order->item_name }}</td>
                                 <td class="px-4 py-3">
@@ -174,7 +174,7 @@
         @endif
 
         @if($user->isTailor())
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
             <h3 class="font-bold text-slate-800 mb-4">Pesanan yang Ditangani</h3>
             @if($user->tailorOrders->isEmpty())
                 <div class="text-center py-8">
@@ -195,7 +195,7 @@
                             @foreach($user->tailorOrders as $order)
                             <tr class="hover:bg-slate-50/60 transition-colors">
                                 <td class="px-4 py-3">
-                                    <a href="{{ route('admin.orders.show', $order) }}" class="font-mono text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-semibold hover:bg-indigo-100">{{ $order->order_code }}</a>
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="font-mono text-xs bg-tailor-soft text-tailor-purple px-2 py-1 rounded font-semibold hover:bg-tailor-soft">{{ $order->order_code }}</a>
                                 </td>
                                 <td class="px-4 py-3 text-slate-700">{{ $order->customer->name ?? '-' }}</td>
                                 <td class="px-4 py-3">

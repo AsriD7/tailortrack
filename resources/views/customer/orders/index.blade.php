@@ -1,327 +1,179 @@
 @extends('layouts.customer')
 
 @section('title', 'Pesanan Saya')
-@section('page-title', 'Pesanan Saya')
-@section('page-subtitle', 'Kelola dan pantau semua pesanan jahit Anda')
 
-{{-- ======================== SIDEBAR NAV ======================== --}}
-@section('sidebar-nav')
-    {{-- Dashboard --}}
-    <a href="{{ route('customer.dashboard') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('customer.dashboard') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-        </svg>
-        Dashboard
-    </a>
-
-    {{-- Pesanan Saya --}}
-    <a href="{{ route('customer.orders.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('customer.orders*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-        </svg>
-        Pesanan Saya
-    </a>
-
-    {{-- Cari Penjahit --}}
-    <a href="{{ route('tailors.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('tailors*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        Cari Penjahit
-    </a>
-
-    {{-- Daftar Harga --}}
-    <a href="{{ route('price-lists.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('price-lists*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a2 2 0 012-2z"/>
-        </svg>
-        Daftar Harga
-    </a>
-@endsection
-
-{{-- ======================== PAGE ACTIONS ======================== --}}
-@section('page-actions')
-    <a href="{{ route('tailors.index') }}"
-       class="inline-flex items-center gap-2 gradient-brand text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Buat Pesanan Baru
-    </a>
-@endsection
-
-{{-- ======================== CONTENT ======================== --}}
 @section('content')
-<div class="space-y-6">
+@php
+    $diproses = $orders->getCollection()->whereIn('status.value', ['diproses', 'finishing', 'siap_diambil'])->count();
+    $selesai = $orders->getCollection()->where('status.value', 'selesai')->count();
+    $menunggu = $orders->getCollection()->whereIn('status.value', ['menunggu_konfirmasi', 'menunggu_pembayaran'])->count();
+@endphp
 
-    {{-- Summary Stats --}}
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        @php
-            $total      = $orders->total();
-            $diproses   = $orders->getCollection()->whereIn('status.value', ['diproses', 'finishing', 'siap_diambil'])->count();
-            $selesai    = $orders->getCollection()->where('status.value', 'selesai')->count();
-            $menunggu   = $orders->getCollection()->where('status.value', 'menunggu_konfirmasi')->count();
-        @endphp
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/>
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs text-slate-500 font-medium">Total Pesanan</p>
-                <p class="text-xl font-bold text-slate-800">{{ $orders->total() }}</p>
-            </div>
+<section class="mb-8 rounded-[2rem] bg-tailor-cream p-5 shadow-sm ring-1 ring-tailor-purple/10 sm:p-7">
+    <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <span class="inline-flex rounded-full bg-white px-4 py-2 text-xs font-black text-tailor-purple shadow-sm ring-1 ring-tailor-purple/10">
+                Pesanan Saya
+            </span>
+            <h1 class="mt-5 text-3xl font-black text-tailor-deep sm:text-4xl">Kelola semua pesanan jahit.</h1>
+            <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Pantau status, cek pembayaran, dan lihat detail progress dari penjahit.</p>
         </div>
+        <a href="{{ route('tailors.index') }}" class="inline-flex items-center justify-center gap-2 rounded-2xl brand-gradient px-6 py-3 text-sm font-extrabold text-white shadow-soft">
+            Buat Pesanan Baru
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+        </a>
+    </div>
+</section>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs text-slate-500 font-medium">Menunggu</p>
-                <p class="text-xl font-bold text-slate-800">{{ $menunggu }}</p>
-            </div>
-        </div>
+<section class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-tailor-purple/10">
+        <p class="text-sm font-bold text-slate-500">Total Pesanan</p>
+        <p class="mt-2 text-3xl font-black text-tailor-deep">{{ $orders->total() }}</p>
+    </div>
+    <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-tailor-purple/10">
+        <p class="text-sm font-bold text-slate-500">Menunggu</p>
+        <p class="mt-2 text-3xl font-black text-amber-600">{{ $menunggu }}</p>
+    </div>
+    <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-tailor-purple/10">
+        <p class="text-sm font-bold text-slate-500">Berjalan</p>
+        <p class="mt-2 text-3xl font-black text-tailor-purple">{{ $diproses }}</p>
+    </div>
+    <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-tailor-purple/10">
+        <p class="text-sm font-bold text-slate-500">Selesai</p>
+        <p class="mt-2 text-3xl font-black text-emerald-600">{{ $selesai }}</p>
+    </div>
+</section>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs text-slate-500 font-medium">Berjalan</p>
-                <p class="text-xl font-bold text-slate-800">{{ $diproses }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs text-slate-500 font-medium">Selesai</p>
-                <p class="text-xl font-bold text-slate-800">{{ $selesai }}</p>
-            </div>
-        </div>
+<section class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-tailor-purple/10">
+    <div class="border-b border-tailor-purple/10 px-5 py-4 sm:px-6">
+        <h2 class="font-black text-tailor-deep">Daftar Pesanan</h2>
+        <p class="mt-1 text-xs font-semibold text-slate-500">
+            Menampilkan {{ $orders->firstItem() ?? 0 }}-{{ $orders->lastItem() ?? 0 }} dari {{ $orders->total() }} pesanan
+        </p>
     </div>
 
-    {{-- Orders Table Card --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-
-        {{-- Card Header --}}
-        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <div>
-                <h2 class="text-base font-semibold text-slate-800">Daftar Pesanan</h2>
-                <p class="text-xs text-slate-500 mt-0.5">Menampilkan {{ $orders->firstItem() ?? 0 }}–{{ $orders->lastItem() ?? 0 }} dari {{ $orders->total() }} pesanan</p>
+    @if($orders->isEmpty())
+        <div class="p-10 text-center sm:p-14">
+            <div class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-tailor-soft text-tailor-purple">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5h6M9 9h6M9 13h4M5 3h14v18l-3-2-3 2-3-2-3 2-2-1.5V3z"/>
+                </svg>
             </div>
+            <h3 class="mt-5 text-xl font-black text-tailor-deep">Belum ada pesanan</h3>
+            <p class="mx-auto mt-2 max-w-md text-sm leading-7 text-slate-500">Temukan penjahit terbaik dan buat pesanan pertama kamu sekarang.</p>
+            <a href="{{ route('tailors.index') }}" class="mt-6 inline-flex rounded-2xl brand-gradient px-6 py-3 text-sm font-extrabold text-white shadow-soft">
+                Cari Penjahit
+            </a>
         </div>
-
-        @if($orders->isEmpty())
-            {{-- Empty State --}}
-            <div class="flex flex-col items-center justify-center py-20 px-6 text-center">
-                <div class="w-20 h-20 rounded-2xl bg-indigo-50 flex items-center justify-center mb-5">
-                    <svg class="w-10 h-10 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold text-slate-700 mb-2">Belum Ada Pesanan</h3>
-                <p class="text-slate-500 text-sm max-w-sm mb-6">
-                    Anda belum memiliki pesanan jahit. Temukan penjahit terbaik dan buat pesanan pertama Anda sekarang!
-                </p>
-                <a href="{{ route('tailors.index') }}"
-                   class="inline-flex items-center gap-2 gradient-brand text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    Cari Penjahit Sekarang
-                </a>
-            </div>
-        @else
-            {{-- Mobile Cards --}}
-            <div class="md:hidden divide-y divide-slate-100">
-                @foreach($orders as $order)
-                    <a href="{{ route('customer.orders.show', $order) }}" class="block p-4 hover:bg-slate-50 transition-colors">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="min-w-0">
-                                <span class="inline-flex font-mono font-semibold text-indigo-600 text-xs bg-indigo-50 px-2.5 py-1 rounded-lg">
-                                    {{ $order->order_code }}
-                                </span>
-                                <h3 class="mt-2 text-sm font-semibold text-slate-800 truncate">{{ $order->item_name }}</h3>
-                                <p class="text-xs text-slate-500 mt-0.5 truncate">
-                                    {{ $order->tailor->tailorProfile->shop_name ?? $order->tailor->name }}
-                                </p>
-                            </div>
-                            <span class="inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold {{ $order->status->badgeColor() }} whitespace-nowrap">
-                                {{ $order->status->label() }}
-                            </span>
+    @else
+        <div class="md:hidden divide-y divide-tailor-purple/10">
+            @foreach($orders as $order)
+                <a href="{{ route('customer.orders.show', $order) }}" class="block p-5 transition hover:bg-tailor-cream">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <span class="rounded-full bg-tailor-soft px-3 py-1 font-mono text-xs font-black text-tailor-purple">{{ $order->order_code }}</span>
+                            <h3 class="mt-3 truncate font-black text-tailor-deep">{{ $order->item_name }}</h3>
+                            <p class="mt-1 truncate text-sm font-semibold text-slate-500">{{ $order->tailor->tailorProfile->shop_name ?? $order->tailor->name }}</p>
                         </div>
+                        <span class="shrink-0 rounded-full px-3 py-1 text-xs font-black {{ $order->status->badgeColor() }}">{{ $order->status->label() }}</span>
+                    </div>
 
-                        <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
-                            <div class="rounded-lg bg-slate-50 px-3 py-2">
-                                <p class="text-slate-400">Harga</p>
-                                <p class="font-semibold text-slate-700">
-                                    @if($order->total_price)
-                                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                                    @elseif($order->estimated_price)
-                                        Rp {{ number_format($order->estimated_price, 0, ',', '.') }}
-                                    @else
-                                        Menunggu
-                                    @endif
-                                </p>
-                            </div>
-                            <div class="rounded-lg bg-slate-50 px-3 py-2">
-                                <p class="text-slate-400">Deadline</p>
-                                <p class="font-semibold {{ $order->deadline && $order->deadline->isPast() && !in_array($order->status->value, ['selesai', 'dibatalkan']) ? 'text-red-600' : 'text-slate-700' }}">
-                                    {{ $order->deadline?->format('d M Y') ?? '-' }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="mt-3 flex items-center justify-between gap-3">
-                            <p class="text-xs text-slate-500">
-                                {{ $order->size }}
-                                <span class="text-slate-300 mx-1">/</span>
-                                {{ $order->quantity }} pcs
-                                <span class="text-slate-300 mx-1">/</span>
-                                {{ $order->created_at->format('d M Y') }}
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="rounded-2xl bg-tailor-cream p-3">
+                            <p class="text-xs font-bold text-slate-400">Harga</p>
+                            <p class="mt-1 text-sm font-black text-tailor-deep">
+                                @if($order->total_price)
+                                    Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                @elseif($order->estimated_price)
+                                    Rp {{ number_format($order->estimated_price, 0, ',', '.') }}
+                                @else
+                                    Menunggu
+                                @endif
                             </p>
-                            <span class="inline-flex items-center gap-1.5 text-indigo-700 text-xs font-semibold">
-                                Detail
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </span>
                         </div>
-                    </a>
-                @endforeach
-            </div>
+                        <div class="rounded-2xl bg-tailor-cream p-3">
+                            <p class="text-xs font-bold text-slate-400">Deadline</p>
+                            <p class="mt-1 text-sm font-black {{ $order->deadline && $order->deadline->isPast() && !in_array($order->status->value, ['selesai', 'dibatalkan']) ? 'text-red-600' : 'text-tailor-deep' }}">
+                                {{ $order->deadline?->format('d M Y') ?? '-' }}
+                            </p>
+                        </div>
+                    </div>
 
-            {{-- Table --}}
-            <div class="hidden md:block overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Kode Order</th>
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Penjahit</th>
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Item</th>
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Ukuran</th>
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Est. Harga</th>
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Tanggal</th>
-                            <th class="px-6 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Aksi</th>
+                    <div class="mt-4 flex items-center justify-between gap-3 text-xs font-semibold text-slate-500">
+                        <span>{{ $order->size }} / {{ $order->quantity }} pcs / {{ $order->created_at->format('d M Y') }}</span>
+                        <span class="font-black text-tailor-purple">Detail</span>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+
+        <div class="hidden overflow-x-auto md:block">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-tailor-purple/10 bg-tailor-cream">
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Kode</th>
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Penjahit</th>
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Item</th>
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Ukuran</th>
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Harga</th>
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Tanggal</th>
+                        <th class="px-6 py-4 text-right text-xs font-black uppercase tracking-[0.14em] text-slate-500">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-tailor-purple/10">
+                    @foreach($orders as $order)
+                        <tr class="transition hover:bg-tailor-cream">
+                            <td class="px-6 py-4">
+                                <span class="rounded-full bg-tailor-soft px-3 py-1 font-mono text-xs font-black text-tailor-purple">{{ $order->order_code }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-black text-tailor-deep">{{ $order->tailor->tailorProfile->shop_name ?? '-' }}</p>
+                                <p class="text-xs font-semibold text-slate-500">{{ $order->tailor->name }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-black text-tailor-deep">{{ $order->item_name }}</p>
+                                @if($order->category)
+                                    <p class="text-xs font-semibold text-slate-500">{{ $order->category }}</p>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{{ $order->size }}</span>
+                                @if($order->quantity > 1)
+                                    <span class="ml-1 text-xs font-semibold text-slate-500">x{{ $order->quantity }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 font-black text-tailor-deep">
+                                @if($order->total_price)
+                                    Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                @elseif($order->estimated_price)
+                                    Rp {{ number_format($order->estimated_price, 0, ',', '.') }}
+                                @else
+                                    <span class="text-xs font-semibold text-slate-400">Menunggu</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="rounded-full px-3 py-1 text-xs font-black {{ $order->status->badgeColor() }}">{{ $order->status->label() }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-xs font-semibold text-slate-500">{{ $order->created_at->format('d M Y') }}</td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="{{ route('customer.orders.show', $order) }}" class="rounded-2xl bg-tailor-soft px-4 py-2 text-xs font-black text-tailor-purple">
+                                    Detail
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach($orders as $order)
-                            <tr class="hover:bg-slate-50/60 transition-colors group">
-                                {{-- Kode Order --}}
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="font-mono font-semibold text-indigo-600 text-xs bg-indigo-50 px-2.5 py-1 rounded-lg">
-                                        {{ $order->order_code }}
-                                    </span>
-                                </td>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-                                {{-- Penjahit --}}
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-7 h-7 rounded-full gradient-brand flex items-center justify-center text-white text-xs font-bold shrink-0">
-                                            {{ mb_substr($order->tailor->tailorProfile->shop_name ?? $order->tailor->name, 0, 1) }}
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-slate-800 text-xs leading-tight">
-                                                {{ $order->tailor->tailorProfile->shop_name ?? '-' }}
-                                            </p>
-                                            <p class="text-slate-500 text-xs">{{ $order->tailor->name }}</p>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                {{-- Item --}}
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <p class="font-medium text-slate-700">{{ $order->item_name }}</p>
-                                    @if($order->category)
-                                        <p class="text-slate-500 text-xs">{{ $order->category }}</p>
-                                    @endif
-                                </td>
-
-                                {{-- Ukuran --}}
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
-                                        {{ $order->size }}
-                                    </span>
-                                    @if($order->quantity > 1)
-                                        <span class="ml-1 text-xs text-slate-500">×{{ $order->quantity }}</span>
-                                    @endif
-                                </td>
-
-                                {{-- Estimasi Harga --}}
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($order->estimated_price)
-                                        <span class="font-semibold text-slate-800">
-                                            Rp {{ number_format($order->estimated_price, 0, ',', '.') }}
-                                        </span>
-                                    @else
-                                        <span class="text-slate-400 text-xs italic">Menunggu</span>
-                                    @endif
-                                </td>
-
-                                {{-- Status --}}
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $order->status->badgeColor() }}">
-                                        {{ $order->status->label() }}
-                                    </span>
-                                </td>
-
-                                {{-- Tanggal --}}
-                                <td class="px-6 py-4 whitespace-nowrap text-slate-500 text-xs">
-                                    {{ $order->created_at->format('d M Y') }}
-                                </td>
-
-                                {{-- Aksi --}}
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <a href="{{ route('customer.orders.show', $order) }}"
-                                       class="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-semibold text-xs bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
-                                        Lihat Detail
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        @if($orders->hasPages())
+            <div class="border-t border-tailor-purple/10 px-6 py-4">
+                {{ $orders->links() }}
             </div>
-
-            {{-- Pagination --}}
-            @if($orders->hasPages())
-                <div class="px-6 py-4 border-t border-slate-100">
-                    {{ $orders->links() }}
-                </div>
-            @endif
         @endif
-    </div>
-
-</div>
+    @endif
+</section>
 @endsection

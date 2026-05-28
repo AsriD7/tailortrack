@@ -1,65 +1,27 @@
 @extends('layouts.customer')
 
 @section('title', 'Buat Pesanan Baru')
-@section('page-title', 'Buat Pesanan Baru')
-@section('page-subtitle', 'Isi detail pesanan jahit Anda dengan lengkap')
 
-{{-- ======================== SIDEBAR NAV ======================== --}}
-@section('sidebar-nav')
-    {{-- Dashboard --}}
-    <a href="{{ route('customer.dashboard') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('customer.dashboard') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-        </svg>
-        Dashboard
-    </a>
-
-    {{-- Pesanan Saya --}}
-    <a href="{{ route('customer.orders.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium active bg-white/15 text-white">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-        </svg>
-        Pesanan Saya
-    </a>
-
-    {{-- Cari Penjahit --}}
-    <a href="{{ route('tailors.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('tailors*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        Cari Penjahit
-    </a>
-
-    {{-- Daftar Harga --}}
-    <a href="{{ route('price-lists.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('price-lists*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a2 2 0 012-2z"/>
-        </svg>
-        Daftar Harga
-    </a>
-@endsection
-
-{{-- ======================== PAGE ACTIONS ======================== --}}
-@section('page-actions')
-    <a href="{{ route('customer.orders.index') }}"
-       class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-        </svg>
-        Kembali
-    </a>
-@endsection
-
-{{-- ======================== CONTENT ======================== --}}
 @section('content')
+<div class="mb-6 overflow-hidden rounded-[2rem] border border-tailor-purple/10 bg-white shadow-soft">
+    <div class="relative brand-gradient px-5 py-6 text-white sm:px-8 sm:py-8">
+        <div class="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(240,179,79,0.35),transparent_55%)] sm:block"></div>
+        <div class="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-[0.24em] text-tailor-gold">Buat Pesanan</p>
+                <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-4xl">Detail pesanan jahit</h1>
+                <p class="mt-3 max-w-2xl text-sm font-medium leading-7 text-white/80">
+                    Pilih layanan, isi ukuran, upload referensi, lalu kirim pesanan ke penjahit untuk diproses.
+                </p>
+            </div>
+            <a href="{{ route('customer.orders.index') }}"
+               class="inline-flex items-center justify-center rounded-2xl bg-white/12 px-5 py-3 text-sm font-extrabold text-white ring-1 ring-white/20 transition hover:bg-white/18">
+                Kembali
+            </a>
+        </div>
+    </div>
+</div>
+
 <form action="{{ route('customer.orders.store') }}" method="POST" enctype="multipart/form-data" id="orderForm">
     @csrf
     <input type="hidden" name="tailor_id" value="{{ $tailor->id }}">
@@ -90,7 +52,7 @@
             @endif
 
             {{-- Tailor Info Card (read-only) --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -99,7 +61,7 @@
                     Informasi Penjahit
                 </h3>
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-2xl gradient-brand flex items-center justify-center text-white text-xl font-bold shrink-0">
+                    <div class="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center text-white text-xl font-bold shrink-0">
                         {{ mb_substr($tailor->tailorProfile->shop_name ?? $tailor->name, 0, 1) }}
                     </div>
                     <div class="flex-1 min-w-0">
@@ -110,7 +72,7 @@
                         @if($tailor->tailorProfile->specialization)
                             <div class="flex flex-wrap gap-1.5 mt-2">
                                 @foreach(explode(',', $tailor->tailorProfile->specialization) as $spec)
-                                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-tailor-soft text-tailor-purple">
                                         {{ trim($spec) }}
                                     </span>
                                 @endforeach
@@ -153,7 +115,7 @@
                     </div>
                 </div>
                 @if($workingDayLabels->isNotEmpty())
-                    <div class="mt-3 rounded-xl bg-indigo-50 border border-indigo-100 px-4 py-3 text-xs text-indigo-700">
+                    <div class="mt-3 rounded-xl bg-tailor-soft border border-tailor-purple/10 px-4 py-3 text-xs text-tailor-purple">
                         Hari kerja penjahit: <span class="font-semibold">{{ $workingDayLabels->implode(', ') }}</span>
                     </div>
                 @endif
@@ -178,7 +140,7 @@
             </div>
 
             {{-- Order Detail Form --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-5">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6 space-y-5">
                 <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -209,7 +171,7 @@
                                 @foreach($serviceCategories as $category)
                                     <button type="button"
                                             data-category="{{ $category }}"
-                                            class="service-category-option inline-flex items-center px-3 py-2 rounded-xl border text-xs font-bold transition-colors {{ $activeServiceCategory === $category ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50' }}">
+                                            class="service-category-option inline-flex items-center px-3 py-2 rounded-xl border text-xs font-bold transition-colors {{ $activeServiceCategory === $category ? 'border-tailor-purple bg-tailor-soft text-tailor-purple' : 'border-slate-200 bg-white text-slate-600 hover:border-tailor-purple/30 hover:text-tailor-purple hover:bg-tailor-soft' }}">
                                         {{ $category }}
                                     </button>
                                 @endforeach
@@ -220,7 +182,7 @@
                         @foreach($priceLists as $priceList)
                             @php $isSelected = old('price_list_id') == $priceList->id; @endphp
                             <label data-category="{{ $priceList->category }}"
-                                   class="price-list-option group relative rounded-2xl border-2 p-4 cursor-pointer transition-all {{ $isSelected ? 'border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40' }}">
+                                   class="price-list-option group relative rounded-2xl border-2 p-4 cursor-pointer transition-all {{ $isSelected ? 'border-tailor-purple bg-tailor-soft shadow-sm' : 'border-slate-200 bg-white hover:border-tailor-purple/30 hover:bg-tailor-soft/40' }}">
                                 <input
                                     type="radio"
                                     name="price_list_id"
@@ -245,10 +207,10 @@
                                         @endif
                                     </div>
                                     <div class="shrink-0 text-right">
-                                        <p class="text-sm font-extrabold text-indigo-600">
+                                        <p class="text-sm font-extrabold text-tailor-purple">
                                             Rp {{ number_format($priceList->base_price, 0, ',', '.') }}
                                         </p>
-                                        <div class="option-check mt-2 ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center {{ $isSelected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300 bg-white' }}">
+                                        <div class="option-check mt-2 ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center {{ $isSelected ? 'border-tailor-purple bg-tailor-purple' : 'border-slate-300 bg-white' }}">
                                             <svg class="w-3 h-3 text-white {{ $isSelected ? '' : 'hidden' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                                             </svg>
@@ -287,8 +249,8 @@
                                        {{ old('size', 'M') === $size ? 'checked' : '' }}>
                                 <span class="size-label inline-flex items-center justify-center px-4 py-2 rounded-lg border-2 text-sm font-semibold cursor-pointer transition-all
                                     {{ old('size', 'M') === $size
-                                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                                        : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600' }}">
+                                        ? 'border-tailor-purple bg-tailor-soft text-tailor-purple'
+                                        : 'border-slate-200 bg-white text-slate-600 hover:border-tailor-purple/30 hover:text-tailor-purple' }}">
                                     {{ $size }}
                                 </span>
                             </label>
@@ -298,7 +260,7 @@
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
 
-                    <div id="standardSizeInfo" class="mt-3 rounded-xl bg-indigo-50 border border-indigo-100 p-4 text-sm text-indigo-800"></div>
+                    <div id="standardSizeInfo" class="mt-3 rounded-xl bg-tailor-soft border border-tailor-purple/10 p-4 text-sm text-tailor-deep"></div>
 
                     <div id="customMeasurementPanel" class="hidden mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -307,7 +269,7 @@
                                 <p class="text-xs text-slate-500 mt-0.5">Pilih profil ukuran tersimpan atau isi manual untuk pesanan ini.</p>
                             </div>
                             <a href="{{ route('customer.measurements.create') }}"
-                               class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
+                               class="text-xs font-semibold text-tailor-purple hover:text-tailor-purple">
                                 Tambah profil ukuran
                             </a>
                         </div>
@@ -315,7 +277,7 @@
                         <div>
                             <label for="measurement_id" class="block text-xs font-semibold text-slate-600 mb-1.5">Profil Ukuran</label>
                             <select id="measurement_id" name="measurement_id"
-                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold">
                                 <option value="">Isi manual untuk pesanan ini</option>
                                 @foreach($measurements as $measurement)
                                     <option value="{{ $measurement->id }}" @selected(old('measurement_id') == $measurement->id)>
@@ -350,7 +312,7 @@
                                     <div class="relative">
                                         <input type="number" step="0.1" min="1" max="300" id="{{ $field }}" name="{{ $field }}"
                                                value="{{ old($field) }}"
-                                               class="w-full px-3 py-2 pr-10 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 @error($field) border-red-400 @enderror">
+                                               class="w-full px-3 py-2 pr-10 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold @error($field) border-red-400 @enderror">
                                         <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-slate-400">{{ $unit }}</span>
                                     </div>
                                     @error($field)
@@ -363,7 +325,7 @@
                                 <label for="custom_measurement_notes" class="block text-xs font-semibold text-slate-600 mb-1">Catatan Ukuran Custom</label>
                                 <textarea id="custom_measurement_notes" name="custom_measurement_notes" rows="2" maxlength="500"
                                           placeholder="Contoh: bagian pinggang dibuat longgar, lengan jangan terlalu ketat..."
-                                          class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none @error('custom_measurement_notes') border-red-400 @enderror">{{ old('custom_measurement_notes') }}</textarea>
+                                          class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold resize-none @error('custom_measurement_notes') border-red-400 @enderror">{{ old('custom_measurement_notes') }}</textarea>
                                 @error('custom_measurement_notes')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -384,7 +346,7 @@
                         </button>
                         <input type="number" id="quantity" name="quantity"
                                value="{{ old('quantity', 1) }}" min="1" max="99"
-                               class="w-20 text-center px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('quantity') border-red-400 @enderror"
+                               class="w-20 text-center px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('quantity') border-red-400 @enderror"
                                required>
                         <button type="button" id="qtyPlus"
                                 class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold transition-colors">
@@ -403,7 +365,7 @@
                     </label>
                     <textarea id="description" name="description" rows="3"
                               placeholder="Contoh: Kemeja batik lengan panjang, bahan katun, warna navy..."
-                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('description') border-red-400 @enderror">{{ old('description') }}</textarea>
+                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent resize-none @error('description') border-red-400 @enderror">{{ old('description') }}</textarea>
                     @error('description')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -417,7 +379,7 @@
                     <input type="date" id="deadline" name="deadline"
                            value="{{ old('deadline') }}"
                            min="{{ $minDeadline }}"
-                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('deadline') border-red-400 @enderror">
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('deadline') border-red-400 @enderror">
                     <p class="text-xs text-slate-400 mt-1">
                         Deadline minimal {{ \Illuminate\Support\Carbon::parse($minDeadline)->format('d M Y') }}{{ $workingDayLabels->isNotEmpty() ? ' dan harus jatuh pada hari kerja penjahit.' : '.' }}
                     </p>
@@ -433,7 +395,7 @@
                     </label>
                     <textarea id="note" name="note" rows="2"
                               placeholder="Catatan khusus untuk penjahit (opsional)..."
-                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('note') border-red-400 @enderror">{{ old('note') }}</textarea>
+                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent resize-none @error('note') border-red-400 @enderror">{{ old('note') }}</textarea>
                     @error('note')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -441,7 +403,7 @@
             </div>
 
             {{-- Reference Images Upload --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -453,14 +415,14 @@
 
                 {{-- Drop Zone --}}
                 <label for="images"
-                       class="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-indigo-50 hover:border-indigo-400 transition-colors group">
+                       class="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-tailor-soft hover:border-tailor-purple/40 transition-colors group">
                     <div class="flex flex-col items-center gap-2 text-center px-4">
-                        <svg class="w-8 h-8 text-slate-400 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-slate-400 group-hover:text-tailor-purple transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                         </svg>
                         <div>
-                            <p class="text-sm font-medium text-slate-600 group-hover:text-indigo-700">Klik untuk unggah referensi desain</p>
+                            <p class="text-sm font-medium text-slate-600 group-hover:text-tailor-purple">Klik untuk unggah referensi desain</p>
                             <p class="text-xs text-slate-400 mt-0.5">PNG, JPG, JPEG, WEBP - maks. 2MB per foto</p>
                         </div>
                     </div>
@@ -490,7 +452,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                        class="inline-flex items-center gap-2 gradient-brand text-white px-8 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="inline-flex items-center gap-2 brand-gradient text-white px-8 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         {{ $priceLists->isEmpty() || $isAtCapacity ? 'disabled' : '' }}>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -505,7 +467,7 @@
         <div class="lg:col-span-1 space-y-6">
 
             {{-- Price Estimator Card --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sticky top-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6 sticky top-6">
                 <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -530,7 +492,7 @@
                     </div>
                     <div class="border-t border-slate-100 pt-3 flex justify-between items-center">
                         <span class="text-sm font-semibold text-slate-700">Total Estimasi</span>
-                        <span id="est-total" class="text-lg font-bold text-indigo-600">Rp 0</span>
+                        <span id="est-total" class="text-lg font-bold text-tailor-purple">Rp 0</span>
                     </div>
                 </div>
 
@@ -559,19 +521,19 @@
                                 </tr>
                                 <tr>
                                     <td class="px-3 py-2 text-slate-700">L</td>
-                                    <td class="px-3 py-2 text-right font-medium text-indigo-600">+ Rp 5.000</td>
+                                    <td class="px-3 py-2 text-right font-medium text-tailor-purple">+ Rp 5.000</td>
                                 </tr>
                                 <tr>
                                     <td class="px-3 py-2 text-slate-700">XL</td>
-                                    <td class="px-3 py-2 text-right font-medium text-indigo-600">+ Rp 10.000</td>
+                                    <td class="px-3 py-2 text-right font-medium text-tailor-purple">+ Rp 10.000</td>
                                 </tr>
                                 <tr>
                                     <td class="px-3 py-2 text-slate-700">XXL</td>
-                                    <td class="px-3 py-2 text-right font-medium text-indigo-600">+ Rp 15.000</td>
+                                    <td class="px-3 py-2 text-right font-medium text-tailor-purple">+ Rp 15.000</td>
                                 </tr>
                                 <tr>
                                     <td class="px-3 py-2 text-slate-700">Custom</td>
-                                    <td class="px-3 py-2 text-right font-medium text-purple-600">+ Rp 20.000</td>
+                                    <td class="px-3 py-2 text-right font-medium text-tailor-purple">+ Rp 20.000</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -589,11 +551,11 @@
 @push('scripts')
 <script>
 (function () {
-    // ─── Size surcharges ──────────────────────────────────────────
+    // Size surcharges
     const SURCHARGES = { S: 0, M: 0, L: 5000, XL: 10000, XXL: 15000, Custom: 20000 };
     const STANDARD_SIZE_DETAILS = @json($standardSizeDetails);
 
-    // ─── DOM refs ─────────────────────────────────────────────────
+    // DOM refs
     const quantityInput   = document.getElementById('quantity');
     const qtyMinus        = document.getElementById('qtyMinus');
     const qtyPlus         = document.getElementById('qtyPlus');
@@ -612,12 +574,12 @@
     const estQty     = document.getElementById('est-qty');
     const estTotal   = document.getElementById('est-total');
 
-    // ─── Format currency ─────────────────────────────────────────
+    // Format currency
     function rupiah(n) {
         return 'Rp ' + n.toLocaleString('id-ID');
     }
 
-    // ─── Get selected size ───────────────────────────────────────
+    // Get selected size
     function getSelectedSize() {
         const checked = document.querySelector('input[name="size"]:checked');
         return checked ? checked.value : 'M';
@@ -627,7 +589,7 @@
         return document.querySelector('input[name="price_list_id"]:checked');
     }
 
-    // ─── Update estimate display ─────────────────────────────────
+    // Update estimate display
     function updateEstimate() {
         const selectedPriceList = getSelectedPriceList();
         const basePrice  = parseInt(selectedPriceList?.dataset?.price || 0, 10);
@@ -638,7 +600,7 @@
 
         estBase.textContent  = rupiah(basePrice);
         estSurge.textContent = surcharge > 0 ? ('+ ' + rupiah(surcharge)) : rupiah(0);
-        estQty.textContent   = '×' + qty;
+        estQty.textContent   = 'x' + qty;
         estTotal.textContent = rupiah(total);
     }
 
@@ -649,18 +611,18 @@
             const checkIcon = check ? check.querySelector('svg') : null;
 
             if (radio.checked) {
-                label.classList.remove('border-slate-200', 'bg-white', 'hover:border-indigo-300', 'hover:bg-indigo-50/40');
-                label.classList.add('border-indigo-500', 'bg-indigo-50', 'shadow-sm');
+                label.classList.remove('border-slate-200', 'bg-white', 'hover:border-tailor-purple/30', 'hover:bg-tailor-soft/40');
+                label.classList.add('border-tailor-purple', 'bg-tailor-soft', 'shadow-sm');
                 if (check) {
                     check.classList.remove('border-slate-300', 'bg-white');
-                    check.classList.add('border-indigo-500', 'bg-indigo-500');
+                    check.classList.add('border-tailor-purple', 'bg-tailor-purple');
                 }
                 if (checkIcon) checkIcon.classList.remove('hidden');
             } else {
-                label.classList.remove('border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-                label.classList.add('border-slate-200', 'bg-white', 'hover:border-indigo-300', 'hover:bg-indigo-50/40');
+                label.classList.remove('border-tailor-purple', 'bg-tailor-soft', 'shadow-sm');
+                label.classList.add('border-slate-200', 'bg-white', 'hover:border-tailor-purple/30', 'hover:bg-tailor-soft/40');
                 if (check) {
-                    check.classList.remove('border-indigo-500', 'bg-indigo-500');
+                    check.classList.remove('border-tailor-purple', 'bg-tailor-purple');
                     check.classList.add('border-slate-300', 'bg-white');
                 }
                 if (checkIcon) checkIcon.classList.add('hidden');
@@ -668,7 +630,7 @@
         });
     }
 
-    // ─── Size radio button styling ───────────────────────────────
+    // Size radio button styling
     function getActiveServiceCategory() {
         return serviceCategoryInput ? serviceCategoryInput.value : '';
     }
@@ -678,11 +640,11 @@
 
         document.querySelectorAll('.service-category-option').forEach(function (button) {
             if (button.dataset.category === activeCategory) {
-                button.classList.remove('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-700', 'hover:bg-indigo-50');
-                button.classList.add('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
+                button.classList.remove('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-tailor-purple/30', 'hover:text-tailor-purple', 'hover:bg-tailor-soft');
+                button.classList.add('border-tailor-purple', 'bg-tailor-soft', 'text-tailor-purple');
             } else {
-                button.classList.remove('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
-                button.classList.add('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-700', 'hover:bg-indigo-50');
+                button.classList.remove('border-tailor-purple', 'bg-tailor-soft', 'text-tailor-purple');
+                button.classList.add('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-tailor-purple/30', 'hover:text-tailor-purple', 'hover:bg-tailor-soft');
             }
         });
     }
@@ -711,11 +673,11 @@
             const radio = label.querySelector('input[type="radio"]');
             const span  = label.querySelector('.size-label');
             if (radio.checked) {
-                span.classList.remove('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-600');
-                span.classList.add('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
+                span.classList.remove('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-tailor-purple/30', 'hover:text-tailor-purple');
+                span.classList.add('border-tailor-purple', 'bg-tailor-soft', 'text-tailor-purple');
             } else {
-                span.classList.remove('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
-                span.classList.add('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-600');
+                span.classList.remove('border-tailor-purple', 'bg-tailor-soft', 'text-tailor-purple');
+                span.classList.add('border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-tailor-purple/30', 'hover:text-tailor-purple');
             }
         });
     }
@@ -735,11 +697,11 @@
                 const details = STANDARD_SIZE_DETAILS[size] || {};
                 const rows = Object.entries(details)
                     .map(function ([label, value]) {
-                        return '<div class="rounded-lg bg-white/70 border border-indigo-100 px-3 py-2"><p class="text-[11px] text-indigo-500 font-semibold">' + label + '</p><p class="text-sm font-bold text-indigo-800">' + value + '</p></div>';
+                        return '<div class="rounded-lg bg-white/70 border border-tailor-purple/10 px-3 py-2"><p class="text-[11px] text-tailor-purple font-semibold">' + label + '</p><p class="text-sm font-bold text-tailor-deep">' + value + '</p></div>';
                     })
                     .join('');
 
-                standardSizeInfo.innerHTML = '<p class="font-bold mb-2">Acuan ukuran standar ' + size + '</p><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">' + rows + '</div><p class="text-xs text-indigo-600 mt-2">Acuan ini membantu penjahit membaca ukuran standar. Untuk ukuran badan detail, pilih Custom.</p>';
+                standardSizeInfo.innerHTML = '<p class="font-bold mb-2">Acuan ukuran standar ' + size + '</p><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">' + rows + '</div><p class="text-xs text-tailor-purple mt-2">Acuan ini membantu penjahit membaca ukuran standar. Untuk ukuran badan detail, pilih Custom.</p>';
                 standardSizeInfo.classList.remove('hidden');
             }
         }
@@ -749,7 +711,7 @@
         }
     }
 
-    // ─── Quantity stepper ────────────────────────────────────────
+    // Quantity stepper
     qtyMinus.addEventListener('click', function () {
         const v = parseInt(quantityInput.value, 10);
         if (v > 1) { quantityInput.value = v - 1; updateEstimate(); }
@@ -759,7 +721,7 @@
         if (v < 99) { quantityInput.value = v + 1; updateEstimate(); }
     });
 
-    // ─── Event listeners ─────────────────────────────────────────
+    // Event listeners
     document.querySelectorAll('.service-category-option').forEach(function (button) {
         button.addEventListener('click', function () {
             if (!serviceCategoryInput) return;
@@ -798,7 +760,7 @@
         measurementSelect.addEventListener('change', updateMeasurementUi);
     }
 
-    // ─── Image preview ───────────────────────────────────────────
+    // Image preview
     imagesInput.addEventListener('change', function () {
         previewGrid.innerHTML = '';
         const files = Array.from(this.files).slice(0, 5);
@@ -842,7 +804,7 @@
         });
     });
 
-    // ─── Init ────────────────────────────────────────────────────
+    // Init
     updateServiceCategoryStyles();
     updateVisibleServices();
     updatePriceListStyles();

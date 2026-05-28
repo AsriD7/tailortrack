@@ -32,14 +32,14 @@
 @endsection
 
 @section('page-actions')
-    <a href="{{ route('admin.price-lists.create') }}" class="flex items-center gap-2 gradient-brand text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+    <a href="{{ route('admin.price-lists.create') }}" class="flex items-center gap-2 brand-gradient text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Tambah Harga
     </a>
 @endsection
 
 @section('content')
-<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+<div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
@@ -56,13 +56,13 @@
                 <tr class="hover:bg-slate-50/60 transition-colors">
                     <td class="px-6 py-4 font-semibold text-slate-800">{{ $item->name }}</td>
                     <td class="px-6 py-4">
-                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">{{ $item->category }}</span>
+                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-tailor-soft text-tailor-purple">{{ $item->category }}</span>
                     </td>
                     <td class="px-6 py-4 font-semibold text-emerald-700">Rp {{ number_format($item->base_price, 0, ',', '.') }}</td>
                     <td class="px-6 py-4 text-slate-500 max-w-xs truncate">{{ $item->description ?? '-' }}</td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ route('admin.price-lists.edit', $item) }}" class="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition-colors">
+                            <a href="{{ route('admin.price-lists.edit', $item) }}" class="flex items-center gap-1.5 bg-tailor-soft text-tailor-purple px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-tailor-soft transition-colors">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 Edit
                             </a>
@@ -83,7 +83,7 @@
                             <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg>
                         </div>
                         <p class="text-slate-500 text-sm">Belum ada daftar harga.</p>
-                        <a href="{{ route('admin.price-lists.create') }}" class="mt-3 inline-flex gradient-brand text-white px-4 py-2 rounded-lg text-sm font-semibold">Tambah Sekarang</a>
+                        <a href="{{ route('admin.price-lists.create') }}" class="mt-3 inline-flex brand-gradient text-white px-4 py-2 rounded-lg text-sm font-semibold">Tambah Sekarang</a>
                     </td>
                 </tr>
                 @endforelse

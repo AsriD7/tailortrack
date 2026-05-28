@@ -1,83 +1,38 @@
 @extends('layouts.customer')
 
 @section('title', 'Detail Pesanan #' . $order->order_code)
-@section('page-title', 'Detail Pesanan')
-@section('page-subtitle', 'Kode: ' . $order->order_code)
 
-{{-- ======================== SIDEBAR NAV ======================== --}}
-@section('sidebar-nav')
-    {{-- Dashboard --}}
-    <a href="{{ route('customer.dashboard') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('customer.dashboard') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-        </svg>
-        Dashboard
-    </a>
-
-    {{-- Pesanan Saya --}}
-    <a href="{{ route('customer.orders.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium active bg-white/15 text-white">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-        </svg>
-        Pesanan Saya
-    </a>
-
-    {{-- Cari Penjahit --}}
-    <a href="{{ route('tailors.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('tailors*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        Cari Penjahit
-    </a>
-
-    {{-- Daftar Harga --}}
-    <a href="{{ route('price-lists.index') }}"
-       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white text-sm font-medium {{ request()->routeIs('price-lists*') ? 'active bg-white/15 text-white' : '' }}">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a2 2 0 012-2z"/>
-        </svg>
-        Daftar Harga
-    </a>
-@endsection
-
-{{-- ======================== PAGE ACTIONS ======================== --}}
-@section('page-actions')
-    <a href="{{ route('customer.orders.index') }}"
-       class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-        </svg>
-        Kembali ke Daftar
-    </a>
-@endsection
-
-{{-- ======================== CONTENT ======================== --}}
 @section('content')
 <div class="space-y-6">
 
-    {{-- ── Order Header Banner ── --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-center gap-3 mb-1">
-                    <h1 class="text-xl font-bold text-slate-800 font-mono">{{ $order->order_code }}</h1>
-                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold {{ $order->status->badgeColor() }}">
-                        {{ $order->status->label() }}
-                    </span>
+    {{-- Order Header Banner --}}
+    <div class="overflow-hidden rounded-[2rem] border border-tailor-purple/10 bg-white shadow-soft">
+        <div class="relative brand-gradient p-5 text-white sm:p-7">
+            <div class="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(240,179,79,0.35),transparent_55%)] sm:block"></div>
+            <div class="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                <div class="min-w-0">
+                    <div class="mb-2 flex flex-wrap items-center gap-3">
+                        <h1 class="font-mono text-2xl font-black tracking-tight sm:text-3xl">{{ $order->order_code }}</h1>
+                        <span class="inline-flex rounded-full bg-white/14 px-3 py-1 text-xs font-extrabold text-white ring-1 ring-white/20">
+                            {{ $order->status->label() }}
+                        </span>
+                    </div>
+                    <p class="text-sm font-medium text-white/75">
+                        Dibuat pada {{ $order->created_at->translatedFormat('d F Y, H:i') }} WIB
+                    </p>
                 </div>
-                <p class="text-sm text-slate-500">
-                    Dibuat pada {{ $order->created_at->translatedFormat('d F Y, H:i') }} WIB
-                </p>
+
+                <a href="{{ route('customer.orders.index') }}"
+                   class="inline-flex items-center justify-center rounded-2xl bg-white/12 px-5 py-3 text-sm font-extrabold text-white ring-1 ring-white/20 transition hover:bg-white/18">
+                    Kembali
+                </a>
             </div>
+        </div>
+
+        <div class="p-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
             {{-- Progress steps --}}
-            <div class="flex items-center gap-1 shrink-0 overflow-x-auto pb-1">
+            <div class="flex w-full items-center gap-1 overflow-x-auto pb-1">
                 @php
                     $steps = [
                         ['key' => 'menunggu_konfirmasi', 'label' => 'Konfirmasi'],
@@ -105,7 +60,7 @@
                         <div class="flex items-center">
                             <div class="flex flex-col items-center">
                                 <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0
-                                    {{ $i < $currentIndex ? 'bg-indigo-600 text-white' : ($i === $currentIndex ? 'gradient-brand text-white ring-2 ring-indigo-200' : 'bg-slate-100 text-slate-400') }}">
+                                    {{ $i < $currentIndex ? 'bg-tailor-purple text-white' : ($i === $currentIndex ? 'brand-gradient text-white ring-2 ring-tailor-soft' : 'bg-slate-100 text-slate-400') }}">
                                     @if($i < $currentIndex)
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
@@ -114,28 +69,29 @@
                                         {{ $i + 1 }}
                                     @endif
                                 </div>
-                                <span class="text-xs mt-1 whitespace-nowrap {{ $i === $currentIndex ? 'text-indigo-600 font-semibold' : 'text-slate-400' }}">
+                                <span class="text-xs mt-1 whitespace-nowrap {{ $i === $currentIndex ? 'text-tailor-purple font-semibold' : 'text-slate-400' }}">
                                     {{ $step['label'] }}
                                 </span>
                             </div>
                             @if(!$loop->last)
-                                <div class="w-6 h-0.5 mb-4 mx-1 {{ $i < $currentIndex ? 'bg-indigo-400' : 'bg-slate-200' }}"></div>
+                                <div class="w-6 h-0.5 mb-4 mx-1 {{ $i < $currentIndex ? 'bg-tailor-purple' : 'bg-slate-200' }}"></div>
                             @endif
                         </div>
                     @endforeach
                 @endif
             </div>
         </div>
+        </div>
     </div>
 
-    {{-- ── Main 2-column Layout ── --}}
+    {{-- Main 2-column Layout --}}
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
         {{-- ===== LEFT COLUMN (3/5) ===== --}}
         <div class="lg:col-span-3 space-y-6">
 
             {{-- Order Info Card --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -194,7 +150,7 @@
             </div>
 
             {{-- Penjahit Info --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -203,7 +159,7 @@
                     Informasi Penjahit
                 </h2>
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl gradient-brand flex items-center justify-center text-white font-bold text-lg shrink-0">
+                    <div class="w-12 h-12 rounded-xl brand-gradient flex items-center justify-center text-white font-bold text-lg shrink-0">
                         {{ mb_substr($order->tailor->tailorProfile->shop_name ?? $order->tailor->name, 0, 1) }}
                     </div>
                     <div class="flex-1 min-w-0">
@@ -211,7 +167,7 @@
                         <p class="text-sm text-slate-500">{{ $order->tailor->name }}</p>
                         @if($order->tailor->tailorProfile->phone ?? false)
                             <a href="tel:{{ $order->tailor->tailorProfile->phone }}"
-                               class="inline-flex items-center gap-1.5 text-indigo-600 text-xs font-medium mt-1 hover:underline">
+                               class="inline-flex items-center gap-1.5 text-tailor-purple text-xs font-medium mt-1 hover:underline">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
@@ -224,7 +180,7 @@
             </div>
 
             {{-- Price Info --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -245,7 +201,7 @@
                     </div>
                     <div class="flex justify-between items-center text-sm pt-3 border-t border-slate-100">
                         <span class="font-semibold text-slate-700">Total Harga Final</span>
-                        <span class="text-lg font-bold {{ $order->total_price ? 'text-indigo-600' : 'text-slate-400' }}">
+                        <span class="text-lg font-bold {{ $order->total_price ? 'text-tailor-purple' : 'text-slate-400' }}">
                             @if($order->total_price)
                                 Rp {{ number_format($order->total_price, 0, ',', '.') }}
                             @else
@@ -258,7 +214,7 @@
 
             {{-- Reference Images --}}
             @if($order->orderImages->isNotEmpty())
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                     <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -270,7 +226,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         @foreach($order->orderImages as $image)
                             <a href="{{ $image->imageUrl }}" target="_blank" rel="noopener"
-                               class="group block aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-400 transition-all hover:shadow-md">
+                               class="group block aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-tailor-purple/40 transition-all hover:shadow-md">
                                 <img src="{{ $image->imageUrl }}"
                                      alt="Referensi Desain {{ $loop->iteration }}"
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
@@ -323,7 +279,7 @@
         <div class="lg:col-span-2 space-y-6">
 
             {{-- Tracking / History Timeline --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -342,7 +298,7 @@
                                 <div class="flex gap-4 relative">
                                     {{-- Dot --}}
                                     <div class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center z-10
-                                        {{ $loop->first ? 'gradient-brand shadow-sm' : 'bg-slate-100' }}">
+                                        {{ $loop->first ? 'brand-gradient shadow-sm' : 'bg-slate-100' }}">
                                         @if($loop->first)
                                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
@@ -397,7 +353,7 @@
 
             {{-- Payment Upload Form --}}
             @if($order->status === \App\Enums\OrderStatus::MenungguPembayaran)
-                <div class="bg-white rounded-2xl shadow-sm border border-orange-200 p-6">
+                <div class="bg-white rounded-2xl shadow-soft border border-orange-200 p-6">
                     <div class="flex items-center gap-3 mb-5">
                         <div class="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -517,7 +473,7 @@
                                 <div class="flex items-center justify-between gap-3">
                                     <p class="text-sm font-semibold text-slate-700 truncate" data-payment-proof-name></p>
                                     <a href="#" target="_blank" rel="noopener"
-                                       class="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 hover:text-indigo-900"
+                                       class="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-tailor-purple hover:text-tailor-deep"
                                        data-payment-proof-link>
                                         Lihat preview
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -560,7 +516,7 @@
 
             {{-- Cancel Order Form --}}
             @if(in_array($order->status, \App\Enums\OrderStatus::cancellableByCustomer()))
-                <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-6">
+                <div class="bg-white rounded-2xl shadow-soft border border-red-100 p-6">
                     <div class="flex items-center gap-3 mb-5">
                         <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -637,7 +593,7 @@
          REVIEW SECTION (hanya tampil jika pesanan selesai)
          ================================================================ --}}
     @if($order->status === \App\Enums\OrderStatus::Selesai)
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex items-center gap-3">
             <div class="w-9 h-9 bg-yellow-50 rounded-xl flex items-center justify-center">
                 <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
@@ -652,7 +608,7 @@
 
         <div class="p-6">
             @if($order->review)
-                {{-- Ulasan sudah ada — tampilkan --}}
+                {{-- Ulasan sudah ada --}}
                 <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-5">
                     <div class="flex items-start justify-between gap-4 mb-3">
                         <div>
@@ -727,9 +683,9 @@
                             Komentar <span class="text-slate-400 font-normal">(opsional)</span>
                         </label>
                         <textarea id="comment" name="comment" rows="3"
-                                  placeholder="Ceritakan pengalaman Anda dengan penjahit ini — kualitas jahitan, ketepatan waktu, pelayanan..."
+                                  placeholder="Ceritakan pengalaman Anda dengan penjahit ini: kualitas jahitan, ketepatan waktu, pelayanan..."
                                   maxlength="1000"
-                                  class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent resize-none transition-shadow @error('comment') border-red-400 @enderror">{{ old('comment') }}</textarea>
+                                  class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent resize-none transition-shadow @error('comment') border-red-400 @enderror">{{ old('comment') }}</textarea>
                         <div class="flex justify-between mt-1">
                             @error('comment')
                                 <p class="text-red-500 text-xs">{{ $message }}</p>
@@ -743,7 +699,7 @@
                     <button type="submit"
                             :disabled="rating === 0"
                             :class="rating === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'"
-                            class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-md shadow-indigo-200">
+                            class="inline-flex items-center gap-2 brand-gradient text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-md shadow-tailor-purple/10">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                         </svg>

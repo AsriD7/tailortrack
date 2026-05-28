@@ -57,7 +57,7 @@
 
 @section('page-actions')
     <a href="{{ route('admin.tailors.create') }}"
-       class="inline-flex items-center gap-2 gradient-brand text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
+       class="inline-flex items-center gap-2 brand-gradient text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -85,7 +85,7 @@
     @endif
 
     {{-- Filter Card --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6 mb-6">
         <form method="GET" action="{{ route('admin.tailors.index') }}" class="flex flex-col sm:flex-row gap-3">
             <div class="flex-1 relative">
                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,17 +93,17 @@
                 </svg>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Cari nama, toko, atau spesialisasi..."
-                       class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                       class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent">
             </div>
             <div class="sm:w-48">
-                <select name="published" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white">
+                <select name="published" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent bg-white">
                     <option value="">Semua Status Publikasi</option>
                     <option value="1" {{ request('published') === '1' ? 'selected' : '' }}>Tampil di Publik</option>
                     <option value="0" {{ request('published') === '0' ? 'selected' : '' }}>Disembunyikan</option>
                 </select>
             </div>
             <button type="submit"
-                    class="gradient-brand text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
+                    class="brand-gradient text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
                 Filter
             </button>
             @if(request()->hasAny(['search', 'published']))
@@ -116,7 +116,7 @@
     </div>
 
     {{-- Table Card --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
             <h3 class="font-semibold text-slate-800">
                 Daftar Penjahit
@@ -151,7 +151,7 @@
                             <tr class="hover:bg-slate-50/50 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                        <div class="w-9 h-9 rounded-full brand-gradient flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                                             {{ strtoupper(substr($tailor->name, 0, 1)) }}
                                         </div>
                                         <div>
@@ -201,7 +201,7 @@
                                             Lihat
                                         </a>
                                         <a href="{{ route('admin.tailors.edit', $tailor) }}"
-                                           class="inline-flex items-center gap-1.5 bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition-colors">
+                                           class="inline-flex items-center gap-1.5 bg-tailor-soft text-tailor-purple px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-tailor-soft transition-colors">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                             </svg>

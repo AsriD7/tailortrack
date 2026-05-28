@@ -76,7 +76,7 @@
             </button>
         </form>
         <a href="{{ route('admin.tailors.edit', $tailor) }}"
-           class="inline-flex items-center gap-2 gradient-brand text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
+           class="inline-flex items-center gap-2 brand-gradient text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
@@ -100,9 +100,9 @@
         {{-- Left Column --}}
         <div class="lg:col-span-1 space-y-6">
             {{-- Profile Card --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <div class="flex flex-col items-center text-center mb-6">
-                    <div class="w-20 h-20 rounded-2xl gradient-brand flex items-center justify-center text-white font-bold text-2xl mb-4">
+                    <div class="w-20 h-20 rounded-2xl brand-gradient flex items-center justify-center text-white font-bold text-2xl mb-4">
                         {{ strtoupper(substr($tailor->name, 0, 1)) }}
                     </div>
                     <h2 class="text-lg font-bold text-slate-800">{{ $tailor->name }}</h2>
@@ -155,7 +155,7 @@
 
             {{-- Shop Profile Card --}}
             @if($tailor->tailorProfile)
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                     <h3 class="font-semibold text-slate-800 mb-4">Profil Toko</h3>
                     <div class="space-y-4 text-sm">
                         @if($tailor->tailorProfile->shop_name)
@@ -195,7 +195,7 @@
                                 <p class="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Hari Kerja</p>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach($tailor->tailorProfile->working_days as $day)
-                                        <span class="inline-flex px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                                        <span class="inline-flex px-2.5 py-1 rounded-full bg-tailor-soft text-tailor-purple text-xs font-semibold">
                                             {{ \App\Models\TailorProfile::WORKING_DAY_LABELS[(int) $day] ?? '-' }}
                                         </span>
                                     @endforeach
@@ -206,14 +206,14 @@
                 </div>
             @endif
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <h3 class="font-semibold text-slate-800 mb-4">Layanan yang Diterima</h3>
                 @if($tailor->priceLists->isEmpty())
                     <p class="text-sm text-slate-400">Belum ada layanan yang dipilih.</p>
                 @else
                     <div class="flex flex-wrap gap-2">
                         @foreach($tailor->priceLists as $priceList)
-                            <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-tailor-soft text-tailor-purple text-xs font-semibold">
                                 {{ $priceList->name }}
                             </span>
                         @endforeach
@@ -225,7 +225,7 @@
         {{-- Right Column --}}
         <div class="lg:col-span-2 space-y-6">
             {{-- Portfolio Gallery --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold text-slate-800">Portofolio</h3>
                     <span class="text-sm text-slate-500">{{ $tailor->portfolios->count() }} item</span>
@@ -245,8 +245,8 @@
                                     <img src="{{ $portfolio->image_url }}" alt="{{ $portfolio->title }}"
                                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-50 to-violet-50">
-                                        <svg class="w-8 h-8 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-tailor-soft to-white">
+                                        <svg class="w-8 h-8 text-tailor-purple/35" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
                                     </div>
@@ -263,7 +263,7 @@
             </div>
 
             {{-- Recent Orders --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                     <h3 class="font-semibold text-slate-800">Pesanan Terbaru</h3>
                     <span class="text-sm text-slate-500">{{ $tailor->tailorOrders->count() }} pesanan</span>
@@ -291,7 +291,7 @@
                             <tbody class="divide-y divide-slate-100">
                                 @foreach($tailor->tailorOrders->take(10) as $order)
                                     <tr class="hover:bg-slate-50/50 transition-colors">
-                                        <td class="px-6 py-3 font-mono text-xs text-indigo-600 font-semibold">{{ $order->order_code }}</td>
+                                        <td class="px-6 py-3 font-mono text-xs text-tailor-purple font-semibold">{{ $order->order_code }}</td>
                                         <td class="px-6 py-3 text-slate-700">{{ $order->customer?->name ?? '-' }}</td>
                                         <td class="px-6 py-3 text-slate-600">{{ $order->item_name ?? '-' }}</td>
                                         <td class="px-6 py-3">
@@ -302,7 +302,7 @@
                                         <td class="px-6 py-3 text-slate-800 font-medium">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                         <td class="px-6 py-3 text-right">
                                             <a href="{{ route('admin.orders.show', $order) }}"
-                                               class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold">
+                                               class="text-tailor-purple hover:text-tailor-deep text-xs font-semibold">
                                                 Lihat
                                             </a>
                                         </td>

@@ -6,7 +6,7 @@
 
 @section('page-actions')
     <a href="{{ route('tailor.portfolios.create') }}"
-       class="gradient-brand text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
+       class="brand-gradient text-white px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -52,6 +52,28 @@
 @section('content')
 <div class="space-y-6">
 
+    <section class="overflow-hidden rounded-[2rem] border border-tailor-purple/10 bg-white shadow-soft">
+        <div class="relative brand-gradient p-5 text-white sm:p-7">
+            <div class="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(240,179,79,0.35),transparent_55%)] sm:block"></div>
+            <div class="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.24em] text-tailor-gold">Portfolio Toko</p>
+                    <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Karya jahitan terbaik</h1>
+                    <p class="mt-2 max-w-2xl text-sm font-medium leading-6 text-white/75">
+                        Kelola foto karya, kategori, harga, dan karya unggulan yang tampil di profil publik.
+                    </p>
+                </div>
+                <a href="{{ route('tailor.portfolios.create') }}"
+                   class="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-tailor-purple shadow-sm transition hover:bg-tailor-cream">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Tambah Portfolio
+                </a>
+            </div>
+        </div>
+    </section>
+
     {{-- Flash Messages --}}
     @if(session('success'))
         <div class="flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3.5 rounded-xl">
@@ -63,30 +85,30 @@
     @endif
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-4">
             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Karya</p>
             <p class="text-2xl font-extrabold text-slate-800 mt-1">{{ $stats['total'] ?? 0 }}</p>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-4">
             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Karya Unggulan</p>
-            <p class="text-2xl font-extrabold text-indigo-700 mt-1">{{ $stats['featured'] ?? 0 }}</p>
+            <p class="text-2xl font-extrabold text-tailor-purple mt-1">{{ $stats['featured'] ?? 0 }}</p>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-4">
             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Kategori</p>
             <p class="text-2xl font-extrabold text-slate-800 mt-1">{{ $stats['categories'] ?? 0 }}</p>
         </div>
     </div>
 
-    <form method="GET" action="{{ route('tailor.portfolios.index') }}" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+    <form method="GET" action="{{ route('tailor.portfolios.index') }}" class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-4">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-5">
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Cari judul, kategori, atau deskripsi..."
-                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent">
             </div>
             <div class="md:col-span-4">
                 <select name="category"
-                        class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent">
                     <option value="">Semua kategori</option>
                     @foreach($categoryOptions as $category)
                         <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>{{ $category }}</option>
@@ -94,11 +116,11 @@
                 </select>
             </div>
             <label class="md:col-span-2 inline-flex items-center gap-2 px-3 py-2.5 rounded-lg border border-slate-200 text-sm font-semibold text-slate-600">
-                <input type="checkbox" name="featured" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" {{ request()->boolean('featured') ? 'checked' : '' }}>
+                <input type="checkbox" name="featured" value="1" class="rounded border-slate-300 text-tailor-purple focus:ring-tailor-gold" {{ request()->boolean('featured') ? 'checked' : '' }}>
                 Unggulan
             </label>
             <button type="submit"
-                    class="md:col-span-1 inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors">
+                    class="md:col-span-1 inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-tailor-deep text-white text-sm font-semibold hover:bg-tailor-purple transition-colors">
                 Cari
             </button>
         </div>
@@ -108,7 +130,7 @@
         {{-- Portfolio Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($portfolios as $portfolio)
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden group hover:shadow-md transition-shadow">
                     {{-- Portfolio Image --}}
                     <div class="relative aspect-video overflow-hidden bg-slate-100">
                         @if($portfolio->image)
@@ -127,7 +149,7 @@
                         {{-- Category Badge overlay --}}
                         @if($portfolio->category)
                             <div class="absolute top-3 left-3">
-                                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-sm text-indigo-700 shadow-sm">
+                                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-sm text-tailor-purple shadow-sm">
                                     {{ $portfolio->category }}
                                 </span>
                             </div>
@@ -163,7 +185,7 @@
 
                         <div class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100">
                             <a href="{{ route('tailor.portfolios.edit', $portfolio) }}"
-                               class="flex-1 flex items-center justify-center gap-1.5 bg-slate-100 text-slate-700 px-3 py-2 rounded-lg font-semibold text-xs hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
+                               class="flex-1 flex items-center justify-center gap-1.5 bg-slate-100 text-slate-700 px-3 py-2 rounded-lg font-semibold text-xs hover:bg-tailor-soft hover:text-tailor-purple transition-colors">
                                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
@@ -196,9 +218,9 @@
 
     @else
         {{-- Empty State --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-12 text-center">
-            <div class="w-20 h-20 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-10 h-10 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-12 text-center">
+            <div class="w-20 h-20 bg-tailor-soft rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-tailor-purple/35" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
             </div>
@@ -207,7 +229,7 @@
                 Tambahkan karya terbaik Anda untuk menarik lebih banyak pelanggan dan meningkatkan kepercayaan.
             </p>
             <a href="{{ route('tailor.portfolios.create') }}"
-               class="inline-flex items-center gap-2 gradient-brand text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
+               class="inline-flex items-center gap-2 brand-gradient text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>

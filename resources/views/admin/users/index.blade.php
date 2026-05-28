@@ -67,27 +67,27 @@
     @endif
 
     {{-- Role Filter Tabs --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-1.5 mb-6 inline-flex gap-1">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-1.5 mb-6 inline-flex gap-1">
         <a href="{{ route('admin.users.index') }}"
-           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ !request('role') ? 'gradient-brand text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
+           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ !request('role') ? 'brand-gradient text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
             Semua
         </a>
         <a href="{{ route('admin.users.index', ['role' => 'customer']) }}"
-           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ request('role') === 'customer' ? 'gradient-brand text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
+           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ request('role') === 'customer' ? 'brand-gradient text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
             Customer
         </a>
         <a href="{{ route('admin.users.index', ['role' => 'tailor']) }}"
-           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ request('role') === 'tailor' ? 'gradient-brand text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
+           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ request('role') === 'tailor' ? 'brand-gradient text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
             Penjahit
         </a>
         <a href="{{ route('admin.users.index', ['role' => 'admin']) }}"
-           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ request('role') === 'admin' ? 'gradient-brand text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
+           class="px-4 py-2 rounded-xl text-sm font-semibold transition-colors {{ request('role') === 'admin' ? 'brand-gradient text-white shadow-sm' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50' }}">
             Admin
         </a>
     </div>
 
     {{-- Filter Card --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6 mb-6">
         <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-col sm:flex-row gap-3">
             @if(request('role'))
                 <input type="hidden" name="role" value="{{ request('role') }}">
@@ -98,10 +98,10 @@
                 </svg>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Cari nama atau email pengguna..."
-                       class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                       class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent">
             </div>
             <button type="submit"
-                    class="gradient-brand text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
+                    class="brand-gradient text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
                 Cari
             </button>
             @if(request('search'))
@@ -114,7 +114,7 @@
     </div>
 
     {{-- Table Card --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
             <h3 class="font-semibold text-slate-800">
                 Daftar Pengguna
@@ -150,7 +150,7 @@
                                     <div class="flex items-center gap-3">
                                         <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0
                                             @if($user->role === 'admin') bg-red-500
-                                            @elseif($user->role === 'tailor') bg-gradient-to-br from-indigo-500 to-violet-600
+                                            @elseif($user->role === 'tailor') bg-gradient-to-br from-tailor-purple to-tailor-deep
                                             @else bg-gradient-to-br from-emerald-500 to-teal-600
                                             @endif">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -165,7 +165,7 @@
                                     @php
                                         $roleColor = match($user->role) {
                                             'admin' => 'bg-red-100 text-red-700',
-                                            'tailor' => 'bg-indigo-100 text-indigo-700',
+                                            'tailor' => 'bg-tailor-soft text-tailor-purple',
                                             default => 'bg-emerald-100 text-emerald-700',
                                         };
                                         $roleLabel = match($user->role) {

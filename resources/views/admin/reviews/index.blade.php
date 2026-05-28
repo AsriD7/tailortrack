@@ -58,25 +58,25 @@
 
 @section('content')
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-5 shadow-soft border border-tailor-purple/10">
             <p class="text-xs text-slate-500 font-medium">Total Review</p>
             <p class="text-2xl font-bold text-slate-800 mt-2">{{ number_format($stats['total']) }}</p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-5 shadow-soft border border-tailor-purple/10">
             <p class="text-xs text-slate-500 font-medium">Rata-rata Rating</p>
             <p class="text-2xl font-bold text-yellow-600 mt-2">{{ $stats['average'] ?: '-' }}</p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-5 shadow-soft border border-tailor-purple/10">
             <p class="text-xs text-slate-500 font-medium">Rating Rendah</p>
             <p class="text-2xl font-bold text-red-600 mt-2">{{ number_format($stats['low_rating']) }}</p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="bg-white rounded-2xl p-5 shadow-soft border border-tailor-purple/10">
             <p class="text-xs text-slate-500 font-medium">Dengan Komentar</p>
-            <p class="text-2xl font-bold text-indigo-600 mt-2">{{ number_format($stats['with_comment']) }}</p>
+            <p class="text-2xl font-bold text-tailor-purple mt-2">{{ number_format($stats['with_comment']) }}</p>
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-4 mb-6">
         <form method="GET" action="{{ route('admin.reviews.index') }}" class="flex flex-col lg:flex-row gap-3">
             <div class="flex-1">
                 <input
@@ -84,10 +84,10 @@
                     name="search"
                     value="{{ request('search') }}"
                     placeholder="Cari komentar, customer, penjahit, atau kode order..."
-                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent"
                 >
             </div>
-            <select name="rating" class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <select name="rating" class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-tailor-gold">
                 <option value="">Semua Rating</option>
                 @for($rating = 5; $rating >= 1; $rating--)
                     <option value="{{ $rating }}" {{ (string) request('rating') === (string) $rating ? 'selected' : '' }}>
@@ -95,7 +95,7 @@
                     </option>
                 @endfor
             </select>
-            <button type="submit" class="gradient-brand text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90">
+            <button type="submit" class="brand-gradient text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90">
                 Filter
             </button>
             @if(request()->hasAny(['search', 'rating']))
@@ -106,7 +106,7 @@
         </form>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
             <h2 class="font-semibold text-slate-800">
                 Daftar Review
@@ -165,7 +165,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($review->order)
-                                        <a href="{{ route('admin.orders.show', $review->order) }}" class="font-mono text-xs bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg font-semibold hover:bg-indigo-100">
+                                        <a href="{{ route('admin.orders.show', $review->order) }}" class="font-mono text-xs bg-tailor-soft text-tailor-purple px-2.5 py-1 rounded-lg font-semibold hover:bg-tailor-soft">
                                             {{ $review->order->order_code }}
                                         </a>
                                     @else

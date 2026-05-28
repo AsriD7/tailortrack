@@ -40,7 +40,75 @@
 @endsection
 
 @section('content')
+@php
+    $shopName = $profile->shop_name ?? 'Profil Toko Belum Lengkap';
+    $isPublished = (bool) ($profile?->is_verified ?? false);
+    $isAvailable = (bool) old('is_available', $profile->is_available ?? true);
+    $selectedWorkingDays = collect(old('working_days', $profile->working_days ?? [1, 2, 3, 4, 5, 6]))
+        ->map(fn($day) => (int) $day)
+        ->all();
+    $selectedWorkingDayLabels = collect($selectedWorkingDays)
+        ->map(fn($day) => \App\Models\TailorProfile::WORKING_DAY_LABELS[$day] ?? null)
+        ->filter()
+        ->values();
+@endphp
 <div class="max-w-4xl mx-auto space-y-6">
+
+    <section class="overflow-hidden rounded-[2rem] border border-tailor-purple/10 bg-white shadow-soft">
+        <div class="relative brand-gradient p-5 text-white sm:p-7">
+            <div class="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(240,179,79,0.35),transparent_55%)] sm:block"></div>
+            <div class="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div class="flex min-w-0 items-start gap-4">
+                    <div class="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-3xl bg-white/14 text-2xl font-black ring-1 ring-white/20">
+                        @if($profile && $profile->profile_photo)
+                            <img src="{{ asset('storage/' . $profile->profile_photo) }}" alt="{{ $shopName }}" class="h-full w-full object-cover">
+                        @else
+                            {{ mb_substr($shopName, 0, 1) }}
+                        @endif
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-black uppercase tracking-[0.24em] text-tailor-gold">Profil Toko</p>
+                        <h1 class="mt-2 truncate text-2xl font-black tracking-tight sm:text-3xl">{{ $shopName }}</h1>
+                        <p class="mt-2 max-w-2xl text-sm font-medium leading-6 text-white/75">
+                            Atur data toko, kapasitas, layanan, hari kerja, dan tanggal libur agar pesanan customer lebih akurat.
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit" form="tailorProfileForm"
+                        class="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-tailor-purple shadow-sm transition hover:bg-tailor-cream">
+                    Simpan Profil
+                </button>
+            </div>
+        </div>
+
+        <div class="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-2xl bg-tailor-cream p-4 ring-1 ring-tailor-purple/10">
+                <p class="text-xs font-bold text-slate-500">Publikasi</p>
+                <p class="mt-1 text-sm font-black {{ $isPublished ? 'text-emerald-700' : 'text-amber-700' }}">
+                    {{ $isPublished ? 'Tampil di Publik' : 'Disembunyikan' }}
+                </p>
+            </div>
+            <div class="rounded-2xl bg-tailor-cream p-4 ring-1 ring-tailor-purple/10">
+                <p class="text-xs font-bold text-slate-500">Ketersediaan</p>
+                <p class="mt-1 text-sm font-black {{ $isAvailable ? 'text-tailor-purple' : 'text-slate-500' }}">
+                    {{ $isAvailable ? 'Menerima Pesanan' : 'Tidak Menerima' }}
+                </p>
+            </div>
+            <div class="rounded-2xl bg-tailor-cream p-4 ring-1 ring-tailor-purple/10">
+                <p class="text-xs font-bold text-slate-500">Kapasitas</p>
+                <p class="mt-1 text-sm font-black text-tailor-deep">
+                    {{ $profile->max_active_orders ?? '-' }} aktif / {{ $profile->max_weekly_orders ?? '-' }} minggu
+                </p>
+            </div>
+            <div class="rounded-2xl bg-tailor-cream p-4 ring-1 ring-tailor-purple/10">
+                <p class="text-xs font-bold text-slate-500">Hari Kerja</p>
+                <p class="mt-1 truncate text-sm font-black text-tailor-deep">
+                    {{ $selectedWorkingDayLabels->isNotEmpty() ? $selectedWorkingDayLabels->implode(', ') : '-' }}
+                </p>
+            </div>
+        </div>
+    </section>
 
     {{-- Flash Messages --}}
     @if(session('success'))
@@ -77,15 +145,15 @@
         </div>
     @endif
 
-    <form action="{{ route('tailor.profile.update') }}" method="POST" enctype="multipart/form-data">
+    <form id="tailorProfileForm" action="{{ route('tailor.profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         {{-- Section 1: Personal Info --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden mb-6">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
-                <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-8 h-8 bg-tailor-soft rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-tailor-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
                 </div>
@@ -97,7 +165,7 @@
 
             <div class="p-6 space-y-5">
                 {{-- Profile Photo --}}
-                <div class="flex items-start gap-5">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
                     <div class="relative flex-shrink-0">
                         <div id="photo-preview-wrapper" class="w-24 h-24 rounded-2xl overflow-hidden bg-slate-100 border-2 border-slate-200 flex items-center justify-center">
                             @if($profile && $profile->profile_photo)
@@ -113,7 +181,7 @@
                             @endif
                         </div>
                         <label for="profile_photo"
-                               class="absolute -bottom-2 -right-2 w-8 h-8 gradient-brand text-white rounded-full flex items-center justify-center cursor-pointer shadow-md hover:opacity-90 transition-opacity">
+                               class="absolute -bottom-2 -right-2 w-8 h-8 brand-gradient text-white rounded-full flex items-center justify-center cursor-pointer shadow-md hover:opacity-90 transition-opacity">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -158,7 +226,7 @@
                             <input type="tel" id="phone" name="phone"
                                    value="{{ old('phone', $user->phone ?? '') }}"
                                    placeholder="08xxxxxxxxxx"
-                                   class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('phone') border-red-300 focus:ring-red-500 @enderror">
+                                   class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('phone') border-red-300 focus:ring-red-500 @enderror">
                         </div>
                         @error('phone')
                             <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -198,7 +266,7 @@
                     </label>
                     <textarea id="address" name="address" rows="3"
                               placeholder="Masukkan alamat lengkap Anda..."
-                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('address') border-red-300 focus:ring-red-500 @enderror">{{ old('address', $user->address ?? '') }}</textarea>
+                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent resize-none @error('address') border-red-300 focus:ring-red-500 @enderror">{{ old('address', $user->address ?? '') }}</textarea>
                     @error('address')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -207,10 +275,10 @@
         </div>
 
         {{-- Section 2: Shop Profile --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+        <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden mb-6">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
-                <div class="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-4 h-4 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-8 h-8 bg-tailor-soft rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-tailor-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                 </div>
@@ -230,7 +298,7 @@
                         <input type="text" id="shop_name" name="shop_name"
                                value="{{ old('shop_name', $profile->shop_name ?? '') }}"
                                placeholder="Contoh: Tailor Budi Jaya"
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('shop_name') border-red-300 focus:ring-red-500 @enderror">
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('shop_name') border-red-300 focus:ring-red-500 @enderror">
                         @error('shop_name')
                             <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -244,7 +312,7 @@
                         <input type="text" id="specialization" name="specialization"
                                value="{{ old('specialization', $profile->specialization ?? '') }}"
                                placeholder="Contoh: Baju Pengantin, Seragam, Jas"
-                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('specialization') border-red-300 focus:ring-red-500 @enderror">
+                               class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('specialization') border-red-300 focus:ring-red-500 @enderror">
                         @error('specialization')
                             <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -259,7 +327,7 @@
                             <input type="number" id="experience_years" name="experience_years" min="0" max="50"
                                    value="{{ old('experience_years', $profile->experience_years ?? '') }}"
                                    placeholder="0"
-                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('experience_years') border-red-300 focus:ring-red-500 @enderror">
+                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('experience_years') border-red-300 focus:ring-red-500 @enderror">
                             <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">tahun</span>
                         </div>
                         @error('experience_years')
@@ -273,7 +341,7 @@
                         <div class="flex items-center gap-3 px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50">
                             <button type="button" id="availability-toggle"
                                     onclick="toggleAvailability()"
-                                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 {{ old('is_available', $profile->is_available ?? true) ? 'bg-indigo-600' : 'bg-slate-300' }}"
+                                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:ring-offset-1 {{ old('is_available', $profile->is_available ?? true) ? 'bg-tailor-purple' : 'bg-slate-300' }}"
                                     role="switch"
                                     aria-checked="{{ old('is_available', $profile->is_available ?? true) ? 'true' : 'false' }}">
                                 <span id="toggle-dot"
@@ -283,7 +351,7 @@
                             <input type="hidden" name="is_available" id="is_available_input"
                                    value="{{ old('is_available', $profile->is_available ?? true) ? '1' : '0' }}">
                             <div>
-                                <p id="availability-label" class="text-sm font-medium {{ old('is_available', $profile->is_available ?? true) ? 'text-indigo-700' : 'text-slate-500' }}">
+                                <p id="availability-label" class="text-sm font-medium {{ old('is_available', $profile->is_available ?? true) ? 'text-tailor-purple' : 'text-slate-500' }}">
                                     {{ old('is_available', $profile->is_available ?? true) ? 'Menerima Pesanan' : 'Tidak Menerima Pesanan' }}
                                 </p>
                                 <p class="text-xs text-slate-400">Tampilkan status di halaman publik</p>
@@ -299,7 +367,7 @@
                     </label>
                     <textarea id="description" name="description" rows="4"
                               placeholder="Ceritakan tentang toko dan layanan Anda kepada calon pelanggan..."
-                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('description') border-red-300 focus:ring-red-500 @enderror">{{ old('description', $profile->description ?? '') }}</textarea>
+                              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent resize-none @error('description') border-red-300 focus:ring-red-500 @enderror">{{ old('description', $profile->description ?? '') }}</textarea>
                     @error('description')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -320,7 +388,7 @@
                             <input type="number" id="max_active_orders" name="max_active_orders" min="1" max="999"
                                    value="{{ old('max_active_orders', $profile->max_active_orders ?? '') }}"
                                    placeholder="Contoh: 10"
-                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('max_active_orders') border-red-300 focus:ring-red-500 @enderror">
+                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('max_active_orders') border-red-300 focus:ring-red-500 @enderror">
                             @error('max_active_orders')
                                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                             @enderror
@@ -333,7 +401,7 @@
                             <input type="number" id="max_weekly_orders" name="max_weekly_orders" min="1" max="999"
                                    value="{{ old('max_weekly_orders', $profile->max_weekly_orders ?? '') }}"
                                    placeholder="Contoh: 5"
-                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('max_weekly_orders') border-red-300 focus:ring-red-500 @enderror">
+                                   class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('max_weekly_orders') border-red-300 focus:ring-red-500 @enderror">
                             @error('max_weekly_orders')
                                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                             @enderror
@@ -347,7 +415,7 @@
                                 <input type="number" id="estimated_processing_days" name="estimated_processing_days" min="1" max="365"
                                        value="{{ old('estimated_processing_days', $profile->estimated_processing_days ?? '') }}"
                                        placeholder="Contoh: 7"
-                                       class="w-full px-4 py-2.5 pr-12 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('estimated_processing_days') border-red-300 focus:ring-red-500 @enderror">
+                                       class="w-full px-4 py-2.5 pr-12 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('estimated_processing_days') border-red-300 focus:ring-red-500 @enderror">
                                 <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">hari</span>
                             </div>
                             @error('estimated_processing_days')
@@ -359,18 +427,13 @@
                         <label class="block text-sm font-medium text-slate-700 mb-2">
                             Hari Kerja
                         </label>
-                        @php
-                            $selectedWorkingDays = collect(old('working_days', $profile->working_days ?? [1, 2, 3, 4, 5, 6]))
-                                ->map(fn($day) => (int) $day)
-                                ->all();
-                        @endphp
                         <div class="flex flex-wrap gap-2">
                             @foreach(\App\Models\TailorProfile::WORKING_DAY_LABELS as $day => $label)
-                                <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:border-indigo-300 hover:text-indigo-700 cursor-pointer">
+                                <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:border-tailor-purple/30 hover:text-tailor-purple cursor-pointer">
                                     <input type="checkbox"
                                            name="working_days[]"
                                            value="{{ $day }}"
-                                           class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                           class="rounded border-slate-300 text-tailor-purple focus:ring-tailor-gold"
                                            {{ in_array($day, $selectedWorkingDays, true) ? 'checked' : '' }}>
                                     {{ $label }}
                                 </label>
@@ -400,7 +463,7 @@
                                 <input type="checkbox"
                                        name="price_list_ids[]"
                                        value="{{ $priceList->id }}"
-                                       class="mt-1 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                       class="mt-1 rounded border-slate-300 text-tailor-purple focus:ring-tailor-gold"
                                        {{ in_array($priceList->id, $selectedPriceLists) ? 'checked' : '' }}>
                                 <span>
                                     <span class="block text-sm font-semibold text-slate-700">{{ $priceList->name }}</span>
@@ -421,13 +484,13 @@
         </div>
 
         {{-- Submit --}}
-        <div class="flex items-center justify-end gap-3">
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
             <button type="reset"
-                    class="bg-slate-100 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors">
+                    class="w-full bg-slate-100 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors sm:w-auto">
                 Reset
             </button>
             <button type="submit"
-                    class="gradient-brand text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
+                    class="brand-gradient text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
@@ -437,7 +500,7 @@
 
     </form>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -456,7 +519,7 @@
                 <div class="md:col-span-4">
                     <label for="unavailable_date" class="block text-sm font-medium text-slate-700 mb-1.5">Tanggal</label>
                     <input type="date" id="unavailable_date" name="date" min="{{ now()->format('Y-m-d') }}"
-                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('date') border-red-300 focus:ring-red-500 @enderror">
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('date') border-red-300 focus:ring-red-500 @enderror">
                     @error('date')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -465,13 +528,13 @@
                     <label for="unavailable_reason" class="block text-sm font-medium text-slate-700 mb-1.5">Alasan</label>
                     <input type="text" id="unavailable_reason" name="reason" value="{{ old('reason') }}"
                            placeholder="Contoh: Libur keluarga, workshop tutup"
-                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('reason') border-red-300 focus:ring-red-500 @enderror">
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tailor-gold focus:border-transparent @error('reason') border-red-300 focus:ring-red-500 @enderror">
                     @error('reason')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="md:col-span-2 flex items-end">
-                    <button type="submit" class="w-full gradient-brand text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
+                    <button type="submit" class="w-full brand-gradient text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
                         Tambah
                     </button>
                 </div>
@@ -534,18 +597,18 @@
 
         if (isOn) {
             input.value = '0';
-            toggle.classList.replace('bg-indigo-600', 'bg-slate-300');
+            toggle.classList.replace('bg-tailor-purple', 'bg-slate-300');
             dot.classList.replace('translate-x-6', 'translate-x-1');
             toggle.setAttribute('aria-checked', 'false');
             label.textContent = 'Tidak Menerima Pesanan';
-            label.classList.replace('text-indigo-700', 'text-slate-500');
+            label.classList.replace('text-tailor-purple', 'text-slate-500');
         } else {
             input.value = '1';
-            toggle.classList.replace('bg-slate-300', 'bg-indigo-600');
+            toggle.classList.replace('bg-slate-300', 'bg-tailor-purple');
             dot.classList.replace('translate-x-1', 'translate-x-6');
             toggle.setAttribute('aria-checked', 'true');
             label.textContent = 'Menerima Pesanan';
-            label.classList.replace('text-slate-500', 'text-indigo-700');
+            label.classList.replace('text-slate-500', 'text-tailor-purple');
         }
     }
 </script>
