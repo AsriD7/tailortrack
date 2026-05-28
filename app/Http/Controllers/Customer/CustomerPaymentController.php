@@ -22,15 +22,12 @@ class CustomerPaymentController extends Controller
         // Pastikan order milik customer yang login
         abort_if($order->customer_id !== Auth::id(), 403, 'Akses ditolak.');
 
-        // Hanya boleh upload jika status menunggu pembayaran
-        if ($order->status !== OrderStatus::MenungguPembayaran) {
-            return back()->with('error', 'Pembayaran hanya dapat diupload saat pesanan menunggu pembayaran.');
-        }
+        $order->loadMissing('payments');
 
         $bankKeys = array_keys(config('payments.banks', []));
 
         $request->validate([
-            'payment_type'  => 'required|in:full,dp',
+            'payment_type'  => 'required|in:full,dp,pelunasan',
             'bank_key'      => 'required|in:' . implode(',', $bankKeys),
             'payment_proof' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'payment_date'  => 'nullable|date',
@@ -44,22 +41,52 @@ class CustomerPaymentController extends Controller
             'payment_proof.max'      => 'Ukuran gambar maksimal 2MB.',
         ]);
 
-        // Upload bukti bayar ke storage
-        $path = $request->file('payment_proof')->store('payments', 'public');
+        $paymentType = $request->payment_type;
         $totalPrice = (float) $order->total_price;
         $dpPercentage = max(1, min(100, (int) config('payments.dp_percentage', 50)));
-        $paymentAmount = $request->payment_type === 'dp'
-            ? round($totalPrice * ($dpPercentage / 100), 2)
-            : $totalPrice;
-        $bank = config("payments.banks.{$request->bank_key}");
 
-        // Hapus payment lama jika ada (kasus upload ulang setelah ditolak)
-        $order->payment()->delete();
+        if ($paymentType === Payment::TYPE_FINAL) {
+            if ($order->status !== OrderStatus::SiapDiambil || !$order->hasVerifiedDpPayment()) {
+                return back()->with('error', 'Pelunasan hanya dapat diupload setelah pesanan siap diambil dan DP sudah diverifikasi.');
+            }
+
+            if ($order->hasPendingFinalPayment()) {
+                return back()->with('error', 'Bukti pelunasan sebelumnya masih menunggu verifikasi admin.');
+            }
+
+            $paymentAmount = $order->paymentRemainingAmount();
+
+            if ($paymentAmount <= 0) {
+                return back()->with('error', 'Pesanan ini sudah lunas.');
+            }
+        } else {
+            if ($order->status !== OrderStatus::MenungguPembayaran) {
+                return back()->with('error', 'Pembayaran awal hanya dapat diupload saat pesanan menunggu pembayaran.');
+            }
+
+            $hasPendingInitialPayment = $order->payments
+                ->contains(fn(Payment $payment) =>
+                    in_array($payment->payment_type, [Payment::TYPE_FULL, Payment::TYPE_DP], true)
+                    && $payment->status === PaymentStatus::Pending
+                );
+
+            if ($hasPendingInitialPayment) {
+                return back()->with('error', 'Bukti pembayaran sebelumnya masih menunggu verifikasi admin.');
+            }
+
+            $paymentAmount = $paymentType === Payment::TYPE_DP
+                ? round($totalPrice * ($dpPercentage / 100), 2)
+                : $totalPrice;
+        }
+
+        // Upload bukti bayar ke storage
+        $path = $request->file('payment_proof')->store('payments', 'public');
+        $bank = config("payments.banks.{$request->bank_key}");
 
         // Buat record payment baru
         Payment::create([
             'order_id'      => $order->id,
-            'payment_type'  => $request->payment_type,
+            'payment_type'  => $paymentType,
             'amount'        => $paymentAmount,
             'bank_name'     => $bank['name'] ?? null,
             'bank_account_number' => $bank['account_number'] ?? null,
@@ -69,15 +96,25 @@ class CustomerPaymentController extends Controller
             'status'        => PaymentStatus::Pending,
         ]);
 
-        // Update status order menjadi dibayar
-        $order->update(['status' => OrderStatus::Dibayar]);
+        if ($paymentType !== Payment::TYPE_FINAL) {
+            $order->update(['status' => OrderStatus::Dibayar]);
+        }
 
         // Tambah tracking history
+        $trackingStatus = $paymentType === Payment::TYPE_FINAL
+            ? OrderStatus::SiapDiambil
+            : OrderStatus::Dibayar;
+        $description = match ($paymentType) {
+            Payment::TYPE_DP => 'Bukti pembayaran DP telah diupload oleh customer. Menunggu verifikasi admin.',
+            Payment::TYPE_FINAL => 'Bukti pelunasan sisa pembayaran telah diupload oleh customer. Menunggu verifikasi admin.',
+            default => 'Bukti pembayaran full telah diupload oleh customer. Menunggu verifikasi admin.',
+        };
+
         TrackingHistory::create([
             'order_id'    => $order->id,
             'updated_by'  => Auth::id(),
-            'status'      => OrderStatus::Dibayar->value,
-            'description' => ($request->payment_type === 'dp' ? 'Bukti pembayaran DP' : 'Bukti pembayaran full') . ' telah diupload oleh customer. Menunggu verifikasi admin.',
+            'status'      => $trackingStatus->value,
+            'description' => $description,
             'created_at'  => Carbon::now(),
         ]);
 

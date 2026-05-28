@@ -351,6 +351,55 @@
                 @endif
             </div>
 
+            @if($order->total_price)
+                <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 p-6">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800">Ringkasan Pembayaran</h2>
+                            <p class="text-xs text-slate-500">Pantau DP, pelunasan, dan sisa pembayaran</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+                            <p class="text-xs text-slate-400">Total Tagihan</p>
+                            <p class="mt-1 text-lg font-black text-slate-900">{{ $order->formattedTotalPrice() }}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+                                <p class="text-xs text-emerald-600">Sudah Terverifikasi</p>
+                                <p class="mt-1 text-sm font-black text-emerald-800">{{ $order->formattedVerifiedPaymentsTotal() }}</p>
+                            </div>
+                            <div class="rounded-xl bg-orange-50 border border-orange-100 p-3">
+                                <p class="text-xs text-orange-600">Sisa Bayar</p>
+                                <p class="mt-1 text-sm font-black text-orange-800">{{ $order->formattedPaymentRemainingAmount() }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if($order->payments->isNotEmpty())
+                        <div class="mt-4 space-y-2">
+                            @foreach($order->payments as $payment)
+                                <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-white p-3">
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-bold text-slate-800">{{ $payment->payment_type_label }}</p>
+                                        <p class="text-xs text-slate-500">{{ $payment->formattedAmount() }} - {{ $payment->payment_date?->format('d M Y') ?? '-' }}</p>
+                                    </div>
+                                    <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold {{ $payment->status->badgeColor() }}">
+                                        {{ $payment->status->label() }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endif
+
             {{-- Payment Upload Form --}}
             @if($order->status === \App\Enums\OrderStatus::MenungguPembayaran)
                 <div class="bg-white rounded-2xl shadow-soft border border-orange-200 p-6">
@@ -511,6 +560,130 @@
                             Kirim Bukti Pembayaran
                         </button>
                     </form>
+                </div>
+            @endif
+
+            @if($order->status === \App\Enums\OrderStatus::SiapDiambil && $order->hasVerifiedDpPayment() && $order->paymentRemainingAmount() > 0)
+                <div class="bg-white rounded-2xl shadow-soft border border-orange-200 p-6">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m5 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l7-3 7 3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800">Upload Bukti Pelunasan</h2>
+                            <p class="text-xs text-slate-500">Pesanan siap diambil setelah sisa pembayaran diverifikasi admin</p>
+                        </div>
+                    </div>
+
+                    @php
+                        $banks = config('payments.banks', []);
+                        $defaultBank = old('bank_key', config('payments.default_bank', array_key_first($banks)));
+                        $remainingPayment = $order->paymentRemainingAmount();
+                    @endphp
+
+                    @if($order->hasPendingFinalPayment())
+                        <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+                            <p class="text-sm font-bold text-blue-800">Pelunasan sedang diverifikasi admin.</p>
+                            <p class="mt-1 text-xs leading-5 text-blue-700">Jika bukti ditolak, form upload ulang akan muncul kembali di sini.</p>
+                        </div>
+                    @else
+                        <div class="bg-orange-50 border border-orange-100 rounded-xl p-3 mb-4">
+                            <p class="text-xs text-orange-700">Sisa pembayaran:</p>
+                            <p class="text-lg font-bold text-orange-800 mt-0.5">
+                                Rp {{ number_format($remainingPayment, 0, ',', '.') }}
+                            </p>
+                        </div>
+
+                        <form action="{{ route('customer.orders.payment', $order) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="payment_type" value="pelunasan">
+
+                            <div class="mb-4" data-bank-selector>
+                                <label for="final_bank_key" class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Pilih Rekening Tujuan <span class="text-red-500">*</span>
+                                </label>
+                                <select id="final_bank_key" name="bank_key"
+                                        class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent @error('bank_key') border-red-400 @enderror"
+                                        data-bank-select>
+                                    @foreach($banks as $key => $bank)
+                                        <option value="{{ $key }}" {{ $defaultBank === $key ? 'selected' : '' }}>
+                                            {{ $bank['name'] }} - {{ $bank['account_number'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <div class="mt-3 space-y-2">
+                                    @foreach($banks as $key => $bank)
+                                        <div class="rounded-xl border border-orange-100 bg-orange-50 p-3 {{ $defaultBank === $key ? '' : 'hidden' }}" data-bank-card="{{ $key }}">
+                                            <p class="text-xs font-semibold uppercase tracking-wide text-orange-500">{{ $bank['name'] }}</p>
+                                            <p class="mt-1 font-mono text-lg font-black text-orange-900">{{ $bank['account_number'] }}</p>
+                                            <p class="mt-1 text-xs font-semibold text-orange-700">a.n. {{ $bank['account_name'] }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @error('bank_key')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="final_payment_proof" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                    Bukti Pelunasan <span class="text-red-500">*</span>
+                                </label>
+                                <label for="final_payment_proof"
+                                       class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-orange-300 rounded-xl cursor-pointer bg-orange-50 hover:bg-orange-100 hover:border-orange-400 transition-colors group">
+                                    <svg class="w-7 h-7 text-orange-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                    </svg>
+                                    <p class="text-xs font-medium text-orange-600">Klik untuk unggah</p>
+                                    <p class="text-xs text-orange-400 mt-0.5">PNG, JPG - maks. 2MB</p>
+                                    <input type="file" id="final_payment_proof" name="payment_proof"
+                                           class="hidden" accept="image/png,image/jpeg,image/jpg" required data-payment-proof-input>
+                                </label>
+                                <div class="hidden mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3" data-payment-proof-preview>
+                                    <p class="text-xs text-slate-400 mb-1">File dipilih</p>
+                                    <div class="flex items-center justify-between gap-3">
+                                        <p class="text-sm font-semibold text-slate-700 truncate" data-payment-proof-name></p>
+                                        <a href="#" target="_blank" rel="noopener"
+                                           class="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-tailor-purple hover:text-tailor-deep"
+                                           data-payment-proof-link>
+                                            Lihat preview
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                @error('payment_proof')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-5">
+                                <label for="final_payment_date" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                    Tanggal Transfer <span class="text-red-500">*</span>
+                                </label>
+                                <input type="date" id="final_payment_date" name="payment_date"
+                                       value="{{ old('payment_date', now()->format('Y-m-d')) }}"
+                                       max="{{ now()->format('Y-m-d') }}"
+                                       class="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent @error('payment_date') border-red-400 @enderror"
+                                       required>
+                                @error('payment_date')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <button type="submit"
+                                    class="w-full inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
+                                Kirim Bukti Pelunasan
+                            </button>
+                        </form>
+                    @endif
                 </div>
             @endif
 

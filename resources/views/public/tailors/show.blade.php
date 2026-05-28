@@ -6,6 +6,8 @@
     $words = preg_split('/\s+/', trim($shopName));
     $initials = strtoupper(substr($words[0] ?? 'T', 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
     $totalOrders = $tailor->tailorOrders()->count();
+    $contactPhone = $tailor->phone;
+    $contactAddress = $tailor->address;
 @endphp
 
 @section('title', $shopName . ' - TailorTrack')
@@ -69,6 +71,32 @@
                         @endif
                     </div>
                 </div>
+
+                @if($contactAddress || $contactPhone || $tailor->email)
+                    <div class="mt-7 border-t border-tailor-purple/10 pt-6">
+                        <h2 class="text-lg font-black text-tailor-deep">Lokasi dan Kontak</h2>
+                        <div class="mt-4 grid gap-3 md:grid-cols-3">
+                            @if($contactAddress)
+                                <div class="rounded-2xl bg-tailor-cream p-4">
+                                    <p class="text-xs font-bold text-slate-400">Alamat</p>
+                                    <p class="mt-1 text-sm font-semibold leading-6 text-tailor-deep">{{ $contactAddress }}</p>
+                                </div>
+                            @endif
+                            @if($contactPhone)
+                                <div class="rounded-2xl bg-tailor-cream p-4">
+                                    <p class="text-xs font-bold text-slate-400">Telepon / WhatsApp</p>
+                                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $contactPhone) }}" target="_blank" rel="noopener" class="mt-1 block text-sm font-black text-tailor-purple">{{ $contactPhone }}</a>
+                                </div>
+                            @endif
+                            @if($tailor->email)
+                                <div class="rounded-2xl bg-tailor-cream p-4">
+                                    <p class="text-xs font-bold text-slate-400">Email</p>
+                                    <p class="mt-1 break-words text-sm font-semibold text-tailor-deep">{{ $tailor->email }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <aside class="rounded-[2rem] border border-tailor-purple/10 bg-white p-5 shadow-soft">
@@ -133,8 +161,8 @@
                         </a>
                     @endauth
 
-                    @if($profile && $profile->phone)
-                        <a href="https://wa.me/{{ preg_replace('/\D/', '', $profile->phone) }}?text=Halo, saya tertarik dengan layanan jahit Anda di TailorTrack." target="_blank" rel="noopener" class="mt-3 block rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-center text-sm font-extrabold text-emerald-700">
+                    @if($contactPhone)
+                        <a href="https://wa.me/{{ preg_replace('/\D/', '', $contactPhone) }}?text=Halo, saya tertarik dengan layanan jahit Anda di TailorTrack." target="_blank" rel="noopener" class="mt-3 block rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-center text-sm font-extrabold text-emerald-700">
                             Chat via WhatsApp
                         </a>
                     @endif
@@ -147,32 +175,6 @@
 <section class="bg-white py-12">
     <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_360px] lg:px-8">
         <div class="space-y-8">
-            @if($profile && ($profile->address || $profile->phone || $profile->city || $tailor->email))
-                <div class="rounded-3xl border border-tailor-purple/10 bg-white p-6 shadow-sm">
-                    <h2 class="text-xl font-black text-tailor-deep">Lokasi dan Kontak</h2>
-                    <div class="mt-5 grid gap-3 sm:grid-cols-2">
-                        @if($profile->address || $profile->city)
-                            <div class="rounded-2xl bg-tailor-cream p-4">
-                                <p class="text-xs font-bold text-slate-400">Alamat</p>
-                                <p class="mt-1 text-sm font-semibold leading-6 text-tailor-deep">{{ $profile->address }}{{ $profile->address && $profile->city ? ', ' : '' }}{{ $profile->city }}</p>
-                            </div>
-                        @endif
-                        @if($profile->phone)
-                            <div class="rounded-2xl bg-tailor-cream p-4">
-                                <p class="text-xs font-bold text-slate-400">Telepon / WhatsApp</p>
-                                <a href="https://wa.me/{{ preg_replace('/\D/', '', $profile->phone) }}" target="_blank" rel="noopener" class="mt-1 block text-sm font-black text-tailor-purple">{{ $profile->phone }}</a>
-                            </div>
-                        @endif
-                        @if($tailor->email)
-                            <div class="rounded-2xl bg-tailor-cream p-4">
-                                <p class="text-xs font-bold text-slate-400">Email</p>
-                                <p class="mt-1 text-sm font-semibold text-tailor-deep">{{ $tailor->email }}</p>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            @endif
-
             <div class="rounded-3xl border border-tailor-purple/10 bg-white p-6 shadow-sm">
                 <div class="flex items-center justify-between gap-4">
                     <div>
@@ -259,6 +261,13 @@
             <div class="grid gap-6 lg:grid-cols-[320px_1fr]">
                 <div class="rounded-3xl bg-white p-6 text-center shadow-sm ring-1 ring-tailor-purple/10">
                     <p class="text-6xl font-black text-tailor-gold">{{ number_format($avgRating, 1) }}</p>
+                    <div class="mt-3 flex items-center justify-center gap-1 text-tailor-gold">
+                        @for($i = 1; $i <= 5; $i++)
+                            <svg class="h-5 w-5 {{ $i <= round($avgRating) ? 'text-tailor-gold' : 'text-slate-200' }}" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        @endfor
+                    </div>
                     <p class="mt-2 text-sm font-semibold text-slate-500">dari {{ $reviewCount }} ulasan</p>
                     <div class="mt-5 space-y-2">
                         @foreach($ratingBreakdown as $star => $data)
@@ -286,7 +295,14 @@
                                         <p class="text-xs font-semibold text-slate-400">{{ $review->created_at->diffForHumans() }}</p>
                                     </div>
                                 </div>
-                                <span class="rounded-full bg-tailor-gold/20 px-3 py-1 text-xs font-black text-tailor-deep">{{ $review->rating_label }}</span>
+                                <div class="flex shrink-0 items-center gap-1 rounded-full bg-tailor-gold/20 px-3 py-1 text-tailor-deep">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <svg class="h-3.5 w-3.5 {{ $i <= $review->rating ? 'text-tailor-gold' : 'text-slate-300' }}" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    @endfor
+                                    <span class="ml-1 text-xs font-black">{{ $review->rating_label }}</span>
+                                </div>
                             </div>
                             <p class="mt-4 rounded-2xl bg-tailor-cream p-4 text-sm leading-7 text-slate-600">{{ $review->comment ?: 'Tidak ada komentar.' }}</p>
                         </div>

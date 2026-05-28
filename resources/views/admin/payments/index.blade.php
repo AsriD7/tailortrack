@@ -39,6 +39,7 @@
             <option value="">Semua Jenis</option>
             <option value="full" {{ request('payment_type') === 'full' ? 'selected' : '' }}>Bayar Full</option>
             <option value="dp" {{ request('payment_type') === 'dp' ? 'selected' : '' }}>DP / Panjar</option>
+            <option value="pelunasan" {{ request('payment_type') === 'pelunasan' ? 'selected' : '' }}>Pelunasan</option>
         </select>
         <button type="submit" class="brand-gradient text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">Filter</button>
         @if(request()->hasAny(['status', 'payment_type']))
@@ -71,7 +72,7 @@
                     <td class="px-5 py-3.5 font-medium text-slate-700">{{ $payment->order->customer->name ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-slate-600">{{ $payment->order->tailor->tailorProfile->shop_name ?? $payment->order->tailor->name ?? '-' }}</td>
                     <td class="px-5 py-3.5">
-                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $payment->payment_type === 'dp' ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700' }}">
+                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $payment->payment_type === 'dp' ? 'bg-orange-100 text-orange-700' : ($payment->payment_type === 'pelunasan' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700') }}">
                             {{ $payment->payment_type_label }}
                         </span>
                     </td>

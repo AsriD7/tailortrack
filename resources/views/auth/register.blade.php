@@ -34,7 +34,7 @@
             <div class="w-full max-w-lg rounded-[2rem] bg-white p-5 shadow-soft ring-1 ring-tailor-purple/10 sm:p-7">
                 <div class="mb-7 text-center">
                     <a href="{{ route('landing') }}" class="mx-auto inline-flex items-center">
-                        <img src="{{ asset('storage/images/tailortrack-logo.svg') }}" alt="TailorTrack" class="h-16 w-auto max-w-[230px] object-contain">
+                        <img src="{{ asset('images/tailortrack-logo.svg') }}" alt="TailorTrack" class="h-16 w-auto max-w-[230px] object-contain">
                     </a>
                     <h2 class="mt-6 text-2xl font-black text-tailor-deep">Buat akun customer</h2>
                     <p class="mt-2 text-sm font-semibold text-slate-500">Akun tailor dibuat oleh admin.</p>

@@ -32,7 +32,7 @@ class TailorOrderController extends Controller
     {
         abort_if($order->tailor_id !== Auth::id(), 403, 'Akses ditolak.');
 
-        $order->load(['customer', 'priceList', 'orderImages', 'payment', 'trackingHistories.updatedByUser']);
+        $order->load(['customer', 'priceList', 'orderImages', 'payment', 'payments', 'trackingHistories.updatedByUser']);
 
         return view('tailor.orders.show', compact('order'));
     }
@@ -103,6 +103,10 @@ class TailorOrderController extends Controller
 
         if (!in_array($newStatus->value, $allowedStatuses, true)) {
             return back()->with('error', 'Transisi status tidak diizinkan.');
+        }
+
+        if ($newStatus === OrderStatus::Selesai && !$order->isFullyPaid()) {
+            return back()->with('error', 'Pesanan belum bisa diselesaikan karena sisa pembayaran belum diverifikasi admin.');
         }
 
         $order->update(['status' => $newStatus]);

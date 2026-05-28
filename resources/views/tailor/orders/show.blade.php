@@ -53,7 +53,11 @@
 @php
     $progressSteps = \App\Enums\OrderStatus::tailorProgressStatuses();
     $currentProgressIndex = collect($progressSteps)->search(fn($status) => $status === $order->status);
-    $availableProgressStatuses = $order->status->availableTailorProgressTargets();
+    $canCompleteOrder = $order->isFullyPaid();
+    $availableProgressStatuses = collect($order->status->availableTailorProgressTargets())
+        ->reject(fn($status) => $status === \App\Enums\OrderStatus::Selesai && !$canCompleteOrder)
+        ->values()
+        ->all();
 @endphp
 <div class="space-y-5">
 
@@ -306,7 +310,7 @@
             @endif
 
             {{-- Payment Status --}}
-            @if($order->payment)
+            @if($order->total_price)
                 <div class="bg-white rounded-2xl shadow-soft border border-tailor-purple/10 overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
                         <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -317,22 +321,42 @@
                         <h2 class="text-sm font-semibold text-slate-700">Status Pembayaran</h2>
                     </div>
                     <div class="p-5">
-                        <div class="flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-xl p-3">
-                            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                </svg>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+                                <p class="text-xs text-slate-400">Total Tagihan</p>
+                                <p class="mt-1 text-sm font-black text-slate-900">{{ $order->formattedTotalPrice() }}</p>
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-emerald-800">{{ $order->payment->payment_type_label }} - {{ $order->payment->status->label() }}</p>
-                                <p class="text-xs text-emerald-600 mt-0.5">
-                                    Nominal: {{ $order->payment->formattedAmount() }} / Tanggal upload: {{ $order->payment->payment_date?->format('d M Y') ?? '-' }}
-                                </p>
+                            <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+                                <p class="text-xs text-emerald-600">Terverifikasi</p>
+                                <p class="mt-1 text-sm font-black text-emerald-800">{{ $order->formattedVerifiedPaymentsTotal() }}</p>
                             </div>
-                            <span class="flex-shrink-0 inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold {{ $order->payment->status->badgeColor() }}">
-                                Verifikasi Admin
-                            </span>
+                            <div class="rounded-xl bg-orange-50 border border-orange-100 p-3">
+                                <p class="text-xs text-orange-600">Sisa Bayar</p>
+                                <p class="mt-1 text-sm font-black text-orange-800">{{ $order->formattedPaymentRemainingAmount() }}</p>
+                            </div>
                         </div>
+
+                        @if(!$canCompleteOrder && $order->status === \App\Enums\OrderStatus::SiapDiambil)
+                            <div class="mt-3 rounded-xl border border-orange-100 bg-orange-50 p-3 text-xs leading-5 text-orange-700">
+                                Customer perlu upload pelunasan, lalu admin memverifikasi sebelum pesanan dapat ditandai selesai.
+                            </div>
+                        @endif
+
+                        @if($order->payments->isNotEmpty())
+                            <div class="mt-4 space-y-2">
+                                @foreach($order->payments as $payment)
+                                    <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-white p-3">
+                                        <div class="min-w-0">
+                                            <p class="text-sm font-bold text-slate-800">{{ $payment->payment_type_label }}</p>
+                                            <p class="text-xs text-slate-500">{{ $payment->formattedAmount() }} - {{ $payment->payment_date?->format('d M Y') ?? '-' }}</p>
+                                        </div>
+                                        <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold {{ $payment->status->badgeColor() }}">
+                                            {{ $payment->status->label() }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endif
@@ -482,6 +506,14 @@
                                 </p>
                             </div>
                         </div>
+
+                        @if(!$canCompleteOrder && $order->status === \App\Enums\OrderStatus::SiapDiambil)
+                            <div class="bg-orange-50 border border-orange-100 rounded-xl p-3 mb-4">
+                                <p class="text-xs text-orange-700">
+                                    Status selesai akan aktif setelah sisa pembayaran {{ $order->formattedPaymentRemainingAmount() }} diverifikasi admin.
+                                </p>
+                            </div>
+                        @endif
 
                         <form action="{{ route('tailor.orders.update-status', $order) }}" method="POST" class="space-y-4">
                             @csrf

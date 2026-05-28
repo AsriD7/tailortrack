@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TailorTrack - Platform pemesanan jasa jahit custom dengan tracking pesanan.">
+    <meta name="theme-color" content="#4C0D7A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="TailorTrack">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>@yield('title', 'TailorTrack') - Platform Jasa Jahit</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('storage/images/tailortrack-icon.svg') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/tailortrack-icon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/tailortrack-icon-192.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -97,7 +104,7 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-72 -translate-x-full flex-col bg-tailor-deep shadow-2xl lg:relative lg:z-auto lg:translate-x-0">
         <div class="flex items-center gap-3 border-b border-white/10 px-5 py-5">
             <a href="{{ route('landing') }}" class="grid h-12 w-12 place-items-center overflow-hidden rounded-2xl bg-white shadow-soft">
-                <img src="{{ asset('storage/images/tailortrack-icon.svg') }}" alt="TailorTrack" class="h-full w-full object-cover">
+                <img src="{{ asset('images/tailortrack-icon.svg') }}" alt="TailorTrack" class="h-full w-full object-cover">
             </a>
             <div class="min-w-0 flex-1">
                 <p class="text-lg font-black leading-none text-white">TailorTrack</p>
@@ -213,6 +220,12 @@
             }
         });
     }, 4000);
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
 </script>
 
 @stack('scripts')

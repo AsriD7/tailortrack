@@ -39,7 +39,7 @@ class AdminPaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        $payment->load(['order.customer', 'order.tailor.tailorProfile', 'order.trackingHistories.updatedByUser']);
+        $payment->load(['order.customer', 'order.tailor.tailorProfile', 'order.payments', 'order.trackingHistories.updatedByUser']);
 
         return view('admin.payments.show', compact('payment'));
     }
@@ -58,18 +58,27 @@ class AdminPaymentController extends Controller
         $payment->update(['status' => PaymentStatus::Verified]);
 
         $order = $payment->order;
-        $order->update(['status' => OrderStatus::Diproses]);
+        $isFinalPayment = $payment->payment_type === Payment::TYPE_FINAL;
+        $trackingStatus = $isFinalPayment ? $order->status : OrderStatus::Diproses;
+
+        if (!$isFinalPayment) {
+            $order->update(['status' => OrderStatus::Diproses]);
+        }
 
         TrackingHistory::create([
             'order_id'    => $order->id,
             'updated_by'  => Auth::id(),
-            'status'      => OrderStatus::Diproses->value,
-            'description' => 'Pembayaran telah diverifikasi oleh admin. Pesanan mulai diproses oleh penjahit.',
+            'status'      => $trackingStatus->value,
+            'description' => $isFinalPayment
+                ? 'Pelunasan pembayaran telah diverifikasi oleh admin. Pesanan sudah dapat diselesaikan oleh penjahit.'
+                : 'Pembayaran telah diverifikasi oleh admin. Pesanan mulai diproses oleh penjahit.',
             'created_at'  => Carbon::now(),
         ]);
 
         return redirect()->route('admin.payments.show', $payment)
-            ->with('success', 'Pembayaran berhasil diverifikasi. Pesanan sekarang sedang diproses.');
+            ->with('success', $isFinalPayment
+                ? 'Pelunasan berhasil diverifikasi. Pesanan sudah dapat diselesaikan.'
+                : 'Pembayaran berhasil diverifikasi. Pesanan sekarang sedang diproses.');
     }
 
     /**
@@ -90,19 +99,28 @@ class AdminPaymentController extends Controller
         $payment->update(['status' => PaymentStatus::Rejected]);
 
         $order = $payment->order;
-        $order->update(['status' => OrderStatus::MenungguPembayaran]);
+        $isFinalPayment = $payment->payment_type === Payment::TYPE_FINAL;
+
+        if (!$isFinalPayment) {
+            $order->update(['status' => OrderStatus::MenungguPembayaran]);
+        }
 
         $reason = $request->reject_reason ?? 'Bukti pembayaran tidak valid atau tidak sesuai.';
+        $trackingStatus = $isFinalPayment ? $order->status : OrderStatus::MenungguPembayaran;
 
         TrackingHistory::create([
             'order_id'    => $order->id,
             'updated_by'  => Auth::id(),
-            'status'      => OrderStatus::MenungguPembayaran->value,
-            'description' => "Pembayaran ditolak oleh admin. Alasan: {$reason} Customer diminta upload ulang bukti pembayaran.",
+            'status'      => $trackingStatus->value,
+            'description' => $isFinalPayment
+                ? "Pelunasan ditolak oleh admin. Alasan: {$reason} Customer diminta upload ulang bukti pelunasan."
+                : "Pembayaran ditolak oleh admin. Alasan: {$reason} Customer diminta upload ulang bukti pembayaran.",
             'created_at'  => Carbon::now(),
         ]);
 
         return redirect()->route('admin.payments.show', $payment)
-            ->with('success', 'Pembayaran ditolak. Customer akan diminta upload ulang bukti pembayaran.');
+            ->with('success', $isFinalPayment
+                ? 'Pelunasan ditolak. Customer akan diminta upload ulang bukti pelunasan.'
+                : 'Pembayaran ditolak. Customer akan diminta upload ulang bukti pembayaran.');
     }
 }

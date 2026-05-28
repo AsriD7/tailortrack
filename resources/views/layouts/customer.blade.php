@@ -5,8 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="@yield('meta-description', 'TailorTrack - Platform pemesanan jasa jahit custom, tracking pesanan, portofolio penjahit, dan pembayaran sederhana.')">
+    <meta name="theme-color" content="#4C0D7A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="TailorTrack">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>@yield('title', 'TailorTrack') - Platform Jasa Jahit Custom</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('storage\images\tailortrack-icon.svg') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/tailortrack-icon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/tailortrack-icon-192.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,7 +133,7 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-20 items-center justify-between gap-4">
                 <a href="{{ route('landing') }}" class="flex shrink-0 items-center gap-3" aria-label="TailorTrack Home">
-                    <img src="{{ asset('storage\images\tailortrack-icon.svg') }}" alt="" class="brand-logo h-12 w-12 rounded-2xl shadow-soft ring-1 ring-tailor-purple/10">
+                    <img src="{{ asset('images/tailortrack-icon.svg') }}" alt="" class="brand-logo h-12 w-12 rounded-2xl shadow-soft ring-1 ring-tailor-purple/10">
                     <span class="text-2xl font-black tracking-tight brand-text">TailorTrack</span>
                 </a>
 
@@ -218,7 +225,7 @@
             <div class="grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
                 <div>
                     <div class="flex items-center">
-                        <img src="{{ asset('storage\images\tailortrack-logo.svg') }}" alt="TailorTrack" class="brand-logo h-14 w-auto max-w-[220px]">
+                        <img src="{{ asset('images/tailortrack-logo.svg') }}" alt="TailorTrack" class="brand-logo h-14 w-auto max-w-[220px]">
                     </div>
                     <p class="mt-4 max-w-md text-sm leading-7 text-slate-500">Platform jasa jahit custom yang membantu pelanggan menemukan penjahit, mengirim detail pesanan, melacak proses jahitan, dan mengelola pembayaran secara lebih rapi.</p>
                 </div>
@@ -262,6 +269,12 @@
             const menu = document.getElementById('mobile-menu');
             if (menu) menu.classList.toggle('hidden');
         });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').catch(function () {});
+            });
+        }
     </script>
 
     @stack('scripts')

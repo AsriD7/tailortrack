@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\PriceList;
 use App\Models\Portfolio;
+use App\Models\Review;
 use App\Models\TailorProfile;
 use App\Models\User;
 use App\Enums\UserRole;
@@ -20,6 +22,10 @@ class LandingController extends Controller
         $tailors = User::where('role', UserRole::Tailor->value)
             ->whereHas('tailorProfile', fn($q) => $q->where('is_verified', true)->where('is_available', true))
             ->with('tailorProfile')
+            ->withAvg('reviewsReceived', 'rating')
+            ->withCount('reviewsReceived')
+            ->orderByDesc('reviews_received_avg_rating')
+            ->orderByDesc('reviews_received_count')
             ->limit(6)
             ->get();
 
@@ -32,6 +38,17 @@ class LandingController extends Controller
         // Ambil beberapa daftar harga
         $priceLists = PriceList::limit(6)->get();
 
-        return view('public.landing', compact('tailors', 'portfolios', 'priceLists'));
+        $reviewCount = Review::count();
+
+        $stats = [
+            'tailors' => User::where('role', UserRole::Tailor->value)
+                ->whereHas('tailorProfile', fn($q) => $q->where('is_verified', true))
+                ->count(),
+            'orders' => Order::count(),
+            'avg_rating' => $reviewCount > 0 ? round((float) Review::avg('rating'), 1) : null,
+            'review_count' => $reviewCount,
+        ];
+
+        return view('public.landing', compact('tailors', 'portfolios', 'priceLists', 'stats'));
     }
 }

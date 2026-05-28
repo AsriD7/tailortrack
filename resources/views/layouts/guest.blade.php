@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="@yield('meta-description', 'TailorTrack - Platform pemesanan jasa jahit custom, tracking pesanan, portofolio penjahit, dan pembayaran sederhana.')">
+    <meta name="theme-color" content="#4C0D7A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="TailorTrack">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>@yield('title', 'TailorTrack') - Platform Jasa Jahit Custom</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('storage/images/tailortrack-icon.svg') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/tailortrack-icon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/tailortrack-icon-192.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -70,6 +77,12 @@
                 }
             });
         }, 4000);
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').catch(function () {});
+            });
+        }
     </script>
 
     @stack('scripts')

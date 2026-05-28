@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    public const TYPE_FULL = 'full';
+    public const TYPE_DP = 'dp';
+    public const TYPE_FINAL = 'pelunasan';
+
     /**
      * Kolom yang boleh diisi secara mass assignment.
      */
@@ -57,7 +61,11 @@ class Payment extends Model
 
     public function getPaymentTypeLabelAttribute(): string
     {
-        return $this->payment_type === 'dp' ? 'DP / Panjar' : 'Bayar Full';
+        return match ($this->payment_type) {
+            self::TYPE_DP => 'DP / Panjar',
+            self::TYPE_FINAL => 'Pelunasan',
+            default => 'Bayar Full',
+        };
     }
 
     public function formattedAmount(): string

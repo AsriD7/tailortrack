@@ -1,9 +1,7 @@
-@extends('layouts.customer')
+<?php $__env->startSection('title', 'TailorTrack - Jasa Jahit Custom dengan Tracking Pesanan'); ?>
 
-@section('title', 'TailorTrack - Jasa Jahit Custom dengan Tracking Pesanan')
-
-@section('content')
-@php
+<?php $__env->startSection('content'); ?>
+<?php
     $categories = [
         ['name' => 'Kebaya', 'desc' => 'Busana formal, wisuda, dan acara keluarga.', 'icon' => 'M12 3l2.4 5.6 6.1.6-4.6 4 1.4 6-5.2-3.1L6 19.2l1.4-6-4.6-4 6.1-.6L12 3z'],
         ['name' => 'Jas', 'desc' => 'Setelan rapi untuk kerja, seminar, dan acara resmi.', 'icon' => 'M8 4h8l2 5v11H6V9l2-5zm4 0v16'],
@@ -19,7 +17,7 @@
         ['title' => 'Pembayaran Rapi', 'desc' => 'Customer memilih full atau DP, lalu admin memverifikasi bukti transfer.', 'icon' => 'M4 7h16v10H4V7zm0 4h16'],
         ['title' => 'Portfolio Penjahit', 'desc' => 'Hasil karya penjahit tampil sebagai bahan pertimbangan sebelum order.', 'icon' => 'M4 16l4-4 3 3 5-6 4 5M4 6h16v12H4V6z'],
     ];
-@endphp
+?>
 
 <section class="bg-tailor-cream">
     <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_0.92fr] lg:px-8 lg:py-20">
@@ -38,28 +36,28 @@
             </p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="{{ route('tailors.index') }}" class="inline-flex items-center justify-center gap-2 rounded-2xl brand-gradient px-7 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5">
+                <a href="<?php echo e(route('tailors.index')); ?>" class="inline-flex items-center justify-center gap-2 rounded-2xl brand-gradient px-7 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5">
                     Cari Penjahit
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
                 </a>
-                <a href="{{ route('portfolios.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-tailor-purple/15 bg-white px-7 py-4 text-base font-extrabold text-tailor-purple shadow-sm transition hover:border-tailor-gold/60 hover:bg-tailor-cream">
+                <a href="<?php echo e(route('portfolios.index')); ?>" class="inline-flex items-center justify-center rounded-2xl border border-tailor-purple/15 bg-white px-7 py-4 text-base font-extrabold text-tailor-purple shadow-sm transition hover:border-tailor-gold/60 hover:bg-tailor-cream">
                     Lihat Portfolio
                 </a>
             </div>
 
             <div class="mt-10 grid max-w-xl grid-cols-3 gap-3">
                 <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-tailor-purple/10">
-                    <p class="text-2xl font-black text-tailor-purple">{{ number_format($stats['tailors'] ?? 0, 0, ',', '.') }}</p>
+                    <p class="text-2xl font-black text-tailor-purple"><?php echo e(number_format($stats['tailors'] ?? 0, 0, ',', '.')); ?></p>
                     <p class="mt-1 text-xs font-bold text-slate-500">Penjahit</p>
                 </div>
                 <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-tailor-purple/10">
-                    <p class="text-2xl font-black text-tailor-purple">{{ number_format($stats['orders'] ?? 0, 0, ',', '.') }}</p>
+                    <p class="text-2xl font-black text-tailor-purple"><?php echo e(number_format($stats['orders'] ?? 0, 0, ',', '.')); ?></p>
                     <p class="mt-1 text-xs font-bold text-slate-500">Pesanan</p>
                 </div>
                 <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-tailor-purple/10">
-                    <p class="text-2xl font-black text-tailor-purple">{{ $stats['avg_rating'] ? number_format($stats['avg_rating'], 1) : '-' }}</p>
+                    <p class="text-2xl font-black text-tailor-purple"><?php echo e($stats['avg_rating'] ? number_format($stats['avg_rating'], 1) : '-'); ?></p>
                     <p class="mt-1 text-xs font-bold text-slate-500">Rating</p>
                 </div>
             </div>
@@ -125,8 +123,8 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="font-black text-tailor-deep">{{ $stats['avg_rating'] ? number_format($stats['avg_rating'], 1) . '/5 Rating' : 'Belum ada rating' }}</p>
-                        <p class="text-xs font-semibold text-slate-500">{{ ($stats['review_count'] ?? 0) > 0 ? 'Dari ' . number_format($stats['review_count'], 0, ',', '.') . ' ulasan pelanggan' : 'Menunggu ulasan pelanggan' }}</p>
+                        <p class="font-black text-tailor-deep"><?php echo e($stats['avg_rating'] ? number_format($stats['avg_rating'], 1) . '/5 Rating' : 'Belum ada rating'); ?></p>
+                        <p class="text-xs font-semibold text-slate-500"><?php echo e(($stats['review_count'] ?? 0) > 0 ? 'Dari ' . number_format($stats['review_count'], 0, ',', '.') . ' ulasan pelanggan' : 'Menunggu ulasan pelanggan'); ?></p>
                     </div>
                 </div>
             </div>
@@ -142,17 +140,17 @@
         </div>
 
         <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            @foreach($features as $feature)
+            <?php $__currentLoopData = $features; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feature): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="rounded-3xl border border-tailor-purple/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
                     <div class="grid h-14 w-14 place-items-center rounded-2xl bg-tailor-soft p-3 text-tailor-purple">
                         <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $feature['icon'] }}"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo e($feature['icon']); ?>"/>
                         </svg>
                     </div>
-                    <h3 class="mt-5 text-lg font-black text-tailor-deep">{{ $feature['title'] }}</h3>
-                    <p class="mt-3 text-sm leading-7 text-slate-500">{{ $feature['desc'] }}</p>
+                    <h3 class="mt-5 text-lg font-black text-tailor-deep"><?php echo e($feature['title']); ?></h3>
+                    <p class="mt-3 text-sm leading-7 text-slate-500"><?php echo e($feature['desc']); ?></p>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 </section>
@@ -164,7 +162,7 @@
                 <span class="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-tailor-purple shadow-sm">Kategori Jahitan</span>
                 <h2 class="mt-5 text-3xl font-black text-tailor-deep sm:text-4xl">Pilih jenis jahitan sesuai kebutuhanmu.</h2>
             </div>
-            <a href="{{ route('price-lists.index') }}" class="inline-flex items-center gap-2 font-extrabold text-tailor-purple hover:text-tailor-deep">
+            <a href="<?php echo e(route('price-lists.index')); ?>" class="inline-flex items-center gap-2 font-extrabold text-tailor-purple hover:text-tailor-deep">
                 Lihat daftar harga
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -173,17 +171,17 @@
         </div>
 
         <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach($categories as $category)
-                <a href="{{ route('price-lists.index') }}" class="group rounded-3xl border border-tailor-purple/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
+            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <a href="<?php echo e(route('price-lists.index')); ?>" class="group rounded-3xl border border-tailor-purple/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
                     <div class="grid h-14 w-14 place-items-center rounded-2xl brand-gradient text-white shadow-soft">
                         <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $category['icon'] }}"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo e($category['icon']); ?>"/>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-black text-tailor-deep">{{ $category['name'] }}</h3>
-                    <p class="mt-2 text-sm leading-7 text-slate-500">{{ $category['desc'] }}</p>
+                    <h3 class="mt-6 text-xl font-black text-tailor-deep"><?php echo e($category['name']); ?></h3>
+                    <p class="mt-2 text-sm leading-7 text-slate-500"><?php echo e($category['desc']); ?></p>
                 </a>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 </section>
@@ -195,7 +193,7 @@
                 <span class="rounded-full bg-tailor-soft px-4 py-2 text-sm font-extrabold text-tailor-purple">Penjahit Unggulan</span>
                 <h2 class="mt-5 text-3xl font-black text-tailor-deep sm:text-4xl">Temukan penjahit yang sesuai dengan gayamu.</h2>
             </div>
-            <a href="{{ route('tailors.index') }}" class="inline-flex items-center gap-2 font-extrabold text-tailor-purple hover:text-tailor-deep">
+            <a href="<?php echo e(route('tailors.index')); ?>" class="inline-flex items-center gap-2 font-extrabold text-tailor-purple hover:text-tailor-deep">
                 Lihat semua penjahit
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -203,45 +201,45 @@
             </a>
         </div>
 
-        @if($tailors->isNotEmpty())
+        <?php if($tailors->isNotEmpty()): ?>
             <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($tailors as $tailor)
-                    @php
+                <?php $__currentLoopData = $tailors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tailor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
                         $profile = $tailor->tailorProfile;
                         $shopName = $profile->shop_name ?? $tailor->name ?? 'TailorTrack';
                         $avgRating = round((float) ($tailor->reviews_received_avg_rating ?? 0), 1);
                         $reviewCount = (int) ($tailor->reviews_received_count ?? 0);
-                    @endphp
-                    <a href="{{ route('tailors.show', $tailor) }}" class="overflow-hidden rounded-3xl border border-tailor-purple/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
+                    ?>
+                    <a href="<?php echo e(route('tailors.show', $tailor)); ?>" class="overflow-hidden rounded-3xl border border-tailor-purple/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
                         <div class="h-2 gold-gradient"></div>
                         <div class="p-6">
                             <div class="flex items-start gap-4">
-                                @if($profile && $profile->photo)
-                                    <img src="{{ Storage::url($profile->photo) }}" alt="{{ $shopName }}" class="h-16 w-16 rounded-2xl object-cover ring-4 ring-tailor-soft">
-                                @else
-                                    <div class="grid h-16 w-16 place-items-center rounded-2xl brand-gradient text-2xl font-black text-white ring-4 ring-tailor-soft">{{ strtoupper(substr($shopName, 0, 1)) }}</div>
-                                @endif
+                                <?php if($profile && $profile->photo): ?>
+                                    <img src="<?php echo e(Storage::url($profile->photo)); ?>" alt="<?php echo e($shopName); ?>" class="h-16 w-16 rounded-2xl object-cover ring-4 ring-tailor-soft">
+                                <?php else: ?>
+                                    <div class="grid h-16 w-16 place-items-center rounded-2xl brand-gradient text-2xl font-black text-white ring-4 ring-tailor-soft"><?php echo e(strtoupper(substr($shopName, 0, 1))); ?></div>
+                                <?php endif; ?>
                                 <div class="min-w-0 flex-1">
-                                    <h3 class="truncate text-lg font-black text-tailor-deep">{{ $shopName }}</h3>
-                                    <p class="mt-1 text-sm font-semibold text-slate-500">{{ $profile->specialization ?? 'Jasa Jahit Custom' }}</p>
-                                    @if($reviewCount > 0)
-                                        <p class="mt-2 text-xs font-bold text-tailor-purple">Rating {{ number_format($avgRating, 1) }} dari {{ $reviewCount }} ulasan</p>
-                                    @else
+                                    <h3 class="truncate text-lg font-black text-tailor-deep"><?php echo e($shopName); ?></h3>
+                                    <p class="mt-1 text-sm font-semibold text-slate-500"><?php echo e($profile->specialization ?? 'Jasa Jahit Custom'); ?></p>
+                                    <?php if($reviewCount > 0): ?>
+                                        <p class="mt-2 text-xs font-bold text-tailor-purple">Rating <?php echo e(number_format($avgRating, 1)); ?> dari <?php echo e($reviewCount); ?> ulasan</p>
+                                    <?php else: ?>
                                         <p class="mt-2 text-xs font-bold text-slate-400">Belum ada ulasan</p>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                            <p class="mt-5 line-clamp-2 text-sm leading-7 text-slate-500">{{ $profile->description ?? 'Siap membantu membuat pakaian custom sesuai kebutuhan pelanggan.' }}</p>
+                            <p class="mt-5 line-clamp-2 text-sm leading-7 text-slate-500"><?php echo e($profile->description ?? 'Siap membantu membuat pakaian custom sesuai kebutuhan pelanggan.'); ?></p>
                         </div>
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        @else
+        <?php else: ?>
             <div class="mt-10 rounded-3xl border border-dashed border-tailor-purple/20 bg-tailor-cream p-10 text-center">
                 <p class="font-extrabold text-tailor-deep">Belum ada penjahit unggulan.</p>
                 <p class="mt-2 text-sm text-slate-500">Data penjahit akan muncul setelah profil tersedia.</p>
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </section>
 
@@ -252,7 +250,7 @@
                 <span class="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-tailor-purple shadow-sm">Portfolio Terbaru</span>
                 <h2 class="mt-5 text-3xl font-black text-tailor-deep sm:text-4xl">Lihat hasil jahitan sebelum menentukan pilihan.</h2>
             </div>
-            <a href="{{ route('portfolios.index') }}" class="inline-flex items-center gap-2 font-extrabold text-tailor-purple hover:text-tailor-deep">
+            <a href="<?php echo e(route('portfolios.index')); ?>" class="inline-flex items-center gap-2 font-extrabold text-tailor-purple hover:text-tailor-deep">
                 Lihat semua portfolio
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -260,35 +258,35 @@
             </a>
         </div>
 
-        @if($portfolios->isNotEmpty())
+        <?php if($portfolios->isNotEmpty()): ?>
             <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($portfolios as $portfolio)
-                    <a href="{{ route('portfolios.show', $portfolio) }}" class="group overflow-hidden rounded-3xl border border-tailor-purple/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
+                <?php $__currentLoopData = $portfolios; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $portfolio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <a href="<?php echo e(route('portfolios.show', $portfolio)); ?>" class="group overflow-hidden rounded-3xl border border-tailor-purple/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
                         <div class="aspect-[4/3] overflow-hidden bg-tailor-soft">
-                            @if($portfolio->image)
-                                <img src="{{ Storage::url($portfolio->image) }}" alt="{{ $portfolio->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
-                            @else
+                            <?php if($portfolio->image): ?>
+                                <img src="<?php echo e(Storage::url($portfolio->image)); ?>" alt="<?php echo e($portfolio->title); ?>" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                            <?php else: ?>
                                 <div class="grid h-full w-full place-items-center text-tailor-purple/40">
                                     <svg class="h-16 w-16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4-4 3 3 5-6 4 5M4 6h16v12H4V6z"/>
                                     </svg>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="p-6">
                             <p class="text-xs font-black uppercase tracking-[0.18em] text-tailor-gold">Portfolio</p>
-                            <h3 class="mt-2 line-clamp-1 text-lg font-black text-tailor-deep">{{ $portfolio->title }}</h3>
-                            <p class="mt-2 text-sm font-semibold text-slate-500">{{ $portfolio->tailor->tailorProfile->shop_name ?? $portfolio->tailor->name ?? 'Penjahit TailorTrack' }}</p>
+                            <h3 class="mt-2 line-clamp-1 text-lg font-black text-tailor-deep"><?php echo e($portfolio->title); ?></h3>
+                            <p class="mt-2 text-sm font-semibold text-slate-500"><?php echo e($portfolio->tailor->tailorProfile->shop_name ?? $portfolio->tailor->name ?? 'Penjahit TailorTrack'); ?></p>
                         </div>
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        @else
+        <?php else: ?>
             <div class="mt-10 rounded-3xl border border-dashed border-tailor-purple/20 bg-white p-10 text-center">
                 <p class="font-extrabold text-tailor-deep">Belum ada portfolio terbaru.</p>
                 <p class="mt-2 text-sm text-slate-500">Portfolio akan tampil setelah penjahit mengunggah hasil karya.</p>
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </section>
 
@@ -300,23 +298,25 @@
                     <span class="rounded-full bg-white/15 px-4 py-2 text-sm font-extrabold ring-1 ring-white/20">Alur TailorTrack</span>
                     <h2 class="mt-6 text-3xl font-black sm:text-4xl">Dari desain sampai pakaian selesai, semua tahap punya catatan.</h2>
                     <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                        <a href="{{ route('tailors.index') }}" class="rounded-2xl bg-white px-6 py-3.5 text-center font-extrabold text-tailor-purple">Mulai Cari Penjahit</a>
-                        <a href="{{ route('price-lists.index') }}" class="rounded-2xl border border-white/30 px-6 py-3.5 text-center font-extrabold text-white hover:bg-white/10">Cek Harga</a>
+                        <a href="<?php echo e(route('tailors.index')); ?>" class="rounded-2xl bg-white px-6 py-3.5 text-center font-extrabold text-tailor-purple">Mulai Cari Penjahit</a>
+                        <a href="<?php echo e(route('price-lists.index')); ?>" class="rounded-2xl border border-white/30 px-6 py-3.5 text-center font-extrabold text-white hover:bg-white/10">Cek Harga</a>
                     </div>
                 </div>
                 <div class="rounded-3xl bg-white p-5 text-tailor-ink">
                     <div class="space-y-4">
-                        @foreach(['Pilih penjahit', 'Kirim desain dan ukuran', 'Konfirmasi harga', 'Upload pembayaran', 'Pantau progress', 'Pesanan selesai'] as $index => $step)
+                        <?php $__currentLoopData = ['Pilih penjahit', 'Kirim desain dan ukuran', 'Konfirmasi harga', 'Upload pembayaran', 'Pantau progress', 'Pesanan selesai']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $step): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="flex items-center gap-4">
-                                <div class="grid h-10 w-10 shrink-0 place-items-center rounded-full {{ $index < 5 ? 'bg-tailor-purple text-white' : 'bg-tailor-gold text-tailor-deep' }} text-sm font-black">{{ $index + 1 }}</div>
-                                <div class="h-1 flex-1 rounded-full {{ $index < 5 ? 'bg-tailor-soft' : 'bg-tailor-gold/40' }}"></div>
-                                <p class="w-36 text-sm font-extrabold text-tailor-deep">{{ $step }}</p>
+                                <div class="grid h-10 w-10 shrink-0 place-items-center rounded-full <?php echo e($index < 5 ? 'bg-tailor-purple text-white' : 'bg-tailor-gold text-tailor-deep'); ?> text-sm font-black"><?php echo e($index + 1); ?></div>
+                                <div class="h-1 flex-1 rounded-full <?php echo e($index < 5 ? 'bg-tailor-soft' : 'bg-tailor-gold/40'); ?>"></div>
+                                <p class="w-36 text-sm font-extrabold text-tailor-deep"><?php echo e($step); ?></p>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.customer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\tailortrack\resources\views/public/landing.blade.php ENDPATH**/ ?>

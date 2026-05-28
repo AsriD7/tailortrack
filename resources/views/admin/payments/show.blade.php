@@ -95,6 +95,21 @@
                 @endif
             </div>
 
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+                    <p class="text-xs text-slate-400">Total Tagihan</p>
+                    <p class="mt-1 text-sm font-black text-slate-900">{{ $payment->order->formattedTotalPrice() }}</p>
+                </div>
+                <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+                    <p class="text-xs text-emerald-600">Sudah Terverifikasi</p>
+                    <p class="mt-1 text-sm font-black text-emerald-800">{{ $payment->order->formattedVerifiedPaymentsTotal() }}</p>
+                </div>
+                <div class="rounded-xl bg-orange-50 border border-orange-100 p-3">
+                    <p class="text-xs text-orange-600">Sisa Bayar</p>
+                    <p class="mt-1 text-sm font-black text-orange-800">{{ $payment->order->formattedPaymentRemainingAmount() }}</p>
+                </div>
+            </div>
+
             <div class="mt-5 bg-slate-50 rounded-xl p-4">
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Rekening Tujuan</p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
@@ -174,7 +189,14 @@
                     <p class="text-xs text-emerald-600">Bukti pembayaran valid</p>
                 </div>
             </div>
-            <p class="text-sm text-emerald-700 mb-4">Dengan menekan tombol ini, pembayaran {{ strtolower($payment->payment_type_label) }} akan diverifikasi dan pesanan masuk ke proses penjahit.</p>
+            <p class="text-sm text-emerald-700 mb-4">
+                Dengan menekan tombol ini, pembayaran {{ strtolower($payment->payment_type_label) }} akan diverifikasi.
+                @if($payment->payment_type !== \App\Models\Payment::TYPE_FINAL)
+                    Pesanan masuk ke proses penjahit.
+                @else
+                    Pesanan sudah bisa diselesaikan oleh penjahit.
+                @endif
+            </p>
             <form action="{{ route('admin.payments.verify', $payment) }}" method="POST" onsubmit="return confirm('Verifikasi pembayaran ini?')">
                 @csrf @method('PATCH')
                 <button type="submit" class="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-bold hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2">

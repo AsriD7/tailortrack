@@ -1,0 +1,32 @@
+{
+  "name": "TailorTrack",
+  "short_name": "TailorTrack",
+  "description": "Platform pemesanan jasa jahit custom dengan tracking pesanan.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFF9F0",
+  "theme_color": "#4C0D7A",
+  "categories": ["business", "shopping", "productivity"],
+  "icons": [
+    {
+      "src": "/images/tailortrack-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/tailortrack-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/tailortrack-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

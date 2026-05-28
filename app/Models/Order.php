@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -129,11 +130,19 @@ class Order extends Model
     }
 
     /**
-     * Order ini memiliki satu data pembayaran.
+     * Order ini memiliki riwayat pembayaran.
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'order_id')->latest();
+    }
+
+    /**
+     * Payment terakhir, agar tampilan lama tetap mengambil data terbaru.
      */
     public function payment()
     {
-        return $this->hasOne(Payment::class, 'order_id');
+        return $this->hasOne(Payment::class, 'order_id')->latestOfMany();
     }
 
     /**
@@ -254,5 +263,68 @@ class Order extends Model
     {
         if (!$this->total_price) return '-';
         return 'Rp ' . number_format((float)$this->total_price, 0, ',', '.');
+    }
+
+    public function verifiedPaymentsTotal(): float
+    {
+        if ($this->relationLoaded('payments')) {
+            return (float) $this->payments
+                ->filter(fn(Payment $payment) => $payment->status === PaymentStatus::Verified)
+                ->sum(fn(Payment $payment) => (float) $payment->amount);
+        }
+
+        return (float) $this->payments()
+            ->where('status', PaymentStatus::Verified->value)
+            ->sum('amount');
+    }
+
+    public function paymentRemainingAmount(): float
+    {
+        return max(0, (float) $this->total_price - $this->verifiedPaymentsTotal());
+    }
+
+    public function formattedVerifiedPaymentsTotal(): string
+    {
+        return 'Rp ' . number_format($this->verifiedPaymentsTotal(), 0, ',', '.');
+    }
+
+    public function formattedPaymentRemainingAmount(): string
+    {
+        return 'Rp ' . number_format($this->paymentRemainingAmount(), 0, ',', '.');
+    }
+
+    public function hasVerifiedDpPayment(): bool
+    {
+        if ($this->relationLoaded('payments')) {
+            return $this->payments->contains(fn(Payment $payment) =>
+                $payment->payment_type === Payment::TYPE_DP
+                && $payment->status === PaymentStatus::Verified
+            );
+        }
+
+        return $this->payments()
+            ->where('payment_type', Payment::TYPE_DP)
+            ->where('status', PaymentStatus::Verified->value)
+            ->exists();
+    }
+
+    public function hasPendingFinalPayment(): bool
+    {
+        if ($this->relationLoaded('payments')) {
+            return $this->payments->contains(fn(Payment $payment) =>
+                $payment->payment_type === Payment::TYPE_FINAL
+                && $payment->status === PaymentStatus::Pending
+            );
+        }
+
+        return $this->payments()
+            ->where('payment_type', Payment::TYPE_FINAL)
+            ->where('status', PaymentStatus::Pending->value)
+            ->exists();
+    }
+
+    public function isFullyPaid(): bool
+    {
+        return (float) $this->total_price > 0 && $this->paymentRemainingAmount() <= 0;
     }
 }

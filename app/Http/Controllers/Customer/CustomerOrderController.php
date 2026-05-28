@@ -215,7 +215,7 @@ class CustomerOrderController extends Controller
         // Pastikan order ini milik customer yang login
         abort_if($order->customer_id !== Auth::id(), 403, 'Akses ditolak.');
 
-        $order->load(['tailor.tailorProfile', 'priceList', 'orderImages', 'payment', 'trackingHistories.updatedByUser']);
+        $order->load(['tailor.tailorProfile', 'priceList', 'orderImages', 'payment', 'payments', 'trackingHistories.updatedByUser']);
 
         return view('customer.orders.show', compact('order'));
     }
