@@ -1,11 +1,13 @@
 const CACHE_NAME = 'tailortrack-pwa-v1';
+const BASE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '');
+const assetPath = (path) => `${BASE_PATH}${path}`;
 const STATIC_ASSETS = [
-  '/offline.html',
-  '/manifest.webmanifest',
-  '/images/tailortrack-icon.svg',
-  '/images/tailortrack-logo.svg',
-  '/images/tailortrack-icon-192.png',
-  '/images/tailortrack-icon-512.png'
+  assetPath('/offline.html'),
+  assetPath('/manifest.webmanifest'),
+  assetPath('/images/tailortrack-icon.svg'),
+  assetPath('/images/tailortrack-logo.svg'),
+  assetPath('/images/tailortrack-icon-192.png'),
+  assetPath('/images/tailortrack-icon-512.png')
 ];
 
 self.addEventListener('install', (event) => {
@@ -39,7 +41,7 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('/offline.html'))
+      fetch(request).catch(() => caches.match(assetPath('/offline.html')))
     );
     return;
   }
