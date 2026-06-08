@@ -1,302 +1,271 @@
-<div align="center">
+# TailorTrack
 
-<!-- Animated header using capsule-render -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=6366f1&height=200&section=header&text=TailorTrack&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Marketplace+Penjahit+Terpercaya+🧵&descAlignY=55&descAlign=50" width="100%"/>
+TailorTrack adalah platform pemesanan jasa jahit berbasis web yang menghubungkan customer dengan penjahit. Aplikasi ini membantu customer mencari penjahit sesuai layanan/keahlian, membuat pesanan, mengunggah referensi desain, memilih ukuran standar atau custom, melakukan pembayaran, memantau status pengerjaan, dan memberi review.
 
+Admin mengelola data utama, penjahit, customer, daftar layanan, pembayaran, order, dan review. Penjahit mengelola profil toko, layanan yang diterima, jadwal, portofolio, serta progres pesanan.
 
-<br/>
+## Tech Stack
 
-<!-- Badges -->
-[![Laravel](https://img.shields.io/badge/Laravel-13.8-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
-[![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
-[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+- Backend: Laravel
+- Frontend: Blade, Tailwind CSS
+- Database: MySQL
+- Build tool: Vite
+- PWA: manifest, service worker, offline page
 
-<br/>
+## Role Pengguna
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![GitHub branch](https://img.shields.io/badge/branch-senior-blueviolet?style=flat-square&logo=git)](https://github.com/AsriD7/tailortrack/tree/senior)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/AsriD7/tailortrack/pulls)
+### Admin
 
-</div>
+- Dashboard ringkasan platform.
+- CRUD akun penjahit.
+- Kelola data customer.
+- Kelola daftar harga / layanan.
+- Publikasi atau sembunyikan profil penjahit.
+- Melihat dan membatalkan order jika perlu.
+- Verifikasi atau tolak pembayaran.
+- Moderasi review.
 
----
+### Customer
 
-<div align="center">
+- Register, login, dan edit profil.
+- Cari penjahit berdasarkan layanan/keahlian.
+- Melihat detail penjahit, rating, jadwal, layanan, dan portofolio.
+- Membuat pesanan ke penjahit tertentu.
+- Memilih layanan berdasarkan kategori.
+- Upload gambar referensi desain.
+- Memilih ukuran standar S, M, L, XL, XXL atau Custom.
+- Menyimpan profil ukuran badan.
+- Upload bukti pembayaran full, DP, atau pelunasan.
+- Memantau tracking status order.
+- Membatalkan pesanan pada status tertentu.
+- Memberikan review setelah pesanan selesai.
 
-## 🌟 Apa itu TailorTrack?
+### Penjahit
 
-</div>
+- Dashboard penjahit.
+- Edit profil toko.
+- Mengatur spesialisasi, deskripsi, foto profil, dan status ketersediaan.
+- Memilih layanan yang diterima dari daftar layanan admin.
+- Mengatur jadwal kerja, estimasi pengerjaan, batas order aktif, dan batas order mingguan.
+- Mengatur tanggal tidak tersedia.
+- CRUD portofolio.
+- Melihat order masuk.
+- Konfirmasi harga final.
+- Update progres pengerjaan.
+- Menolak pesanan saat masih menunggu konfirmasi.
+- Melihat review dari customer.
 
-**TailorTrack** adalah platform marketplace yang menghubungkan **pelanggan** dengan **penjahit berbakat** di seluruh Indonesia. Pesan baju custom impianmu, pantau proses jahit secara real-time, dan bayar dengan mudah — semuanya dalam satu platform! 🎉
+## Fitur Utama
 
-```
-🔍 Cari Penjahit  →  📋 Buat Order  →  💰 Bayar  →  ✅ Terima Jahitan!
-```
+- Pencarian penjahit.
+- Filter layanan/keahlian.
+- Layanan order hanya muncul jika dipilih oleh penjahit.
+- Pengelompokan layanan berdasarkan kategori.
+- Upload referensi desain sampai 5 gambar.
+- Sistem ukuran standar dan custom.
+- Profil ukuran customer.
+- Snapshot ukuran pada order agar data ukuran tidak berubah setelah profil diedit.
+- Jadwal dan ketersediaan penjahit.
+- Batas order aktif dan mingguan.
+- Tanggal tidak tersedia.
+- Tracking status order detail.
+- Pembayaran full, DP, dan pelunasan.
+- Verifikasi pembayaran oleh admin.
+- Review dan moderasi review.
+- Portofolio penjahit.
+- PWA dasar dengan service worker dan halaman offline.
 
----
+## Alur Order
 
-## ✨ Fitur Unggulan
+1. Customer memilih penjahit.
+2. Sistem menampilkan layanan yang diterima penjahit.
+3. Customer memilih kategori layanan dan jenis layanan.
+4. Customer mengisi detail pesanan, ukuran, jumlah, deadline, catatan, dan referensi desain.
+5. Order dibuat dengan status `menunggu_konfirmasi`.
+6. Penjahit mengonfirmasi harga final.
+7. Status berubah menjadi `menunggu_pembayaran`.
+8. Customer upload bukti pembayaran full atau DP.
+9. Admin memverifikasi pembayaran.
+10. Penjahit memproses order.
+11. Status bergerak dari `diproses`, `finishing`, `siap_diambil`, sampai `selesai`.
+12. Jika ada DP, customer dapat upload pelunasan.
+13. Customer memberi review setelah order selesai.
 
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <h3>👗 Order Custom</h3>
-      Buat pesanan dengan detail ukuran, deskripsi, dan foto referensi. Penjahit konfirmasi harga sesuai kebutuhanmu.
-    </td>
-    <td align="center" width="33%">
-      <h3>📊 Tracking Real-time</h3>
-      Pantau status pesananmu dari <em>Menunggu Konfirmasi</em> hingga <em>Selesai</em> dengan riwayat lengkap.
-    </td>
-    <td align="center" width="33%">
-      <h3>💳 Sistem Pembayaran</h3>
-      Upload bukti pembayaran dan tunggu verifikasi admin. Aman dan transparan!
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="33%">
-      <h3>🏪 Profil Penjahit</h3>
-      Lihat portofolio, spesialisasi, rating, dan pengalaman penjahit sebelum memesan.
-    </td>
-    <td align="center" width="33%">
-      <h3>⭐ Review & Rating</h3>
-      Berikan ulasan setelah pesanan selesai. Bantu pelanggan lain memilih penjahit terbaik!
-    </td>
-    <td align="center" width="33%">
-      <h3>🔐 Multi-Role System</h3>
-      Tiga peran berbeda: Customer, Penjahit, dan Admin — masing-masing dengan dashboard sendiri.
-    </td>
-  </tr>
-</table>
+## Status Order
 
----
+- `menunggu_konfirmasi`
+- `menunggu_pembayaran`
+- `dibayar`
+- `diproses`
+- `finishing`
+- `siap_diambil`
+- `selesai`
+- `dibatalkan`
 
-## 🗺️ Alur Order
+## Status Pembayaran
 
-```mermaid
-flowchart LR
-    A[🙋 Customer\nBuat Order] --> B[✂️ Penjahit\nKonfirmasi Harga]
-    B --> C[💰 Customer\nUpload Bukti Bayar]
-    C --> D[🔍 Admin\nVerifikasi Payment]
-    D --> E[🧵 Penjahit\nMulai Jahit]
-    E --> F[✅ Selesai!\nCustomer Review]
+Jenis pembayaran:
 
-    style A fill:#3B82F6,color:#fff
-    style B fill:#8B5CF6,color:#fff
-    style C fill:#3B82F6,color:#fff
-    style D fill:#EF4444,color:#fff
-    style E fill:#8B5CF6,color:#fff
-    style F fill:#10B981,color:#fff
-```
+- `full`: pembayaran penuh.
+- `dp`: panjar / pembayaran sebagian.
+- `pelunasan`: pembayaran sisa setelah DP.
 
----
+Status pembayaran:
 
-## 👥 Peran Pengguna
+- `pending`: menunggu verifikasi admin.
+- `verified`: sudah diverifikasi admin.
+- `rejected`: ditolak admin.
 
-<details>
-<summary><b>🙋 Customer (Pelanggan)</b> — klik untuk lihat detail</summary>
-<br/>
+## Struktur Database Utama
 
-| Fitur | Deskripsi |
-|-------|-----------|
-| 🔍 Cari Penjahit | Lihat daftar penjahit, profil, portofolio, dan rating |
-| 📋 Buat Order | Pesan custom dengan foto referensi & pilihan ukuran |
-| 💰 Bayar | Upload bukti pembayaran dengan mudah |
-| 📦 Tracking | Pantau status pesanan secara real-time |
-| ❌ Cancel Order | Batalkan pesanan saat masih menunggu konfirmasi |
-| ⭐ Review | Berikan rating & ulasan setelah pesanan selesai |
+Tabel utama:
 
-</details>
+- `users`
+- `tailor_profiles`
+- `price_lists`
+- `tailor_price_lists`
+- `portfolios`
+- `orders`
+- `order_images`
+- `payments`
+- `tracking_histories`
+- `reviews`
+- `tailor_unavailable_dates`
+- `customer_measurements`
 
-<details>
-<summary><b>✂️ Penjahit (Tailor)</b> — klik untuk lihat detail</summary>
-<br/>
+Relasi ringkas:
 
-| Fitur | Deskripsi |
-|-------|-----------|
-| 🏪 Kelola Toko | Edit profil, spesialisasi, dan bio toko |
-| 🖼️ Portofolio | Showcase hasil karya terbaikmu |
-| 📬 Kelola Order | Terima, konfirmasi harga, dan update status |
-| 📊 Dashboard | Lihat statistik order dan pendapatan |
+- `users` 1-1 `tailor_profiles`
+- `users` 1-N `orders` sebagai customer
+- `users` 1-N `orders` sebagai penjahit
+- `users` 1-N `portfolios`
+- `users` 1-N `customer_measurements`
+- `users` N-M `price_lists` melalui `tailor_price_lists`
+- `price_lists` 1-N `orders`
+- `orders` 1-N `order_images`
+- `orders` 1-N `payments`
+- `orders` 1-N `tracking_histories`
+- `orders` 1-1 `reviews`
+- `users` 1-N `tailor_unavailable_dates`
 
-</details>
+Dokumentasi konteks lebih lengkap untuk ERD dan laporan tersedia di [gpt.md](gpt.md).
 
-<details>
-<summary><b>🔑 Admin</b> — klik untuk lihat detail</summary>
-<br/>
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| ✅ Verifikasi Penjahit | Setujui penjahit baru yang mendaftar |
-| 💳 Verifikasi Payment | Konfirmasi atau tolak bukti pembayaran |
-| 📋 Kelola Daftar Harga | Atur harga global untuk semua layanan |
-| 👥 Kelola Pengguna | Pantau dan kelola semua akun customer |
-| 📊 Laporan | Lihat semua order dan pembayaran di platform |
-
-</details>
-
----
-
-## 🛠️ Tech Stack
-
-<div align="center">
-
-| Layer | Teknologi |
-|-------|-----------|
-| **Backend** | ![Laravel](https://img.shields.io/badge/Laravel_13.8-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![PHP](https://img.shields.io/badge/PHP_8.3+-777BB4?style=flat-square&logo=php&logoColor=white) |
-| **Frontend** | ![Blade](https://img.shields.io/badge/Blade_Templates-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white) |
-| **Build Tool** | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) |
-| **Database** | ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white) |
-| **Testing** | ![PHPUnit](https://img.shields.io/badge/PHPUnit_12-3776AB?style=flat-square&logo=php&logoColor=white) |
-
-</div>
-
----
-
-## 🚀 Cara Menjalankan
+## Instalasi
 
 ### Prasyarat
 
-Pastikan sudah terinstall:
-- **PHP** >= 8.3
-- **Composer**
-- **Node.js** >= 18 & npm
+- PHP
+- Composer
+- Node.js dan npm
+- MySQL
 
-### Instalasi
+### Langkah Setup
 
 ```bash
-# 1. Clone repository
-git clone -b senior https://github.com/AsriD7/tailortrack.git
-cd tailortrack
-
-# 2. Install dependencies PHP
 composer install
-
-# 3. Salin file environment
-cp .env.example .env
-
-# 4. Generate application key
-php artisan key:generate
-
-# 5. Jalankan migrasi database
-php artisan migrate
-
-# 6. Install dependencies JavaScript
 npm install
-
-# 7. Build assets
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
 npm run build
 ```
 
-### Jalankan Development Server
+Jika ingin mengisi data awal:
 
 ```bash
-# Jalankan semua sekaligus (server + queue + logs + vite)
-composer run dev
-```
-
-Buka browser dan akses: **http://localhost:8000** 🎉
-
-### Seed Data (Opsional)
-
-```bash
-# Isi database dengan data contoh
 php artisan db:seed
 ```
 
----
+Jalankan server lokal:
 
-## 📁 Struktur Direktori
-
-```
-tailortrack/
-├── 📂 app/
-│   ├── 📂 Enums/              # OrderStatus, PaymentStatus, UserRole
-│   ├── 📂 Http/
-│   │   └── 📂 Controllers/
-│   │       ├── 📂 Admin/      # Controller admin panel
-│   │       ├── 📂 Auth/       # Login & Register
-│   │       ├── 📂 Customer/   # Dashboard customer
-│   │       ├── 📂 Public/     # Halaman publik
-│   │       └── 📂 Tailor/     # Dashboard penjahit
-│   └── 📂 Models/             # Eloquent Models
-├── 📂 database/
-│   ├── 📂 migrations/         # Skema database
-│   ├── 📂 factories/          # Factory untuk testing
-│   └── 📂 seeders/            # Data awal
-├── 📂 resources/views/        # Blade templates
-│   ├── 📂 admin/
-│   ├── 📂 customer/
-│   ├── 📂 tailor/
-│   └── 📂 public/
-└── 📂 routes/
-    └── 📄 web.php             # Semua routing
+```bash
+php artisan serve
 ```
 
----
+Jalankan Vite saat development:
 
-## 🗃️ Database Schema
-
-```
-users ──────────────┬── tailor_profiles
-   │                │
-   ├── customer ────┤── orders ──── order_images
-   │                │      │
-   └── tailor ──────┘      ├── payments
-                           ├── tracking_histories
-                           └── reviews
-
-price_lists ─── orders
-portfolios  ─── tailor_profiles
+```bash
+npm run dev
 ```
 
----
+## Konfigurasi Penting
 
-## 🧪 Menjalankan Test
+Pastikan `.env` menyesuaikan database lokal:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tailorv2
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Untuk upload file, jalankan:
+
+```bash
+php artisan storage:link
+```
+
+## Struktur Folder
+
+```text
+app/
+  Enums/
+  Http/Controllers/
+    Admin/
+    Auth/
+    Customer/
+    Public/
+    Tailor/
+  Models/
+database/
+  migrations/
+  seeders/
+public/
+  manifest.webmanifest
+  sw.js
+resources/views/
+  admin/
+  auth/
+  customer/
+  layouts/
+  public/
+  tailor/
+routes/
+  web.php
+```
+
+## Migration
+
+Migration sudah dirapikan agar patch kecil digabung ke migration utama.
+
+Contoh:
+
+- Kolom `payment_type`, `amount`, `bank_name`, `bank_account_number`, dan `bank_account_name` sudah berada di `2026_01_01_000006_create_payments_table.php`.
+- Migration tambahan lama untuk menambah tipe pembayaran sudah tidak diperlukan.
+
+## Testing
+
+```bash
+php artisan test
+```
+
+atau:
 
 ```bash
 composer test
 ```
 
----
+## Roadmap
 
-## 🗺️ Roadmap
+- Notifikasi in-app/email/push untuk perubahan status order.
+- Laporan admin yang lebih detail.
+- Chat atau diskusi order antara customer dan penjahit.
+- Payment gateway otomatis.
+- Dashboard tindakan untuk admin dan penjahit.
+- Optimasi PWA dan cache asset dinamis.
 
-- [x] ✅ Manajemen order & tracking
-- [x] ✅ Upload bukti pembayaran
-- [x] ✅ Sistem rating & review
-- [x] ✅ Portofolio penjahit
-- [ ] 🔔 Notifikasi email/push
-- [ ] 💳 Integrasi Midtrans / payment gateway
-- [ ] ☁️ Migrasi storage ke S3
-- [ ] 📱 REST API untuk mobile app
-- [ ] 🔐 Verifikasi email saat register
+## Lisensi
 
----
-
-## 🤝 Kontribusi
-
-Kontribusi sangat diterima! Berikut caranya:
-
-1. **Fork** repository ini
-2. Buat branch fitur baru: `git checkout -b fitur/nama-fitur`
-3. Commit perubahanmu: `git commit -m 'Tambah fitur keren'`
-4. Push ke branch: `git push origin fitur/nama-fitur`
-5. Buat **Pull Request** 🚀
-
----
-
-## 📜 Lisensi
-
-Didistribusikan di bawah lisensi **MIT**. Lihat [`LICENSE`](LICENSE) untuk informasi lebih lanjut.
-
----
-
-<div align="center">
-
-Dibuat dengan ❤️ oleh [AsriD7](https://github.com/AsriD7)
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=6366f1&height=100&section=footer" width="100%"/>
-
-</div>
+Project ini digunakan untuk pengembangan TailorTrack. Sesuaikan lisensi repository jika akan dipublikasikan.
