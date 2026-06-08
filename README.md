@@ -148,7 +148,7 @@ Relasi ringkas:
 - `orders` 1-1 `reviews`
 - `users` 1-N `tailor_unavailable_dates`
 
-Dokumentasi konteks lebih lengkap untuk ERD dan laporan tersedia di [gpt.md](gpt.md).
+Dokumentasi konteks lebih lengkap untuk ERD dan laporan tersedia di [panduan.md](panduan.md).
 
 ## Instalasi
 
