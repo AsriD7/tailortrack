@@ -257,6 +257,11 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @foreach($recentOrders as $order)
+                            @php
+                                $tailorShopName = $order->tailor?->tailorProfile?->shop_name;
+                                $tailorName = $order->tailor?->name;
+                                $tailorDisplayName = $tailorShopName ?: ($tailorName ?: '-');
+                            @endphp
                             <tr class="hover:bg-slate-50/60 transition-colors">
 
                                 {{-- Order code --}}
@@ -287,11 +292,18 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2.5">
                                         <div class="w-8 h-8 rounded-full brand-gradient flex items-center justify-center text-white text-xs font-bold shrink-0">
-                                            {{ mb_substr($order->tailor->shop_name ?? 'T', 0, 1) }}
+                                            {{ mb_substr($tailorDisplayName, 0, 1) }}
                                         </div>
-                                        <span class="font-medium text-slate-700">
-                                            {{ $order->tailor->shop_name ?? '-' }}
-                                        </span>
+                                        <div>
+                                            <p class="font-medium text-slate-700 leading-tight">
+                                                {{ $tailorDisplayName }}
+                                            </p>
+                                            @if($tailorShopName && $tailorName)
+                                                <p class="text-slate-400 text-xs leading-tight">
+                                                    oleh {{ $tailorName }}
+                                                </p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
 
