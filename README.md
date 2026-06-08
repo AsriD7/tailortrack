@@ -265,7 +265,7 @@ composer test
 - Payment gateway otomatis.
 - Dashboard tindakan untuk admin dan penjahit.
 - Optimasi PWA dan cache asset dinamis.
-
+-
 ## Lisensi
 
 Project ini digunakan untuk pengembangan TailorTrack. Sesuaikan lisensi repository jika akan dipublikasikan.
